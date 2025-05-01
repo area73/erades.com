@@ -4,9 +4,11 @@
   font-weight: 400;
   font-display: swap;
 }
-
+@import "tailwindcss";
+/*
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
+*/
 
 :root {
   font-family: Raleway, system-ui, sans-serif !important;
