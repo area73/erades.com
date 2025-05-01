@@ -1,0 +1,49 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="max-w-[1200px] mx-auto pt-8">
+      <section>
+        <ul class="grid grid-cols-3 gap-8 sm:gap-2 list-none m-0 p-0">
+          {
+            posts.map((post, i) => (
+              <li>
+                <a href={`/blog/${post.id}/`} class="block group">
+                  <img
+                    width="100%"
+                    src={post.data.heroImage}
+                    alt=""
+                    class="mb-2 rounded-xl group-hover:shadow-lg transition-all"
+                  />
+                  <h4 class="m-0 text-black leading-none group-hover:text-accent">
+                    {post.data.title}
+                  </h4>
+                  <p class="m-0 text-gray-500 group-hover:text-accent">
+                    <FormattedDate date={post.data.pubDate} />
+                  </p>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
