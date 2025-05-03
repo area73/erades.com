@@ -2,12 +2,24 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
+import astroExpressiveCode from "astro-expressive-code";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://example.com",
-  integrations: [mdx(), sitemap()],
+  markdown: {
+    shikiConfig: {
+      theme: "dracula",
+    },
+  },
+  integrations: [
+    astroExpressiveCode({
+      themes: ["dracula"],
+    }),
+    mdx(),
+    sitemap(),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

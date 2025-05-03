@@ -9,11 +9,9 @@ draft: false
 heroImage: "/blog-placeholder-13.jpg"
 ---
 
-# The Hindley-Milner notation
-
 A way to create a notation to express what types of parameter a function takes, and what it returns.
 
-### The basic
+## The basic
 
 A function that takes a primary value ("old type" like string, number, boolean, array, function...) and returns another primary value:
 
@@ -47,7 +45,7 @@ In the case of an array of numbers:
     }
 ```
 
-### Working with functions
+## Working with functions
 
 In the case of a function, we wrap our function in parenthesis and inside the parenthesis we have our input type and our output type:
 
@@ -83,7 +81,7 @@ And in functional programming we can assuming that everything is curried, so we 
 
 ` replace :: String -> String -> String -> String`
 
-### Working with functions that takes multiple parameters as input (Hindley-Milner's Arbitrary Variables)
+## Working with functions that takes multiple parameters as input (Hindley-Milner's Arbitrary Variables)
 
 We show the example with the length function were we could have:
 `length :: [Number] → Number`
@@ -108,13 +106,11 @@ const map = curry(function (callback, array) {
 The map function takes a function that takes a variable of type `a` and returns a variable of type `b`.
 Then takes an **array of values**, all type `a`, and returns an **array of values**, all type `b`.
 
-<br><br>
-
-# Working with Ramda
-
 ---
 
-### Parametrized Types
+## Working with Ramda
+
+## Parametrized Types
 
 We can easily imagine a type representing a collection of similar items,
 let's call it a Box. But no instance is an arbitrary Box; each one can only hold one sort of item.
@@ -125,7 +121,7 @@ let's call it a Box. But no instance is an arbitrary Box; each one can only hold
   const makeBox = curry((height, width, depth, items) => /* ... */);
 ```
 
-### Type Aliases
+## Type Aliases
 
 If we had a parameterized type User String, where the String was meant to represent a name, and we wanted to be more specific about the type of String that is represented when generating a URL, we could create a type alias like this:
 
@@ -143,7 +139,7 @@ toUrl("http://example.com/users/", { name: "Fred Flintstone", age: 24 });
 //=> 'http://example.com/users/fred-flintstone'
 ```
 
-### Type constrains [Ord]
+## Type constrains [Ord]
 
 Sometimes we want to restrict the generic types we can use in a signature in some way or another
 
@@ -170,7 +166,7 @@ maximum([
 In JS, there's no way to guarantee that the user will not pass us [1, 2, 'a', false, undefined, null].
 So our entire type annotation is **descriptive and aspirational** rather than compiler-enforced, as it would be in, say, Haskell.
 
-### Multiple Signatures
+## Multiple Signatures
 
 Sometimes rather than trying to find the most generic version of a signature, it's more straightforward to list several related signatures separately.
 We could do that like bellow:
@@ -184,7 +180,7 @@ getIndex("ba", "foobar"); //=> 3
 getIndex(42, [7, 14, 21, 28, 35, 42, 49]); //=> 5
 ```
 
-### Variadic Functions (specific to Ramda)
+## Variadic Functions (specific to Ramda)
 
 In Haskell, all functions have a fixed arity. But Javsacript has to deal with variadic functions.
 `flip :: (a -> b -> ... -> z) -> (b -> a -> ... -> z)`
@@ -197,7 +193,7 @@ const flip = (fn) =>
 flip((x, y, z) => x + y + z)("a", "b", "c"); //=> 'bac'
 ```
 
-### Simple Objects
+## Simple Objects
 
 When an object is used as a dictionary of like-typed values (as opposed to its other role as a Record), then the types of the keys and the values can become relevant.
 So we could represent them like this:
@@ -209,7 +205,7 @@ keys({ a: 86, b: 75, c: 309 }); //=> ['a', 'b', 'c']
 values({ a: 86, b: 75, c: 309 }); //=> [86, 75, 309]
 ```
 
-### Complex example
+## Complex example
 
 `Lens s a -> (a -> a) -> s -> s`
 `Lens s a = Functor f => (a -> f a) -> s -> f s`
@@ -220,10 +216,12 @@ We know that there is a constraint on the type of the f variable used in a Lens:
 With that in mind, we see that a Lens is a curried function of two parameters, the first being a function from
 a value of the generic type a to one of the parameterized type f a, and the second being a value of generic type s.
 
-**The result** is a value of the parameterized type f s.
+**The result** is a value of the parameterized type `f・s`
 
-<br><br>
-Bibliogrphy:<br>
-[gentle introduction to functional javascript style](https://jrsinclair.com/articles/2016/gentle-introduction-to-functional-javascript-style/#hindley-milnertypesignatures)<br>
-[function type signatures in Javascript](https://hackernoon.com/function-type-signatures-in-javascript-5c698c1e9801)<br>
-[Type signatures in Ramda](https://github.com/ramda/ramda/wiki/Type-Signatures)<br>
+<div class="bibliography">
+Bibliogrphy:<br><br>
+
+- [gentle introduction to functional javascript style](https://jrsinclair.com/articles/2016/gentle-introduction-to-functional-javascript-style#hindley-milnertypesignatures)
+- [function type signatures in Javascript](https://hackernoon.com/function-type-signatures-in-javascript-5c698c1e9801)
+- [Type signatures in Ramda](https://github.com/ramda/ramda/wiki/Type-Signatures)
+</div>
