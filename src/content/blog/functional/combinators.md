@@ -87,11 +87,13 @@ The fork combinator is useful in cases where you need to process a single resour
 different ways and then combine the results.
 
 <br><br>
-Bibliogrphy:<br>
+
+<div class="bibliography">
+Bibliography:<br>
 
 - Functional Programming in JavaScript . Ed: MANNING SHELTER ISLAND. Author: Luis Atencio.<br>
-- [Mostly Adequate Guide to functional programming](https://drboolean.gitbooks
-  .io/mostly-adequate-guide-old/content/).
+- [Mostly Adequate Guide to functional programming](https://drboolean.gitbooks.io/mostly-adequate-guide-old/content/).
   Professor Frisby's<br>
 - [Building a declarative app using Functional javaScript](https://www.packtpub.com/web-development/building-declarative-apps-using-functional-javascript-video).
   Michael Rosata
+  </div>

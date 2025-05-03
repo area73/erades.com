@@ -8,13 +8,8 @@ draft: false
 heroImage: "/blog-placeholder-15.jpg"
 ---
 
-# Functors
-
-<blockquote>
-Functor is simply an interface with a contract.
-<br>We could have just as easily named it Mappable, but now, where's the fun in that?.
-<br><i>Professor Frisby's</i>
-</blockquote>
+> **Functor is simply an interface with a contract.**<br>
+> We could have just as easily named it Mappable, but now, where's the fun in that?.<br> > _Professor Frisby's_
 
 A functor is nothing more than a data structure that you can map functions with the purpose of
 lifting values intro a wrapper, modifying them, and then putting them back into a wrapper.
@@ -174,11 +169,10 @@ An finally we can say then that an object will be a functor if it fulfills these
 **4) can be composable**<br><br>
 
 <hr>
+<div class="bibliography">
+Bibliogrphy:<br><br>
 
-<br><br>
-Bibliogrphy:<br>
-
-- Functional Programming in JavaScript . Ed: MANNING SHELTER ISLAND. Author: Luis Atencio.<br>
-- [Mostly Adequate Guide to functional programming](https://drboolean.gitbooks
-  .io/mostly-adequate-guide-old/content/).
-  Professor Frisby's<br>
+- Functional Programming in JavaScript . Ed: MANNING SHELTER ISLAND. Author: Luis Atencio.
+- [Mostly Adequate Guide to functional programming](https://drboolean.gitbooks.io/mostly-adequate-guide-old/content/).
+Professor Frisby's<br>
+</div>

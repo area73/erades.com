@@ -8,12 +8,10 @@ draft: false
 heroImage: "/blog-placeholder-12.jpg"
 ---
 
-# functional programming
+In computer science, functional programming is a programming paradigm — a style of building the structure and elements of computer programs— that treats computation as the **evaluation of mathematical functions and avoids changing-state and mutable data**.
 
-In computer science, functional programming is a programming paradigm — a style of building the structure and elements of computer programs— that treats computation as the <b>evaluation of mathematical functions and avoids changing-state and mutable data</b>.
-
-It is a <b>declarative</b> programming paradigm, which means programming is done with expressions or declarations instead of statements. To put it in a diferent way we can say that
-<b>declarative programming cares about what</b> to perform an action and imperative cares about how to perform that action
+It is a **declarative** programming paradigm, which means programming is done with expressions or declarations instead of statements. To put it in a diferent way we can say that
+**declarative programming cares about what** to perform an action and imperative cares about how to perform that action
 
 ## Declarative Vs. Imperative || What Vs. How
 
@@ -21,7 +19,7 @@ In functional code, the output value of a function depends only on the arguments
 
 In contrast, imperative programming changes state with commands in the source code, the simplest example being assignment. Imperative programming does have functions—not in the mathematical sense—but in the sense of subroutines. They can have side effects that may change the value of program state. Functions without return values therefore make sense. Because of this, they lack referential transparency, i.e., the same language expression can result in different values at different times depending on the state of the executing program.
 
-<b>IMPERATIVE </b>
+**IMPERATIVE**
 
 ```javascript
 for (var i = 0; i < users.length; i++) {
@@ -29,7 +27,7 @@ for (var i = 0; i < users.length; i++) {
 }
 ```
 
-<b>DECLARATIVE</b>
+**DECLARATIVE**
 
 ```javascript
 users.mnap((u) => {
@@ -86,7 +84,7 @@ Exercise: For a given array of numer we what to:
 
 Solution:
 
-<b>IMPERATIVE</b>
+**IMPERATIVE**
 
 ```javascript
 // given array
@@ -103,7 +101,7 @@ for (let i = 0; i < numbers.length; i++) {
 console.log(sum); // sum = 30;
 ```
 
-<b>DECLARATIVE</b>
+**DECLARATIVE**
 
 ```javascript
 // given array
@@ -203,8 +201,10 @@ const weightsInKg = weightsInPounds.map(poundsToKg);
 
 Supplying less arguments than required
 
-Bibliography:<br>
+<div class="bibliography">
+Bibliography:
 
 - Wikipedia: https://en.wikipedia.org/wiki/Functional_programming <br>
 - Pluralsite video: [(Fundamentals of Functional Programming in JavaScript by Nate Taylor)](https://app.pluralsight.com/library/courses/javascript-functional-programming-fundamentals/exercise-files)<br>
 - w3School: [JavaScript Array Reference](https://www.w3schools.com/jsref/jsref_obj_array.asp)
+</div>

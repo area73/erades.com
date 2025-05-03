@@ -2,7 +2,7 @@
 title: "Mixins"
 description: "Understanding mixins in JavaScript as a solution for multi-inheritance, including delegation, concatenative, and functional inheritance patterns"
 pubDate: "2018-11-18"
-tags: ["design patterns", "mixins", "functional mixins", "hinerance"]
+tags: ["design patterns", "mixins", "functional mixins", "inherence"]
 categories: ["design patterns"]
 draft: false
 heroImage: "/blog-placeholder-7.jpg"
@@ -62,7 +62,7 @@ var cheese = new Food("feta", 5);
 var fun = new Toy("robot", 40);
 ```
 
-<a href="{{< ref "testing-protoype-inheritance.md" >}}" target="\_blank">This is another "tricky"
+<a href="../testing-protoype-inheritance/" target="_self">This is another "tricky"
 example </a>
 
 ## Concatenative

@@ -16,8 +16,133 @@
   color: #333;
 }
 
+:root .expressive-code .frame {
+  margin: 1.2em;
+}
+
 /* Apply to all elements to override potential :host styles */
 * {
   font-family: inherit;
   /*font-weight: inherit;*/
 }
+
+a {
+  color: #c7254e;
+}
+
+a:hover {
+  color: #e05a7a;
+}
+
+.bibliography {
+  background-color: antiquewhite;
+  padding: 1.2em;
+}
+
+@layer base {
+  html {
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: var(--text-4xl);
+  }
+  h2 {
+    font-size: var(--text-3xl);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  h3 {
+    font-size: var(--text-2xl);
+  }
+  h4 {
+    font-size: var(--text-xl);
+  }
+
+  pre,
+  ul,
+  p {
+    margin-bottom: 1.2em;
+  }
+  pre {
+    padding: 2em;
+  }
+  code {
+    padding: 6px;
+    color: #c7254e;
+    border-radius: 4px;
+    background-color: #f9f2f4;
+  }
+  ul {
+    padding-left: 2em;
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+}
+
+/* Stylish blockquote for quotes */
+blockquote {
+  background: #f9f9fb;
+  border-left: 5px solid #c7254e;
+  margin: 2em 0;
+  padding: 1.2em 2em 1.2em 1.5em;
+  font-size: 1.15em;
+  font-style: italic;
+  color: #444;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 8px 0 rgba(199, 37, 78, 0.04);
+  position: relative;
+}
+blockquote::before {
+  content: "\201C";
+  color: #c7254e;
+  font-size: 2.5em;
+  position: absolute;
+  left: 12px;
+  top: 0.1em;
+  line-height: 1;
+  opacity: 0.2;
+}
+blockquote p {
+  display: inline;
+}
+
+/* Stylish horizontal rule */
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, #c7254e 0%, #e05a7a 100%);
+  border-radius: 1em;
+  margin: 3em 0;
+  opacity: 0.5;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Enable view transitions for the whole document */
+/*
+html {
+  view-transition-name: root;
+}
+*/
+/* Optional: Animate opacity for all view transitions */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Example for a specific element */
+/*
+.transition-main {
+  view-transition-name: transition-main;
+}
+
+::view-transition-old(transition-main),
+::view-transition-new(transition-main) {
+  animation: fade 1.5s;
+}
+*/

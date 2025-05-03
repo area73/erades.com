@@ -28,5 +28,9 @@ console.log(foo); // foo1
 
 We use IIFE in order to not pollute the global scope.
 
-Bibliography: <br/ >
-Ben Alman: [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/)
+<div class="bibliography">
+Bibliography: <br/><br/>
+
+- Ben Alman: [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/)
+
+</div>

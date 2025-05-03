@@ -16,8 +16,6 @@ draft: true
 heroImage: "/blog-placeholder-16.jpg"
 ---
 
-# Transducers
-
 The primary goal of transducers is to run a pipeline of transformations of an input stream of
 values **without creating intermediate values**. The functions describing computations are
 decoupled, so this makes program design cleaner and easier to develop and maintain.
@@ -33,8 +31,8 @@ Transducers can:
 
 There are two strategies:
 
-- Pull: lazy evaluation
-- Push: eager evaluation
+- **Pull:** lazy evaluation
+- **Push:** eager evaluation
 
 **Pull** waits until a consumer asks for the next value (for example an Iterable)
 
@@ -99,14 +97,15 @@ transform(autobots);
 ```
 
 We get the same exact result (in this situation), but something very different and very powerful
-is happening under the hood. **In the first example, the entire list was transformed at each step
-**. This means that we had to iterate over the list three times. However, **in the second example**
+is happening under the hood. **In the first example, the entire list was transformed at each step**.<br>
+This means that we had to iterate over the list three times. However, **in the second example**
 where we used the transducer, **we only had to iterate over the list once!**
 
-<br><br>
-Bibliogrphy:<br>
+<div class="bibliography">
+Bibliogrphy:<br><br>
 
 - [effectfulJS](https://github.com/awto/effectfuljs/tree/master/packages/transducers)
 - [Understanding Transducers in JavaScript](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624)
 - [MAGICAL, MYSTICAL JAVASCRIPT TRANSDUCERS](https://jrsinclair.com/articles/2019/magical-mystical-js-transducers/)
 - [Transducers: Efficient Data Processing Pipelines in JavaScript](https://medium.com/javascript-scene/transducers-efficient-data-processing-pipelines-in-javascript-7985330fe73d).
+</div>
