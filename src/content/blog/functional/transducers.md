@@ -11,7 +11,7 @@ tags:
     "functors",
     "transducers",
   ]
-categories: ["Functional"]
+categories: ["functional"]
 draft: true
 heroImage: "/blog-placeholder-16.jpg"
 ---

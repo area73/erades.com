@@ -3,7 +3,7 @@ title: "functional programming"
 description: "An introduction to functional programming concepts including declarative programming, pure functions, immutability, and currying"
 pubDate: "2018-01-12"
 tags: ["declarative", "Pure functions", "Inmutable", "currying"]
-categories: ["Functional"]
+categories: ["functional"]
 draft: false
 heroImage: "/blog-placeholder-12.jpg"
 ---

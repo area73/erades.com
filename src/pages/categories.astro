@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "../layouts/BlogPost.astro";
+
+const posts = (await getCollection("blog"))
+const categories = posts.map((post) => post.data.categories).flat();
+const uniqueCategories = [...new Set(categories)];
+
+
+---
+
+<Layout
+  title="Post Categories"
+  description="These are the post by categories"
+  pubDate={new Date("August 08 2021")}
+  tags={[]}
+  categories={["astro", "blogging", "community"]}
+  draft={false}
+  heroImage="/blog-placeholder-about.jpg"
+>
+
+<section>
+
+
+    {uniqueCategories.map((category) =>
+      <h2>{category}</h2>
+      <ul>
+        {posts
+          .filter(post => post.data.categories.includes(category))
+          .map((post, i) => <li><a href={`/blog/${post.id}/`} class="block group">{post.data.title}</a></li>)}
+      </ul>
+    )}
+
+  </section>
+</Layout>
