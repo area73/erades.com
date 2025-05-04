@@ -3,7 +3,7 @@ title: "combinators"
 description: "Understanding combinators in functional programming as higher-order pure functions for composing and controlling program flow"
 pubDate: "2019-01-10"
 tags: ["declarative", "Pure functions", "Inmutable", "currying", "combinator"]
-categories: ["Functional"]
+categories: ["functional"]
 draft: false
 heroImage: "/blog-placeholder-10.jpg"
 ---

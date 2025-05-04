@@ -4,7 +4,7 @@ description: "Understanding Hindley-Milner type notation in functional programmi
 pubDate: "2019-04-11"
 tags:
   ["declarative", "Pure functions", "Inmutable", "currying", "Hindley-Milner"]
-categories: ["Functional"]
+categories: ["functional"]
 draft: false
 heroImage: "/blog-placeholder-13.jpg"
 ---
