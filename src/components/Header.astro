@@ -55,5 +55,18 @@ import { SITE_TITLE } from "../consts";
         </svg>
       </a>
     </div>
+    <form action="/search" method="get" class="ml-4 flex items-center">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search posts..."
+        class="border rounded px-2 py-1 text-sm"
+        aria-label="Search posts"
+        required
+      />
+      <button type="submit" class="ml-2 px-2 py-1 bg-accent text-white rounded"
+        >Search</button
+      >
+    </form>
   </nav>
 </header>

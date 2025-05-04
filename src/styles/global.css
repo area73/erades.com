@@ -1,9 +1,27 @@
+/*
 @font-face {
   font-family: "Raleway";
   src: url("/fonts/Raleway-Regular.woff2") format("woff2");
   font-weight: 100;
   font-display: swap;
 }
+*/
+@font-face {
+  font-family: "Raleway";
+  font-stretch: normal; /* Note that font-stretch is a % of normal width */
+  font-style: normal; /* See note below */
+  font-weight: 100 300 400 600 800;
+  src: url("/fonts/Raleway-VariableFont_wght.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Raleway";
+  font-stretch: normal; /* Note that font-stretch is a % of normal width */
+  font-style: italic; /* See note below */
+  font-weight: 100 300 400 600 800;
+  src: url("/fonts/Raleway-Italic-VariableFont_wght.ttf") format("ttf");
+}
+
 @import "tailwindcss";
 /*
 @import "tailwindcss/preflight";

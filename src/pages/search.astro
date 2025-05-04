@@ -1,0 +1,67 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+
+const { searchParams } = new URL(Astro.request.url);
+const query = searchParams.get("q")?.toLowerCase() ?? "";
+
+const posts = (await getCollection("blog")).filter((post) => {
+  const title = post.data.title?.toLowerCase() ?? "";
+  const description = post.data.description?.toLowerCase() ?? "";
+  const tags = (post.data.tags ?? []).join(" ").toLowerCase();
+  return (
+    title.includes(query) || description.includes(query) || tags.includes(query)
+  );
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`Search: ${query} | ${SITE_TITLE}`}
+      description={SITE_DESCRIPTION}
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="max-w-[1200px] mx-auto pt-8 transition-main">
+      <section>
+        <h1 class="text-2xl mb-4">
+          Search results for: <span class="font-mono">{query}</span>
+        </h1>
+        {
+          posts.length === 0 ? (
+            <p>No posts found matching your search.</p>
+          ) : (
+            <ul class="grid grid-cols-3 gap-8 sm:gap-2 list-none m-0 p-0">
+              {posts.map((post) => (
+                <li>
+                  <a href={`/blog/${post.id}/`} class="block group">
+                    <img
+                      width="100%"
+                      src={post.data.heroImage}
+                      alt=""
+                      class="mb-2 rounded-xl group-hover:shadow-lg transition-all"
+                    />
+                    <h4 class="m-0 text-black leading-none group-hover:text-accent">
+                      {post.data.title}
+                    </h4>
+                    <p class="m-0  group-hover:text-accent">
+                      <FormattedDate date={post.data.pubDate} />
+                    </p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
