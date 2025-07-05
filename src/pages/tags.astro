@@ -1,31 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/BlogPost.astro";
+import { getTagCounts, getSortedTags, getFontSize } from "./tags/tag-utils";
 
 const posts = await getCollection("blog");
-const tagCounts = posts
-  .map((post) => post.data.tags || [])
-  .flat()
-  .reduce(
-    (acc, tag) => {
-      acc[tag] = (acc[tag] || 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
-const uniqueTags = Object.keys(tagCounts).sort(
-  (a, b) => tagCounts[b] - tagCounts[a]
-);
+const tagCounts = getTagCounts(posts);
+const uniqueTags = getSortedTags(tagCounts);
 const minCount = Math.min(...Object.values(tagCounts));
 const maxCount = Math.max(...Object.values(tagCounts));
-
-// Map tag count to font size (between 1em and 2.5em)
-const getFontSize = (count: number): string => {
-  if (maxCount === minCount) return "1.5em";
-  const minFont = 1;
-  const maxFont = 2.5;
-  return `${minFont + ((count - minCount) / (maxCount - minCount)) * (maxFont - minFont)}em`;
-};
 ---
 
 <Layout
@@ -43,7 +25,7 @@ const getFontSize = (count: number): string => {
         uniqueTags.map((tag: string) => (
           <a
             href={`/tags/${encodeURIComponent(tag)}/`}
-            style={`font-size: ${getFontSize(tagCounts[tag])};`}
+            style={`font-size: ${getFontSize(tagCounts[tag], minCount, maxCount)};`}
             class="font-semibold text-gray-700 hover:text-accent transition-all"
           >
             {tag} ({tagCounts[tag]})

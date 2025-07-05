@@ -21,6 +21,19 @@ export default defineConfig({
     sitemap(),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      {
+        name: "exclude-public-test-files",
+        generateBundle(_, bundle) {
+          for (const file in bundle) {
+            if (file.startsWith("public/") && file.endsWith(".test.js")) {
+              delete bundle[file];
+            }
+          }
+        },
+        apply: "build",
+      },
+    ],
   },
 });
