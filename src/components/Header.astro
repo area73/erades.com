@@ -1,6 +1,10 @@
 ---
+// @ts-expect-error TS7016: React 19 types are built-in, ignore missing declaration error
+import { useState } from "react";
+import { SearchInput } from "./SearchInput";
 import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
+import HeaderSearchBox from "./HeaderSearchBox.tsx";
 ---
 
 <header class="m-0 px-4 py-8 bg-white shadow-md sticky top-0 z-50">
@@ -56,18 +60,8 @@ import { SITE_TITLE } from "../consts";
         </svg>
       </a>
     </div>
-    <form action="/search" method="get" class="ml-4 flex items-center">
-      <input
-        type="text"
-        name="q"
-        placeholder="Search posts..."
-        class="border rounded px-2 py-1 text-sm"
-        aria-label="Search posts"
-        required
-      />
-      <button type="submit" class="ml-2 px-2 py-1 bg-accent text-white rounded"
-        >Search</button
-      >
-    </form>
+    <div class="ml-4">
+      <HeaderSearchBox client:only="react" />
+    </div>
   </nav>
 </header>
