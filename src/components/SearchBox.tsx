@@ -71,7 +71,7 @@ export default function SearchBox({ query }: SearchBoxProps) {
                     className="mb-2 rounded-xl group-hover:shadow-lg transition-all"
                   />
                 )}
-                <h4 className="m-0 text-black leading-none group-hover:text-accent">
+                <h4 className="m-0 text-foreground leading-none group-hover:text-accent">
                   {fullDoc.title}
                 </h4>
                 <p className="m-0 group-hover:text-accent">

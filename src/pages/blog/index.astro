@@ -15,7 +15,7 @@ const posts = (await getCollection("blog")).sort(
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body>
+  <body class="bg-background text-foreground min-h-screen">
     <Header />
     <main class="max-w-[1200px] mx-auto pt-8 transition-main">
       <section>
@@ -30,7 +30,7 @@ const posts = (await getCollection("blog")).sort(
                     alt=""
                     class="mb-2 rounded-xl group-hover:shadow-lg transition-all"
                   />
-                  <h4 class="m-0 text-black leading-none group-hover:text-accent">
+                  <h4 class="m-0 text-foreground leading-none group-hover:text-accent">
                     {post.data.title}
                   </h4>
                   <p class="m-0  group-hover:text-accent">

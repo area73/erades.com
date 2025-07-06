@@ -22,7 +22,7 @@ const {
     <BaseHead title={title} description={description} />
   </head>
 
-  <body>
+  <body class="bg-background text-foreground min-h-screen">
     <Header />
     <main class="max-w-[1200px] mx-auto pt-8 w-[calc(100%-2em)]">
       <article>
@@ -56,7 +56,7 @@ const {
             <div class="flex flex-wrap gap-2 justify-end -mt-8">
               {
                 tags.map((tag) => (
-                  <span class="bg-gray-200 px-2 py-1 rounded-full">{tag}</span>
+                  <span class="bg-muted px-2 py-1 rounded-full">{tag}</span>
                 ))
               }
             </div>
