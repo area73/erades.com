@@ -160,7 +160,7 @@ html.dark {
   --secondary-foreground: hsl(215 20% 95%);
 
   --muted: hsl(215 28% 12%);
-  --muted-foreground: hsl(215 20% 95%);
+  --muted-foreground: hsl(144, 20%, 95%);
 
   --accent: hsl(215 28% 14%);
   --accent-foreground: hsl(214 84% 60%);
