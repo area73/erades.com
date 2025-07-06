@@ -79,7 +79,7 @@ export default {
         warning: "hsl(var(--warning))",
         "warning-foreground": "hsl(var(--warning-foreground))",
         muted: "hsl(var(--muted))",
-        "muted-foreground": "hsl(var(--muted-foreground))",
+        "muted-foreground": "var(--muted-foreground)",
         accent: "hsl(var(--accent))",
         "accent-foreground": "hsl(var(--accent-foreground))",
         popover: "hsl(var(--popover))",

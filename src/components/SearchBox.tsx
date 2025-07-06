@@ -7,6 +7,11 @@ type Doc = {
   title: string;
   description: string;
   heroImage?: string;
+  date?: string;
+  author?: string;
+  readTime?: string;
+  category?: string;
+  tags?: string[];
 };
 
 type SearchBoxProps = {
@@ -17,6 +22,7 @@ export default function SearchBox({ query }: SearchBoxProps) {
   const [results, setResults] = useState<any[]>([]);
   const [index, setIndex] = useState<any>(null);
   const [docs, setDocs] = useState<Doc[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
     fetch("/search-index.json")
@@ -52,36 +58,223 @@ export default function SearchBox({ query }: SearchBoxProps) {
     new Set(results.flatMap((doc: { result: string[] }) => doc.result))
   );
 
+  // Filtra los docs según la categoría seleccionada
+  const filteredDocs = uniquePaths
+    .map((path) => docs.find((d: Doc) => d.path === path))
+    .filter(Boolean)
+    .filter(
+      (doc: Doc) =>
+        selectedCategory === "all" ||
+        ((doc as any).categories &&
+          Array.isArray((doc as any).categories) &&
+          (doc as any).categories.includes(selectedCategory))
+    );
+
+  // Extrae las categorías únicas de los resultados actuales
+  const categories = Array.from(
+    new Set(
+      uniquePaths
+        .map((path) => {
+          const doc = docs.find((d: Doc) => d.path === path);
+          return doc && Array.isArray((doc as any).categories)
+            ? (doc as any).categories
+            : [];
+        })
+        .flat()
+        .filter(Boolean)
+    )
+  );
+
   return (
-    <ul className="grid grid-cols-3 gap-8 sm:gap-2 list-none m-0 p-0">
-      {uniquePaths.length === 0 && query ? (
-        <p>No posts found matching your search.</p>
-      ) : (
-        uniquePaths.map((path) => {
-          const fullDoc = docs.find((d: Doc) => d.path === path);
-          if (!fullDoc) return null;
-          return (
-            <li key={fullDoc.path}>
-              <a href={fullDoc.path} className="block group">
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      {/* Cabecera de resultados */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Resultados de búsqueda
+        </h1>
+        {query && (
+          <p className="text-muted-foreground">
+            Mostrando {filteredDocs.length} resultados para "{query}"
+          </p>
+        )}
+      </div>
+      {/* Filtros de categoría */}
+      <div className="flex flex-wrap gap-2 mb-8 items-center">
+        <svg
+          className="h-4 w-4 text-muted-foreground mr-2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <polygon points="22 3 2 3 10 13 10 19 14 21 14 13 22 3" />
+        </svg>
+        <span className="text-base text-muted-foreground mr-2 font-[Inter]">
+          Filtrar por categoría:
+        </span>
+        <button
+          className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors duration-150 ${
+            selectedCategory === "all"
+              ? "bg-primary text-primary-foreground border-primary"
+              : "bg-muted text-muted-foreground border-border hover:bg-primary/10"
+          }`}
+          onClick={() => setSelectedCategory("all")}
+        >
+          Todas
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors duration-150 ${
+              selectedCategory === cat
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-muted text-muted-foreground border-border hover:bg-primary/10"
+            }`}
+            onClick={() => setSelectedCategory(cat as string)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Resultados */}
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
+        {filteredDocs.length === 0 && query ? (
+          <li className="col-span-full text-center py-12">
+            <svg
+              className="mx-auto mb-4 text-muted-foreground"
+              width="48"
+              height="48"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+              No se encontraron resultados
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Intenta con otros términos de búsqueda o cambia los filtros.
+            </p>
+            <button
+              className="px-4 py-2 rounded-md border border-border bg-muted text-muted-foreground hover:bg-primary/10 transition"
+              onClick={() => setSelectedCategory("all")}
+            >
+              Ver todos los posts
+            </button>
+          </li>
+        ) : (
+          filteredDocs.map((fullDoc: any) => (
+            <li
+              key={fullDoc.path}
+              className="bg-card rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden"
+            >
+              <a href={fullDoc.path} className="block group p-6 h-full">
                 {fullDoc.heroImage && (
                   <img
                     width="100%"
                     src={fullDoc.heroImage}
                     alt=""
-                    className="mb-2 rounded-xl group-hover:shadow-lg transition-all"
+                    className="mb-2 rounded-xl group-hover:shadow-lg transition-all aspect-video object-cover"
                   />
                 )}
-                <h4 className="m-0 text-foreground leading-none group-hover:text-accent">
-                  {fullDoc.title}
-                </h4>
-                <p className="m-0 group-hover:text-accent">
-                  {fullDoc.description}
-                </p>
+                <div className="flex flex-col h-full">
+                  {/* Metadatos superiores */}
+                  <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-muted-foreground">
+                    {fullDoc.date && (
+                      <span className="flex items-center gap-1">
+                        <svg
+                          className="h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 6v6l4 2" />
+                        </svg>
+                        {fullDoc.date}
+                      </span>
+                    )}
+                    {fullDoc.author && (
+                      <span className="flex items-center gap-1">
+                        <svg
+                          className="h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle cx="12" cy="7" r="4" />
+                          <path d="M5.5 21a8.38 8.38 0 0 1 13 0" />
+                        </svg>
+                        {fullDoc.author}
+                      </span>
+                    )}
+                    {fullDoc.readTime && (
+                      <span className="flex items-center gap-1">
+                        <svg
+                          className="h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 6v6l4 2" />
+                        </svg>
+                        {fullDoc.readTime}
+                      </span>
+                    )}
+                    {fullDoc.category && (
+                      <span className="inline-block px-2 py-0.5 rounded bg-secondary text-secondary-foreground font-semibold">
+                        {fullDoc.category}
+                      </span>
+                    )}
+                  </div>
+                  {/* Título y extracto */}
+                  <div className="flex-1 mb-4">
+                    <h4 className="m-0 text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-200 mb-1">
+                      {fullDoc.title}
+                    </h4>
+                    <p className="m-0 text-muted-foreground line-clamp-2">
+                      {fullDoc.description}
+                    </p>
+                  </div>
+                  {/* Tags */}
+                  {fullDoc.tags &&
+                    Array.isArray(fullDoc.tags) &&
+                    fullDoc.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        {fullDoc.tags.map((tag: string) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground border border-border"
+                          >
+                            <svg
+                              className="h-3 w-3 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <path d="M7 12l5 5 5-5" />
+                            </svg>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                </div>
               </a>
             </li>
-          );
-        })
-      )}
-    </ul>
+          ))
+        )}
+      </ul>
+    </div>
   );
 }
