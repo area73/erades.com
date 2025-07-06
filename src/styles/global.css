@@ -1,11 +1,5 @@
-/*
-@font-face {
-  font-family: "Raleway";
-  src: url("/fonts/Raleway-Regular.woff2") format("woff2");
-  font-weight: 100;
-  font-display: swap;
-}
-*/
+@import "tailwindcss";
+
 @font-face {
   font-family: "Raleway";
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
@@ -22,131 +16,16 @@
   src: url("/fonts/Raleway-Italic-VariableFont_wght.ttf") format("ttf");
 }
 
-@import "tailwindcss";
-/*
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-*/
-
 :root {
   font-family: Raleway, system-ui, sans-serif !important;
   font-weight: 200;
   color: #333;
-  --border: 231, 234, 238;
-}
-
-:root .expressive-code .frame {
-  margin: 1.2em;
-}
-
-/* Apply to all elements to override potential :host styles */
-* {
-  font-family: inherit;
-  /*font-weight: inherit;*/
-}
-
-a {
-  color: #c7254e;
-}
-
-a:hover {
-  color: #e05a7a;
-}
-
-.bibliography {
-  background-color: antiquewhite;
-  padding: 1.2em;
-}
-
-@layer base {
-  html {
-    line-height: 1.6;
-  }
-  h1 {
-    font-size: var(--text-4xl);
-  }
-  h2 {
-    font-size: var(--text-3xl);
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-  }
-  h3 {
-    font-size: var(--text-2xl);
-  }
-  h4 {
-    font-size: var(--text-xl);
-  }
-
-  pre,
-  ul,
-  p {
-    margin-bottom: 1.2em;
-  }
-  pre {
-    padding: 2em;
-  }
-  code {
-    padding: 6px;
-    color: #c7254e;
-    border-radius: 4px;
-    background-color: #f9f2f4;
-  }
-  ul {
-    padding-left: 2em;
-    list-style-type: disc;
-  }
-  ol {
-    list-style-type: decimal;
-  }
-}
-
-/* Stylish blockquote for quotes */
-blockquote {
-  background: #f9f9fb;
-  border-left: 5px solid #c7254e;
-  margin: 2em 0;
-  padding: 1.2em 2em 1.2em 1.5em;
-  font-size: 1.15em;
-  font-style: italic;
-  color: #444;
-  border-radius: 0 8px 8px 0;
-  box-shadow: 0 2px 8px 0 rgba(199, 37, 78, 0.04);
-  position: relative;
-}
-blockquote::before {
-  content: "\201C";
-  color: #c7254e;
-  font-size: 2.5em;
-  position: absolute;
-  left: 12px;
-  top: 0.1em;
-  line-height: 1;
-  opacity: 0.2;
-}
-blockquote p {
-  display: inline;
-}
-
-/* Stylish horizontal rule */
-hr {
-  border: none;
-  height: 2px;
-  background: linear-gradient(90deg, #c7254e 0%, #e05a7a 100%);
-  border-radius: 1em;
-  margin: 3em 0;
-  opacity: 0.5;
 }
 
 @view-transition {
   navigation: auto;
 }
 
-/* Enable view transitions for the whole document */
-/*
-html {
-  view-transition-name: root;
-}
-*/
 /* Optional: Animate opacity for all view transitions */
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -154,14 +33,150 @@ html {
   animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Example for a specific element */
-/*
-.transition-main {
-  view-transition-name: transition-main;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: hsl(var(--border));
+  }
 
-::view-transition-old(transition-main),
-::view-transition-new(transition-main) {
-  animation: fade 1.5s;
+  :root {
+    /* Colores base - paleta moderna y sofisticada */
+    --background: 0 0% 99%;
+    --foreground: 215 25% 15%;
+
+    /* Superficie y tarjetas con sutiles variaciones */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Azul elegante como primario */
+    --primary: 214 84% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 214 84% 50%;
+
+    /* Gris sofisticado para secundario */
+    --secondary: 215 16% 95%;
+    --secondary-foreground: 215 25% 15%;
+
+    /* Grises neutros y elegantes */
+    --muted: 215 16% 96%;
+    --muted-foreground: 215 14% 45%;
+
+    --accent: 214 100% 96%;
+    --accent-foreground: 214 84% 56%;
+
+    /* Estados y alertas */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Bordes y inputs con más definición */
+    --border: 215 16% 92%;
+    --input: 215 16% 94%;
+    --ring: 214 84% 56%;
+
+    /* Header específico */
+    --header-background: 0 0% 100%/95%;
+    --header-border: 215 16% 90%;
+
+    /* Gradientes elegantes */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(214 84% 56%),
+      hsl(214 84% 65%)
+    );
+    --gradient-surface: linear-gradient(
+      180deg,
+      hsl(0 0% 100%),
+      hsl(215 16% 98%)
+    );
+    --gradient-header: linear-gradient(
+      180deg,
+      hsl(0 0% 100%/98%),
+      hsl(0 0% 100%/90%)
+    );
+
+    /* Sombras sofisticadas */
+    --shadow-soft: 0 2px 8px hsl(215 25% 15%/0.06);
+    --shadow-medium: 0 4px 20px hsl(215 25% 15%/0.12);
+    --shadow-large: 0 8px 40px hsl(215 25% 15%/0.15);
+
+    /* Espaciado del sistema */
+    --radius: 0.75rem;
+    --radius-sm: 0.5rem;
+    --radius-lg: 1rem;
+
+    /* Transiciones suaves */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Modo oscuro elegante */
+    --background: 215 28% 8%;
+    --foreground: 215 20% 95%;
+
+    --card: 215 28% 10%;
+    --card-foreground: 215 20% 95%;
+
+    --popover: 215 28% 10%;
+    --popover-foreground: 215 20% 95%;
+
+    --primary: 214 84% 60%;
+    --primary-foreground: 215 28% 8%;
+    --primary-hover: 214 84% 65%;
+
+    --secondary: 215 28% 14%;
+    --secondary-foreground: 215 20% 95%;
+
+    --muted: 215 28% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 215 28% 14%;
+    --accent-foreground: 214 84% 60%;
+
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 215 28% 8%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 215 28% 8%;
+
+    --warning: 38 85% 60%;
+    --warning-foreground: 215 28% 8%;
+
+    --border: 215 28% 16%;
+    --input: 215 28% 14%;
+    --ring: 214 84% 60%;
+
+    --header-background: 215 28% 10%/95%;
+    --header-border: 215 28% 18%;
+
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(214 84% 60%),
+      hsl(214 84% 70%)
+    );
+    --gradient-surface: linear-gradient(
+      180deg,
+      hsl(215 28% 10%),
+      hsl(215 28% 8%)
+    );
+    --gradient-header: linear-gradient(
+      180deg,
+      hsl(215 28% 10%/98%),
+      hsl(215 28% 10%/90%)
+    );
+
+    --shadow-soft: 0 2px 8px hsl(215 28% 0%/0.3);
+    --shadow-medium: 0 4px 20px hsl(215 28% 0%/0.4);
+    --shadow-large: 0 8px 40px hsl(215 28% 0%/0.5);
+  }
 }
-*/

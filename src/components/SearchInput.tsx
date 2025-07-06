@@ -35,7 +35,7 @@ export function SearchInput({ query, onQueryChange }: SearchInputProps) {
       <input
         type="text"
         placeholder="Buscar en el blog..."
-        className="pl-10 pr-4 h-11 w-full rounded-md border border-border bg-background/80 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
+        className="pl-10 pr-4 h-11 w-full rounded-md border bg-background/80 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
         autoFocus
         value={query}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
