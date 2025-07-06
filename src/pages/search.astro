@@ -1,9 +1,9 @@
 ---
-import SearchBox from "../components/SearchBox.tsx";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import SearchPageWrapper from "../components/SearchPageWrapper.tsx";
 ---
 
 <!doctype html>
@@ -16,7 +16,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
     <main class="max-w-[1200px] mx-auto pt-8 transition-main">
       <section>
         <h1 class="text-2xl mb-4">Search</h1>
-        <SearchBox client:load />
+        <SearchPageWrapper client:only="react" />
       </section>
     </main>
     <Footer />
