@@ -2,6 +2,13 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featured = posts.slice(0, 3);
 ---
 
 <!doctype html>
@@ -11,47 +18,86 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
   </head>
   <body class="bg-background text-foreground min-h-screen">
     <Header />
-    <main class="max-w-[1200px] mx-auto pt-8 transition-main">
-      <h1>🧑‍🚀 Hello, Astronaut!</h1>
-      <p>
-        Welcome to the official <a href="https://astro.build/">Astro</a> blog starter
-        template. This template serves as a lightweight, minimally-styled starting
-        point for anyone looking to build a personal website, blog, or portfolio
-        with Astro.
-      </p>
-      <p>
-        This template comes with a few integrations already configured in your
-        <code>astro.config.mjs</code> file. You can customize your setup with
-        <a href="https://astro.build/integrations">Astro Integrations</a> to add
-        tools like Tailwind, React, or Vue to your project.
-      </p>
-      <p>Here are a few ideas on how to get started with the template:</p>
-      <ul>
-        <li>Edit this page in <code>src/pages/index.astro</code></li>
-        <li>
-          Edit the site header items in <code>src/components/Header.astro</code>
-        </li>
-        <li>
-          Check out the included blog posts in <code>src/content/blog/</code>
-        </li>
-        <li>
-          Customize the blog post page layout in <code
-            >src/layouts/BlogPost.astro</code
+    <main class="container mx-auto px-4 py-12">
+      <div class="max-w-4xl mx-auto">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+          <h1
+            class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
           >
-        </li>
-      </ul>
-      <p>
-        Have fun! If you get stuck, remember to
-        <a href="https://docs.astro.build/">read the docs</a>
-        or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-      </p>
-      <p>
-        Looking for a blog template with a bit more personality? Check out
-        <a href="https://github.com/Charca/astro-blog-template"
-          >astro-blog-template</a
-        >
-        by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-      </p>
+            Bienvenido a {SITE_TITLE}
+          </h1>
+          <p
+            class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+          >
+            Un espacio donde comparto ideas, conocimientos y experiencias sobre
+            tecnología, desarrollo y diseño moderno.
+          </p>
+        </div>
+
+        <!-- Featured Content -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {
+            featured.map((post) => (
+              <a href={`/blog/${post.id}/`} class="block">
+                <div class="bg-card rounded-lg shadow-soft p-6 hover:shadow-medium transition-shadow duration-300 h-full">
+                  <div class="h-48 bg-gradient-primary rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                    {post.data.heroImage ? (
+                      <img
+                        src={post.data.heroImage}
+                        alt=""
+                        class="object-cover w-full h-full rounded-lg"
+                      />
+                    ) : (
+                      <span class="text-primary-foreground font-medium">
+                        {SITE_TITLE}
+                      </span>
+                    )}
+                  </div>
+                  <h3 class="font-serif text-xl font-semibold text-card-foreground mb-3 hover:text-primary transition-colors">
+                    {post.data.title}
+                  </h3>
+                  <p class="text-muted-foreground mb-4 line-clamp-3">
+                    {post.data.description}
+                  </p>
+                  <div class="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>
+                      {Math.max(
+                        1,
+                        Math.round((post.body?.length || 500) / 250)
+                      )}{" "}
+                      min de lectura
+                    </span>
+                    <span>
+                      <FormattedDate date={post.data.pubDate} />
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-16">
+          <div class="bg-card rounded-xl p-8 shadow-medium">
+            <h2
+              class="font-serif text-2xl font-semibold text-card-foreground mb-4"
+            >
+              ¿Listo para explorar?
+            </h2>
+            <p class="text-muted-foreground mb-6">
+              Descubre todos los artículos y encuentra contenido que te inspire.
+            </p>
+            <a
+              href="/blog"
+              class="bg-gradient-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 inline-block"
+            >
+              Ver Todos los Posts
+            </a>
+          </div>
+        </div>
+      </div>
     </main>
   </body>
 </html>
