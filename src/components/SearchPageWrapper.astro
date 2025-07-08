@@ -1,0 +1,21 @@
+---
+// Get the query parameter from the URL
+const query = Astro.url.searchParams.get("q") || "";
+---
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-foreground mb-2">
+      Resultados de búsqueda
+    </h1>
+    <p class="text-muted-foreground">
+      {query ? `Buscando "${query}"...` : ""}
+    </p>
+  </div>
+
+  <div class="text-center py-12">
+    <p class="text-muted-foreground">
+      Función de búsqueda temporalmente simplificada
+    </p>
+  </div>
+</div>
