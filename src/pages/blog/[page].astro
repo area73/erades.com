@@ -5,11 +5,26 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 
+// Generación de rutas estáticas para paginación
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  const POSTS_PER_PAGE = 6;
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+  return Array.from({ length: totalPages }).map((_, i) => ({
+    params: { page: String(i + 1) },
+  }));
+}
+
+const { page } = Astro.params;
+const currentPage = Number(page) || 1;
+
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// Extraer categorías únicas
 const categories = [
   "Todas",
   ...Array.from(
@@ -73,7 +88,6 @@ let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-const currentPage = 1; // Solo página 1 en este archivo, las siguientes serán /blog/page/[page].astro
 const paginatedPosts = filteredPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
@@ -297,9 +311,18 @@ const paginatedPosts = filteredPosts.slice(
           totalPages > 1 && (
             <div class="flex justify-center mt-12">
               <div class="flex gap-2">
-                <span class="inline-flex items-center px-3 py-1 rounded border border-border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed">
+                <a
+                  href={
+                    currentPage > 1
+                      ? currentPage === 2
+                        ? "/blog/"
+                        : `/blog/page/${currentPage - 1}/`
+                      : "#"
+                  }
+                  class={`inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/10"}`}
+                >
                   Anterior
-                </span>
+                </a>
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <a
                     href={i === 0 ? "/blog/" : `/blog/page/${i + 1}/`}
@@ -309,7 +332,11 @@ const paginatedPosts = filteredPosts.slice(
                   </a>
                 ))}
                 <a
-                  href={totalPages > 1 ? `/blog/page/2/` : "#"}
+                  href={
+                    currentPage < totalPages
+                      ? `/blog/page/${currentPage + 1}/`
+                      : "#"
+                  }
                   class={`inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/10"}`}
                 >
                   Siguiente
