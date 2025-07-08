@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SearchInput } from "./SearchInput";
 import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
-import HeaderSearchBox from "./HeaderSearchBox.tsx";
+import HeaderSearchBox from "./HeaderSearchBox.astro";
 
 let isDark = false;
 if (typeof window !== "undefined") {
@@ -42,7 +42,7 @@ if (typeof window !== "undefined") {
     <div class="flex items-center gap-6 min-w-0">
       <div class="hidden md:block">
         <div class="w-[420px] max-w-full">
-          <HeaderSearchBox client:only="react" />
+          <HeaderSearchBox />
         </div>
       </div>
       <div class="flex items-center gap-4">
