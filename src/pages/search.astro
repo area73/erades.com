@@ -8,9 +8,13 @@ const query = Astro.url.searchParams.get("q") || "";
 
 let results = [];
 if (query) {
-  const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+  const { origin } = new URL(Astro.request.url);
+  const apiUrl = `${origin}/api/search?q=${encodeURIComponent(query)}`;
+  const res = await fetch(apiUrl);
   results = await res.json();
 }
+console.log("[search.astro] QUERY:", query);
+console.log("[search.astro] RESULTS LENGTH:", results.length);
 ---
 
 <!doctype html>
@@ -22,6 +26,14 @@ if (query) {
     <Header />
     <main class="max-w-[1200px] mx-auto pt-8 transition-main">
       <section>
+        {
+          results.length === 0 && query && (
+            <div class="text-red-600 font-bold text-center my-8">
+              [DEBUG] No se encontraron resultados para "{query}"<br />
+              (Verifica logs SSR y API)
+            </div>
+          )
+        }
         <SearchBox results={results} query={query} />
       </section>
     </main>

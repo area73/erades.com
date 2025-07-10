@@ -4,9 +4,14 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import astroExpressiveCode from "astro-expressive-code";
 import tailwindcss from "@tailwindcss/vite";
+import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
   site: "https://example.com",
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
   markdown: {
     shikiConfig: {
       theme: "dracula",
