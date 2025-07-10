@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "pnpm run build:search && astro build",
-    "build:search": "node scripts/generate-search-index.js",
+    "build": "pnpm run build:flexsearch && astro build",
+    "build:flexsearch": "tsx scripts/generate-flexsearch-index.ts",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest",
@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.1.5",
     "astro": "^5.7.10",
     "astro-expressive-code": "^0.41.2",
+    "flexsearch": "^0.8.205",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.5",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.20.3",
     "vitest": "^3.1.3"
   }
 }
