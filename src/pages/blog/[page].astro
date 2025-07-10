@@ -37,7 +37,9 @@ const categories = [
   ),
 ];
 
-let selectedCategory = "Todas";
+// Obtener la categoría seleccionada de la query string
+const url = new URL(Astro.request.url);
+const selectedCategory = url.searchParams.get("category") || "Todas";
 let sortBy = "date-desc";
 let viewMode = "grid"; // "grid" o "list"
 
@@ -123,14 +125,19 @@ const paginatedPosts = filteredPosts.slice(
               <div class="flex gap-2">
                 {
                   categories.map((category) => (
-                    <button
-                      type="button"
+                    <a
+                      href={
+                        category === "Todas"
+                          ? `?`
+                          : `?category=${encodeURIComponent(category)}`
+                      }
                       class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
-                      aria-pressed={selectedCategory === category}
-                      disabled
+                      aria-current={
+                        selectedCategory === category ? "page" : undefined
+                      }
                     >
                       {category}
-                    </button>
+                    </a>
                   ))
                 }
               </div>

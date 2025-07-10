@@ -55,7 +55,7 @@ const {
             <hr />
             <div class="flex flex-wrap gap-2 justify-end -mt-8">
               {
-                tags.map((tag) => (
+                (tags ?? []).map((tag) => (
                   <span class="bg-muted px-2 py-1 rounded-full">{tag}</span>
                 ))
               }
