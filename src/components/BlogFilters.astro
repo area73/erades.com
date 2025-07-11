@@ -1,4 +1,5 @@
 ---
+import { SortDesc, ChevronDown } from "@lucide/astro";
 interface Props {
   categories: string[];
   selectedCategory: string;
@@ -50,20 +51,28 @@ const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
   </div>
   <div class="flex items-center gap-4">
     <div class="flex items-center gap-2">
-      <span class="text-sm text-muted-foreground">Ordenar por:</span>
-      <select
-        name="sortBy"
-        class="w-40 px-2 py-1 rounded-md border border-border bg-input text-foreground"
-        onchange="this.form.submit()"
-      >
-        <option value="date-desc" selected={sortBy === "date-desc"}
-          >Más recientes</option
+      <span class="text-sm text-muted-foreground flex items-center">
+        <SortDesc class="h-4 w-4 text-muted-foreground" />
+      </span>
+      <div class="relative w-40">
+        <select
+          name="sortBy"
+          class="w-full h-10 px-3 pr-8 py-2 rounded-md border border-border bg-input text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+          onchange="this.form.submit()"
         >
-        <option value="date-asc" selected={sortBy === "date-asc"}
-          >Más antiguos</option
-        >
-        <option value="title" selected={sortBy === "title"}>Por título</option>
-      </select>
+          <option value="date-desc" selected={sortBy === "date-desc"}
+            >Más recientes</option
+          >
+          <option value="date-asc" selected={sortBy === "date-asc"}
+            >Más antiguos</option
+          >
+          <option value="title" selected={sortBy === "title"}>Por título</option
+          >
+        </select>
+        <ChevronDown
+          class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+        />
+      </div>
     </div>
     <!-- Selector visual grid/lista -->
     <div class="flex items-center gap-1 bg-secondary rounded-lg p-1">
