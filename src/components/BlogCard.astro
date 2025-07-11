@@ -2,58 +2,87 @@
 import FormattedDate from "./FormattedDate.astro";
 interface Props {
   post: any;
+  variant?: "grid" | "list";
 }
-const { post } = Astro.props;
+const { post, variant = "grid" } = Astro.props;
 ---
 
-<a href={`/blog/${post.id}/`} class="block group">
-  <div
-    class="rounded-xl overflow-hidden shadow-sm bg-card border border-border hover:shadow-medium transition-all duration-300"
-  >
-    <div class="grid md:grid-cols-4 gap-6">
-      <div class="md:col-span-1">
-        <div
-          class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden"
-        >
-          <img
-            src={post.data.heroImage}
-            alt={post.data.title}
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      </div>
-      <div class="md:col-span-3 flex flex-col h-full">
-        <div class="flex items-start justify-between mb-3">
-          <span
-            class="inline-block px-2 py-1 rounded bg-secondary text-xs text-secondary-foreground font-medium"
-          >
-            {
-              (post.data.categories && post.data.categories[0]) ||
-                "Sin categoría"
-            }
+{
+  variant === "grid" ? (
+    <a href={`/blog/${post.id}/`} class="block group h-full">
+      <div class="bg-card rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden border border-border h-full flex flex-col">
+        {post.data.heroImage && (
+          <div class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-t-xl overflow-hidden">
+            <img
+              src={post.data.heroImage}
+              alt={post.data.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+        )}
+        <div class="p-6 flex flex-col flex-1">
+          <span class="inline-block mb-3 px-2 py-1 rounded bg-secondary text-xs text-secondary-foreground font-medium">
+            {(post.data.categories && post.data.categories[0]) ||
+              "Sin categoría"}
           </span>
-          <div class="flex items-center gap-3 text-xs text-muted-foreground">
-            <span>
-              <FormattedDate date={post.data.pubDate} />
-            </span>
-          </div>
-        </div>
-        <h3
-          class="font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors"
-        >
-          {post.data.title}
-        </h3>
-        <p class="text-muted-foreground mb-4 line-clamp-2 flex-1">
-          {post.data.excerpt || post.data.description || ""}
-        </p>
-        <div class="flex items-center justify-between mt-auto">
-          <div class="flex items-center gap-1 text-xs text-muted-foreground">
-            <span class="font-medium">
-              {post.data.author || ""}
-            </span>
+          <h3 class="font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-2">
+            {post.data.title}
+          </h3>
+          <p class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed flex-1">
+            {post.data.excerpt || post.data.description || ""}
+          </p>
+          <div class="flex items-center justify-between text-xs text-muted-foreground mt-auto">
+            <div class="flex items-center gap-1">
+              <span class="font-medium">{post.data.author || ""}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span>
+                <FormattedDate date={post.data.pubDate} />
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</a>
+    </a>
+  ) : (
+    <a href={`/blog/${post.id}/`} class="block group">
+      <div class="rounded-xl overflow-hidden shadow-sm bg-card border border-border hover:shadow-medium transition-all duration-300">
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="md:col-span-1">
+            <div class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden">
+              <img
+                src={post.data.heroImage}
+                alt={post.data.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </div>
+          <div class="md:col-span-3 flex flex-col h-full">
+            <div class="flex items-start justify-between mb-3">
+              <span class="inline-block px-2 py-1 rounded bg-secondary text-xs text-secondary-foreground font-medium">
+                {(post.data.categories && post.data.categories[0]) ||
+                  "Sin categoría"}
+              </span>
+              <div class="flex items-center gap-3 text-xs text-muted-foreground">
+                <span>
+                  <FormattedDate date={post.data.pubDate} />
+                </span>
+              </div>
+            </div>
+            <h3 class="font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
+              {post.data.title}
+            </h3>
+            <p class="text-muted-foreground mb-4 line-clamp-2 flex-1">
+              {post.data.excerpt || post.data.description || ""}
+            </p>
+            <div class="flex items-center justify-between mt-auto">
+              <div class="flex items-center gap-1 text-xs text-muted-foreground">
+                <span class="font-medium">{post.data.author || ""}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  )
+}
