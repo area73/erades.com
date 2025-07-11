@@ -323,7 +323,7 @@ const paginatedPosts = filteredPosts.slice(
                     currentPage > 1
                       ? currentPage === 2
                         ? "/blog/"
-                        : `/blog/page/${currentPage - 1}/`
+                        : `/blog/${currentPage - 1}/`
                       : "#"
                   }
                   class={`inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/10"}`}
@@ -332,7 +332,7 @@ const paginatedPosts = filteredPosts.slice(
                 </a>
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <a
-                    href={i === 0 ? "/blog/" : `/blog/page/${i + 1}/`}
+                    href={i === 0 ? "/blog/" : `/blog/${i + 1}/`}
                     class={`inline-flex items-center px-3 py-1 rounded border text-sm font-medium ${i + 1 === currentPage ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:bg-primary/10"}`}
                   >
                     {i + 1}
@@ -340,9 +340,7 @@ const paginatedPosts = filteredPosts.slice(
                 ))}
                 <a
                   href={
-                    currentPage < totalPages
-                      ? `/blog/page/${currentPage + 1}/`
-                      : "#"
+                    currentPage < totalPages ? `/blog/${currentPage + 1}/` : "#"
                   }
                   class={`inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/10"}`}
                 >
