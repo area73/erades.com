@@ -59,13 +59,6 @@ switch (sortBy) {
       )
     );
     break;
-  case "author":
-    sortedResults.sort((a: any, b: any) =>
-      (a.author || a.data?.author || "").localeCompare(
-        b.author || b.data?.author || ""
-      )
-    );
-    break;
 }
 
 const paginatedResults = sortedResults.slice(
@@ -110,7 +103,7 @@ if (!categories.includes("all")) categories.unshift("all");
       <BlogFilters
         categories={categories}
         selectedCategory={categoryParam}
-        sortBy={"date-desc"}
+        sortBy={sortBy}
         viewMode={"grid"}
         getCategoryHref={(cat: string) =>
           `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
@@ -157,6 +150,17 @@ if (!categories.includes("all")) categories.unshift("all");
             )
           }
         </ul>
+        {
+          totalPages > 1 && (
+            <Paginator
+              currentPage={currentPage}
+              totalPages={totalPages}
+              getPageHref={(page) =>
+                `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}`
+              }
+            />
+          )
+        }
       </div>
     </div>
   </section></Layout

@@ -56,10 +56,13 @@ const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
         class="w-40 px-2 py-1 rounded-md border border-border bg-input text-foreground"
         onchange="this.form.submit()"
       >
-        <option value="date-desc">Más recientes</option>
-        <option value="date-asc">Más antiguos</option>
-        <option value="title">Por título</option>
-        <option value="author">Por autor</option>
+        <option value="date-desc" selected={sortBy === "date-desc"}
+          >Más recientes</option
+        >
+        <option value="date-asc" selected={sortBy === "date-asc"}
+          >Más antiguos</option
+        >
+        <option value="title" selected={sortBy === "title"}>Por título</option>
       </select>
     </div>
     <!-- Selector visual grid/lista -->
