@@ -21,14 +21,24 @@ console.log("[search.astro] RESULTS LENGTH:", results.length);
 
 const pageParam = Number(Astro.url.searchParams.get("page")) || 1;
 const RESULTS_PER_PAGE = 10;
-const totalPages = Math.ceil(results.length / RESULTS_PER_PAGE);
+// Filtrar resultados por categoría seleccionada
+const categoryParam = Astro.url.searchParams.get("category") || "all";
+const filteredResults =
+  categoryParam === "all"
+    ? results
+    : results.filter((post: any) =>
+        Array.isArray(post.categories)
+          ? post.categories.includes(categoryParam)
+          : false
+      );
+const totalPages = Math.ceil(filteredResults.length / RESULTS_PER_PAGE);
 const currentPage = Math.max(1, Math.min(pageParam, totalPages || 1));
-const paginatedResults = results.slice(
+
+const paginatedResults = filteredResults.slice(
   (currentPage - 1) * RESULTS_PER_PAGE,
   currentPage * RESULTS_PER_PAGE
 );
 
-const categoryParam = Astro.url.searchParams.get("category") || "all";
 const categories = [
   ...Array.from(
     new Set(
@@ -57,7 +67,8 @@ if (!categories.includes("all")) categories.unshift("all");
         {
           query && (
             <p class="text-muted-foreground">
-              Mostrando {paginatedResults.length} resultados para "{query}"
+              Mostrando {paginatedResults.length} de {filteredResults.length}{" "}
+              resultados para "{query}"
             </p>
           )
         }
@@ -120,7 +131,7 @@ if (!categories.includes("all")) categories.unshift("all");
             currentPage={currentPage}
             totalPages={totalPages}
             getPageHref={(page) =>
-              `?q=${encodeURIComponent(query)}&page=${page}`
+              `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&page=${page}`
             }
           />
         )
