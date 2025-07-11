@@ -34,7 +34,41 @@ const filteredResults =
 const totalPages = Math.ceil(filteredResults.length / RESULTS_PER_PAGE);
 const currentPage = Math.max(1, Math.min(pageParam, totalPages || 1));
 
-const paginatedResults = filteredResults.slice(
+const sortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
+// Ordenar los resultados filtrados según sortBy
+let sortedResults = [...filteredResults];
+switch (sortBy) {
+  case "date-asc":
+    sortedResults.sort(
+      (a: any, b: any) =>
+        new Date(a.pubDate || a.data?.pubDate || 0).valueOf() -
+        new Date(b.pubDate || b.data?.pubDate || 0).valueOf()
+    );
+    break;
+  case "date-desc":
+    sortedResults.sort(
+      (a: any, b: any) =>
+        new Date(b.pubDate || b.data?.pubDate || 0).valueOf() -
+        new Date(a.pubDate || a.data?.pubDate || 0).valueOf()
+    );
+    break;
+  case "title":
+    sortedResults.sort((a: any, b: any) =>
+      (a.title || a.data?.title || "").localeCompare(
+        b.title || b.data?.title || ""
+      )
+    );
+    break;
+  case "author":
+    sortedResults.sort((a: any, b: any) =>
+      (a.author || a.data?.author || "").localeCompare(
+        b.author || b.data?.author || ""
+      )
+    );
+    break;
+}
+
+const paginatedResults = sortedResults.slice(
   (currentPage - 1) * RESULTS_PER_PAGE,
   currentPage * RESULTS_PER_PAGE
 );
@@ -78,7 +112,6 @@ if (!categories.includes("all")) categories.unshift("all");
         selectedCategory={categoryParam}
         sortBy={"date-desc"}
         viewMode={"grid"}
-        disabled={true}
         getCategoryHref={(cat: string) =>
           `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
       />
@@ -125,17 +158,6 @@ if (!categories.includes("all")) categories.unshift("all");
           }
         </ul>
       </div>
-      {
-        totalPages > 1 && (
-          <Paginator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            getPageHref={(page) =>
-              `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&page=${page}`
-            }
-          />
-        )
-      }
     </div>
-  </section>
-</Layout>
+  </section></Layout
+>
