@@ -7,6 +7,7 @@ interface Props {
   // Los siguientes props son para manejar cambios (en este caso, solo render, no eventos)
   // Si se quiere manejar eventos, se debe hacer con JS client-side
   disabled?: boolean;
+  getCategoryHref?: (cat: string) => string;
 }
 const {
   categories,
@@ -14,6 +15,7 @@ const {
   sortBy,
   viewMode,
   disabled = true,
+  getCategoryHref,
 } = Astro.props as Props;
 ---
 
@@ -26,16 +28,30 @@ const {
       <span class="text-sm text-muted-foreground">Categoría:</span>
       <div class="flex gap-2">
         {
-          categories.map((category) => (
-            <button
-              type="button"
-              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
-              aria-pressed={selectedCategory === category}
-              disabled={disabled}
-            >
-              {category}
-            </button>
-          ))
+          categories.map((category) =>
+            getCategoryHref ? (
+              <a
+                href={getCategoryHref(category)}
+                class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
+                aria-current={
+                  selectedCategory === category ? "page" : undefined
+                }
+                tabindex={disabled ? -1 : 0}
+                aria-disabled={disabled}
+              >
+                {category}
+              </a>
+            ) : (
+              <button
+                type="button"
+                class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
+                aria-pressed={selectedCategory === category}
+                disabled={disabled}
+              >
+                {category}
+              </button>
+            )
+          )
         }
       </div>
     </div>

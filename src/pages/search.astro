@@ -31,7 +31,11 @@ const paginatedResults = results.slice(
 const categoryParam = Astro.url.searchParams.get("category") || "all";
 const categories = [
   ...Array.from(
-    new Set((results as any[]).map((r: any) => r.category).filter(Boolean))
+    new Set(
+      results
+        .flatMap((r: any) => (Array.isArray(r.categories) ? r.categories : []))
+        .filter(Boolean)
+    )
   ),
 ] as string[];
 if (!categories.includes("all")) categories.unshift("all");
@@ -64,15 +68,9 @@ if (!categories.includes("all")) categories.unshift("all");
         sortBy={"date-desc"}
         viewMode={"grid"}
         disabled={true}
+        getCategoryHref={(cat: string) =>
+          `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
       />
-      {
-        results.length === 0 && query && (
-          <div class="text-red-600 font-bold text-center my-8">
-            [DEBUG] No se encontraron resultados para "{query}"<br />
-            (Verifica logs SSR y API)
-          </div>
-        )
-      }
       <div class="max-w-5xl mx-auto px-4 py-8">
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
           {

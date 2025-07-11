@@ -5,11 +5,23 @@ interface Props {
   variant?: "grid" | "list";
 }
 const { post, variant = "grid" } = Astro.props;
+
+const href =
+  post.data?.path || (post.data?.id ? `/blog/${post.data.id}/` : "#");
+
+const getReadTime = (content: string): number => {
+  // 250 palabras por minuto como estándar
+  if (!content) return 1;
+  const words = content.split(/\s+/).length;
+  return Math.max(1, Math.round(words / 250));
+};
+
+const readTime = getReadTime(post.data.content || "");
 ---
 
 {
   variant === "grid" ? (
-    <a href={`/blog/${post.id}/`} class="block group h-full">
+    <a href={href} class="block group h-full">
       <div class="bg-card rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden border border-border h-full flex flex-col">
         {post.data.heroImage && (
           <div class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-t-xl overflow-hidden">
@@ -21,13 +33,30 @@ const { post, variant = "grid" } = Astro.props;
           </div>
         )}
         <div class="p-6 flex flex-col flex-1">
-          <span class="inline-block mb-3 px-2 py-1 rounded bg-secondary text-xs text-secondary-foreground font-medium">
-            {(post.data.categories && post.data.categories[0]) ||
-              "Sin categoría"}
-          </span>
+          {Array.isArray(post.data.categories) &&
+            post.data.categories.length > 0 && (
+              <div class="flex flex-wrap gap-2 mb-2">
+                {post.data.categories.map((category: string) => (
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
+                    title={`Ver posts en la categoría ${category}`}
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            )}
           <h3 class="font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-2">
             {post.data.title}
           </h3>
+          <div class="text-xs text-muted-foreground mb-2">
+            <FormattedDate
+              date={
+                post.data.pubDate ? new Date(post.data.pubDate) : new Date(0)
+              }
+            />
+            {readTime && <span class="ml-2">· {readTime} min de lectura</span>}
+          </div>
           <p class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed flex-1">
             {post.data.excerpt || post.data.description || ""}
           </p>
@@ -35,17 +64,21 @@ const { post, variant = "grid" } = Astro.props;
             <div class="flex items-center gap-1">
               <span class="font-medium">{post.data.author || ""}</span>
             </div>
-            <div class="flex items-center gap-3">
-              <span>
-                <FormattedDate date={post.data.pubDate} />
-              </span>
-            </div>
           </div>
+          {Array.isArray(post.data.tags) && post.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mt-4">
+              {post.data.tags.map((tag: string) => (
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground border border-border">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </a>
   ) : (
-    <a href={`/blog/${post.id}/`} class="block group">
+    <a href={href} class="block group">
       <div class="rounded-xl overflow-hidden shadow-sm bg-card border border-border hover:shadow-medium transition-all duration-300">
         <div class="grid md:grid-cols-4 gap-6">
           <div class="md:col-span-1">
@@ -65,7 +98,13 @@ const { post, variant = "grid" } = Astro.props;
               </span>
               <div class="flex items-center gap-3 text-xs text-muted-foreground">
                 <span>
-                  <FormattedDate date={post.data.pubDate} />
+                  <FormattedDate
+                    date={
+                      post.data.pubDate
+                        ? new Date(post.data.pubDate)
+                        : new Date(0)
+                    }
+                  />
                 </span>
               </div>
             </div>
@@ -80,6 +119,15 @@ const { post, variant = "grid" } = Astro.props;
                 <span class="font-medium">{post.data.author || ""}</span>
               </div>
             </div>
+            {Array.isArray(post.data.tags) && post.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-2 mt-4">
+                {post.data.tags.map((tag: string) => (
+                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground border border-border">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
