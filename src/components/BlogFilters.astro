@@ -1,5 +1,5 @@
 ---
-import { SortDesc, ChevronDown } from "@lucide/astro";
+import { SortDesc, ChevronDown, LayoutGrid, List } from "@lucide/astro";
 interface Props {
   categories: string[];
   selectedCategory: string;
@@ -81,40 +81,14 @@ const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
         class={`h-8 w-8 p-0 rounded ${viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
         title="Vista grid"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mx-auto"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect
-            x="14"
-            y="3"
-            width="7"
-            height="7"
-            rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"
-          ></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect></svg
-        >
+        <LayoutGrid class="h-4 w-4 mx-auto" />
       </button>
       <button
         type="button"
         class={`h-8 w-8 p-0 rounded ${viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
         title="Vista lista"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mx-auto"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><rect x="4" y="5" width="16" height="3" rx="1.5"></rect><rect
-            x="4"
-            y="10.5"
-            width="16"
-            height="3"
-            rx="1.5"></rect><rect x="4" y="16" width="16" height="3" rx="1.5"
-          ></rect></svg
-        >
+        <List class="h-4 w-4 mx-auto" />
       </button>
     </div>
   </div>
