@@ -38,7 +38,7 @@ async function main() {
       categories: Array.isArray(data.categories) ? data.categories : [],
       heroImage: typeof data.heroImage === "string" ? data.heroImage : "",
       content,
-      path: `/blog/${relPath.replace(/\.mdx?$/, "")}`,
+      path: `/blog/${relPath.replace(/\.mdx?$/, "")}`.toLowerCase(),
       id: String(i), // id único string
     });
   }
