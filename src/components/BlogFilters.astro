@@ -1,0 +1,103 @@
+---
+interface Props {
+  categories: string[];
+  selectedCategory: string;
+  sortBy: string;
+  viewMode: string;
+  // Los siguientes props son para manejar cambios (en este caso, solo render, no eventos)
+  // Si se quiere manejar eventos, se debe hacer con JS client-side
+  disabled?: boolean;
+}
+const {
+  categories,
+  selectedCategory,
+  sortBy,
+  viewMode,
+  disabled = true,
+} = Astro.props as Props;
+---
+
+<form
+  id="filters"
+  class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border border-border"
+>
+  <div class="flex flex-wrap items-center gap-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground">Categoría:</span>
+      <div class="flex gap-2">
+        {
+          categories.map((category) => (
+            <button
+              type="button"
+              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
+              aria-pressed={selectedCategory === category}
+              disabled={disabled}
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground">Ordenar por:</span>
+      <select
+        class="w-40 px-2 py-1 rounded-md border border-border bg-input text-foreground"
+        value={sortBy}
+        disabled={disabled}
+      >
+        <option value="date-desc">Más recientes</option>
+        <option value="date-asc">Más antiguos</option>
+        <option value="title">Por título</option>
+        <option value="author">Por autor</option>
+      </select>
+    </div>
+    <!-- Selector visual grid/lista -->
+    <div class="flex items-center gap-1 bg-secondary rounded-lg p-1">
+      <button
+        type="button"
+        class={`h-8 w-8 p-0 rounded ${viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
+        disabled={disabled}
+        title="Vista grid"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect
+            x="14"
+            y="3"
+            width="7"
+            height="7"
+            rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"
+          ></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect></svg
+        >
+      </button>
+      <button
+        type="button"
+        class={`h-8 w-8 p-0 rounded ${viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
+        disabled={disabled}
+        title="Vista lista"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mx-auto"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><rect x="4" y="5" width="16" height="3" rx="1.5"></rect><rect
+            x="4"
+            y="10.5"
+            width="16"
+            height="3"
+            rx="1.5"></rect><rect x="4" y="16" width="16" height="3" rx="1.5"
+          ></rect></svg
+        >
+      </button>
+    </div>
+  </div>
+</form>

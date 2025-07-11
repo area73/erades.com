@@ -1,0 +1,65 @@
+---
+interface Props {
+  /** Página actual (1-indexed) */
+  currentPage: number;
+  /** Número total de páginas */
+  totalPages: number;
+  /** Función para generar la URL de cada página */
+  getPageHref?: (page: number) => string;
+  /** Texto para el botón anterior */
+  prevLabel?: string;
+  /** Texto para el botón siguiente */
+  nextLabel?: string;
+  /** Si deshabilitar los enlaces cuando no son navegables */
+  disableInactive?: boolean;
+}
+const {
+  currentPage,
+  totalPages,
+  getPageHref = (page) => (page === 1 ? "/blog/" : `/blog/${page}/`),
+  prevLabel = "Anterior",
+  nextLabel = "Siguiente",
+  disableInactive = true,
+} = Astro.props as Props;
+---
+
+{
+  totalPages > 1 && (
+    <div class="flex justify-center mt-12">
+      <div class="flex gap-2">
+        {currentPage === 1 ? (
+          <span class="inline-flex items-center px-3 py-1 rounded border border-border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed">
+            {prevLabel}
+          </span>
+        ) : (
+          <a
+            href={getPageHref(currentPage - 1)}
+            class="inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+          >
+            {prevLabel}
+          </a>
+        )}
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <a
+            href={getPageHref(i + 1)}
+            class={`inline-flex items-center px-3 py-1 rounded border text-sm font-medium ${i + 1 === currentPage ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:bg-primary/10"}`}
+          >
+            {i + 1}
+          </a>
+        ))}
+        {currentPage === totalPages ? (
+          <span class="inline-flex items-center px-3 py-1 rounded border border-border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed">
+            {nextLabel}
+          </span>
+        ) : (
+          <a
+            href={getPageHref(currentPage + 1)}
+            class="inline-flex items-center px-3 py-1 rounded border border-border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+          >
+            {nextLabel}
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
