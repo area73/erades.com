@@ -1,4 +1,5 @@
 ---
+import Layout from "../layouts/BlogPost.astro";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
@@ -11,93 +12,91 @@ const posts = (await getCollection("blog"))
 const featured = posts.slice(0, 3);
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-  </head>
-  <body class="bg-background text-foreground min-h-screen">
-    <Header />
-    <main class="container mx-auto px-4 py-12 pb-14">
-      <div class="max-w-4xl mx-auto">
-        <!-- Hero Section -->
-        <div class="text-center mb-16">
-          <h1
-            class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
-          >
-            Bienvenido a {SITE_TITLE}
-          </h1>
-          <p
-            class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
-          >
-            Un espacio donde comparto ideas, conocimientos y experiencias sobre
-            tecnología, desarrollo y diseño moderno.
-          </p>
-        </div>
+<Layout
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  pubDate={new Date()}
+  tags={[]}
+  categories={[]}
+  draft={false}
+  heroImage="/blog-placeholder-about.jpg"
+>
+  <section>
+    <div class="max-w-4xl mx-auto">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1
+          class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
+        >
+          Bienvenido a {SITE_TITLE}
+        </h1>
+        <p
+          class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+        >
+          Un espacio donde comparto ideas, conocimientos y experiencias sobre
+          tecnología, desarrollo y diseño moderno.
+        </p>
+      </div>
 
-        <!-- Featured Content -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {
-            featured.map((post) => (
-              <a href={`/blog/${post.id}/`} class="block">
-                <div class="bg-card rounded-lg shadow-soft p-6 hover:shadow-medium transition-shadow duration-300 h-full">
-                  <div class="h-48 bg-gradient-primary rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                    {post.data.heroImage ? (
-                      <img
-                        src={post.data.heroImage}
-                        alt=""
-                        class="object-cover w-full h-full rounded-lg"
-                      />
-                    ) : (
-                      <span class="text-primary-foreground font-medium">
-                        {SITE_TITLE}
-                      </span>
-                    )}
-                  </div>
-                  <h3 class="font-serif text-xl font-semibold text-card-foreground mb-3 hover:text-primary transition-colors">
-                    {post.data.title}
-                  </h3>
-                  <p class="text-muted-foreground mb-4 line-clamp-3">
-                    {post.data.description}
-                  </p>
-                  <div class="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>
-                      {Math.max(
-                        1,
-                        Math.round((post.body?.length || 500) / 250)
-                      )}{" "}
-                      min de lectura
+      <!-- Featured Content -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          featured.map((post) => (
+            <a href={`/blog/${post.id}/`} class="block">
+              <div class="bg-card rounded-lg shadow-soft p-6 hover:shadow-medium transition-shadow duration-300 h-full">
+                <div class="h-48 bg-gradient-primary rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                  {post.data.heroImage ? (
+                    <img
+                      src={post.data.heroImage}
+                      alt=""
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  ) : (
+                    <span class="text-primary-foreground font-medium">
+                      {SITE_TITLE}
                     </span>
-                    <span>
-                      <FormattedDate date={post.data.pubDate} />
-                    </span>
-                  </div>
+                  )}
                 </div>
-              </a>
-            ))
-          }
-        </div>
-
-        <!-- Call to Action -->
-        <div class="text-center mt-16">
-          <div class="bg-card rounded-xl p-8 shadow-medium">
-            <h2
-              class="font-serif text-2xl font-semibold text-card-foreground mb-4"
-            >
-              ¿Listo para explorar?
-            </h2>
-            <p class="text-muted-foreground mb-6">
-              Descubre todos los artículos y encuentra contenido que te inspire.
-            </p>
-            <a
-              href="/blog"
-              class="bg-gradient-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 inline-block"
-            >
-              Ver Todos los Posts
+                <h3 class="font-serif text-xl font-semibold text-card-foreground mb-3 hover:text-primary transition-colors">
+                  {post.data.title}
+                </h3>
+                <p class="text-muted-foreground mb-4 line-clamp-3">
+                  {post.data.description}
+                </p>
+                <div class="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>
+                    {Math.max(1, Math.round((post.body?.length || 500) / 250))}{" "}
+                    min de lectura
+                  </span>
+                  <span>
+                    <FormattedDate date={post.data.pubDate} />
+                  </span>
+                </div>
+              </div>
             </a>
-          </div>
+          ))
+        }
+      </div>
+
+      <!-- Call to Action -->
+      <div class="text-center mt-16">
+        <div class="bg-card rounded-xl p-8 shadow-medium">
+          <h2
+            class="font-serif text-2xl font-semibold text-card-foreground mb-4"
+          >
+            ¿Listo para explorar?
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Descubre todos los artículos y encuentra contenido que te inspire.
+          </p>
+          <a
+            href="/blog"
+            class="bg-gradient-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 inline-block"
+          >
+            Ver Todos los Posts
+          </a>
         </div>
       </div>
-    </main>
-  </body>
-</html>
+    </div>
+  </section>
+</Layout>
