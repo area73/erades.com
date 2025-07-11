@@ -6,21 +6,15 @@ interface Props {
   viewMode: string;
   // Los siguientes props son para manejar cambios (en este caso, solo render, no eventos)
   // Si se quiere manejar eventos, se debe hacer con JS client-side
-  disabled?: boolean;
   getCategoryHref?: (cat: string) => string;
 }
-const {
-  categories,
-  selectedCategory,
-  sortBy,
-  viewMode,
-  disabled = true,
-  getCategoryHref,
-} = Astro.props as Props;
+const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
+  Astro.props as Props;
 ---
 
 <form
   id="filters"
+  method="get"
   class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border border-border"
 >
   <div class="flex flex-wrap items-center gap-4">
@@ -36,8 +30,7 @@ const {
                 aria-current={
                   selectedCategory === category ? "page" : undefined
                 }
-                tabindex={disabled ? -1 : 0}
-                aria-disabled={disabled}
+                tabindex={0}
               >
                 {category}
               </a>
@@ -46,7 +39,6 @@ const {
                 type="button"
                 class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory === category ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
                 aria-pressed={selectedCategory === category}
-                disabled={disabled}
               >
                 {category}
               </button>
@@ -60,9 +52,9 @@ const {
     <div class="flex items-center gap-2">
       <span class="text-sm text-muted-foreground">Ordenar por:</span>
       <select
+        name="sortBy"
         class="w-40 px-2 py-1 rounded-md border border-border bg-input text-foreground"
-        value={sortBy}
-        disabled={disabled}
+        onchange="this.form.submit()"
       >
         <option value="date-desc">Más recientes</option>
         <option value="date-asc">Más antiguos</option>
@@ -75,7 +67,6 @@ const {
       <button
         type="button"
         class={`h-8 w-8 p-0 rounded ${viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
-        disabled={disabled}
         title="Vista grid"
       >
         <svg
@@ -96,7 +87,6 @@ const {
       <button
         type="button"
         class={`h-8 w-8 p-0 rounded ${viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
-        disabled={disabled}
         title="Vista lista"
       >
         <svg
@@ -116,4 +106,19 @@ const {
       </button>
     </div>
   </div>
+  {/* Mantener los parámetros de búsqueda y categoría en el formulario */}
+  {
+    Astro.url.searchParams.get("q") && (
+      <input type="hidden" name="q" value={Astro.url.searchParams.get("q")!} />
+    )
+  }
+  {
+    Astro.url.searchParams.get("category") && (
+      <input
+        type="hidden"
+        name="category"
+        value={Astro.url.searchParams.get("category")!}
+      />
+    )
+  }
 </form>
