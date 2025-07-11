@@ -5,6 +5,7 @@ import Header from "../components/Header.astro";
 import Paginator from "../components/Paginator.astro";
 import BlogFilters from "../components/BlogFilters.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import BlogCard from "../components/BlogCard.astro";
 
 const query = Astro.url.searchParams.get("q") || "";
 
@@ -103,103 +104,14 @@ if (!categories.includes("all")) categories.unshift("all");
                 </a>
               </li>
             ) : (
-              paginatedResults.map((doc: any) => (
-                <li class="bg-card rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden">
-                  <a href={doc.path} class="block group p-6 h-full">
-                    {doc.heroImage && (
-                      <img
-                        width="100%"
-                        src={doc.heroImage}
-                        alt=""
-                        class="mb-2 rounded-xl group-hover:shadow-lg transition-all aspect-video object-cover"
-                      />
-                    )}
-                    <div class="flex flex-col h-full">
-                      <div class="flex flex-wrap items-center gap-3 mb-3 text-xs text-muted-foreground">
-                        {doc.date && (
-                          <span class="flex items-center gap-1">
-                            <svg
-                              class="h-3 w-3"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle cx="12" cy="12" r="10" />
-                              <path d="M12 6v6l4 2" />
-                            </svg>
-                            {doc.date}
-                          </span>
-                        )}
-                        {doc.author && (
-                          <span class="flex items-center gap-1">
-                            <svg
-                              class="h-3 w-3"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle cx="12" cy="7" r="4" />
-                              <path d="M5.5 21a8.38 8.38 0 0 1 13 0" />
-                            </svg>
-                            {doc.author}
-                          </span>
-                        )}
-                        {doc.readTime && (
-                          <span class="flex items-center gap-1">
-                            <svg
-                              class="h-3 w-3"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle cx="12" cy="12" r="10" />
-                              <path d="M12 6v6l4 2" />
-                            </svg>
-                            {doc.readTime}
-                          </span>
-                        )}
-                        {doc.category && (
-                          <span class="inline-block px-2 py-0.5 rounded bg-secondary text-secondary-foreground font-semibold">
-                            {doc.category}
-                          </span>
-                        )}
-                      </div>
-                      <div class="flex-1 mb-4">
-                        <h4 class="m-0 text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-200 mb-1">
-                          {doc.title}
-                        </h4>
-                        <p class="m-0 text-muted-foreground line-clamp-2">
-                          {doc.description}
-                        </p>
-                      </div>
-                      {doc.tags &&
-                        Array.isArray(doc.tags) &&
-                        doc.tags.length > 0 && (
-                          <div class="flex flex-wrap gap-2 mt-auto">
-                            {(doc.tags as string[]).map((tag: string) => (
-                              <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground border border-border">
-                                <svg
-                                  class="h-3 w-3 mr-1"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle cx="12" cy="12" r="10" />
-                                  <path d="M7 12l5 5 5-5" />
-                                </svg>
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                    </div>
-                  </a>
-                </li>
-              ))
+              paginatedResults.map((doc: any) => {
+                const post = doc.data ? doc : { data: doc };
+                return (
+                  <li>
+                    <BlogCard post={post} variant="grid" />
+                  </li>
+                );
+              })
             )
           }
         </ul>
