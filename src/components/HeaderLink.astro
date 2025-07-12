@@ -14,7 +14,6 @@ const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
   {href === "/" && <Home class="h-4 w-4 mr-2 text-muted-foreground" />}
   {href === "/blog" && <FileText class="h-4 w-4 mr-2 text-muted-foreground" />}
   {href === "/about" && <Info class="h-4 w-4 mr-2 text-muted-foreground" />}
-  {href === "/categories" && <Tag class="h-4 w-4 mr-2 text-muted-foreground" />}
   {href === "/tags" && <Hash class="h-4 w-4 mr-2 text-muted-foreground" />}
   <slot />
 </a>
