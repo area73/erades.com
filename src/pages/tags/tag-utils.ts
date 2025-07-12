@@ -45,3 +45,69 @@ export function filterPostsByTag<T extends { data: { tags?: string[] } }>(
 ): T[] {
   return posts.filter((post) => (post.data.tags || []).includes(tag));
 }
+
+/**
+ * Counts the occurrences of each category in the given posts.
+ */
+export function getCategoryCounts(
+  posts: { data: { categories?: string[] } }[]
+): Record<string, number> {
+  return posts
+    .map((post) => post.data.categories || [])
+    .flat()
+    .reduce((acc, category) => {
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+}
+
+/**
+ * Returns the categories sorted by count descending.
+ */
+export function getSortedCategories(
+  categoryCounts: Record<string, number>
+): string[] {
+  return Object.keys(categoryCounts).sort(
+    (a, b) => categoryCounts[b] - categoryCounts[a]
+  );
+}
+
+/**
+ * Returns the most recent tags based on post publication date.
+ */
+export function getRecentTags(
+  posts: { data: { tags?: string[]; pubDate?: string } }[],
+  limit: number = 10
+): string[] {
+  // Ordenar posts por fecha descendente
+  const sortedPosts = [...posts].sort((a, b) => {
+    const dateA = new Date(a.data.pubDate || 0).getTime();
+    const dateB = new Date(b.data.pubDate || 0).getTime();
+    return dateB - dateA;
+  });
+  // Extraer etiquetas en orden de aparición reciente
+  const seen = new Set<string>();
+  const recentTags: string[] = [];
+  for (const post of sortedPosts) {
+    for (const tag of post.data.tags || []) {
+      if (!seen.has(tag)) {
+        seen.add(tag);
+        recentTags.push(tag);
+        if (recentTags.length >= limit) return recentTags;
+      }
+    }
+  }
+  return recentTags;
+}
+
+/**
+ * Returns the trending tags (top N by count).
+ */
+export function getTrendingTags(
+  tagCounts: Record<string, number>,
+  limit: number = 8
+): string[] {
+  return Object.keys(tagCounts)
+    .sort((a, b) => tagCounts[b] - tagCounts[a])
+    .slice(0, limit);
+}

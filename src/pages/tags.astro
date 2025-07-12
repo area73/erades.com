@@ -1,14 +1,25 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/BlogPost.astro";
-import { getTagCounts, getSortedTags, getFontSize } from "./tags/tag-utils";
-import { Hash, Search } from "@lucide/astro";
+import {
+  getTagCounts,
+  getSortedTags,
+  getFontSize,
+  getCategoryCounts,
+  getSortedCategories,
+  getRecentTags,
+  getTrendingTags,
+} from "./tags/tag-utils";
+import { Hash, Search, Tag, TrendingUp } from "@lucide/astro";
 
 const posts = await getCollection("blog");
 const tagCounts = getTagCounts(posts);
 const uniqueTags = getSortedTags(tagCounts);
 const minCount = Math.min(...Object.values(tagCounts));
 const maxCount = Math.max(...Object.values(tagCounts));
+
+const categoryCounts = getCategoryCounts(posts);
+const uniqueCategories = getSortedCategories(categoryCounts);
 
 const query = Astro.url.searchParams.get("q")?.toLowerCase() || "";
 const filteredTags = uniqueTags.filter((tag) =>
@@ -19,20 +30,30 @@ const totalTaggedPosts = Object.values(tagCounts).reduce(
   (acc, n) => acc + n,
   0
 );
-const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
+const trendingTags = getTrendingTags(tagCounts, 8);
+const topTags = uniqueTags.slice(0, 5);
+const postsWithStringDate = posts.map((post) => ({
+  ...post,
+  data: {
+    ...post.data,
+    pubDate:
+      post.data.pubDate instanceof Date
+        ? post.data.pubDate.toISOString()
+        : post.data.pubDate,
+  },
+}));
+const recentTags = getRecentTags(postsWithStringDate, 10);
 ---
 
 <Layout
   title="Tags"
   description="All tags used in blog posts. Click a tag to see related articles."
-  pubDate={new Date()}
   tags={[]}
   categories={[]}
   draft={false}
-  heroImage="/blog-placeholder-about.jpg"
 >
   <section class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-12">
         <div class="flex items-center justify-center gap-3 mb-4">
@@ -62,8 +83,14 @@ const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
           />
         </form>
       </div>
-      <!-- Tag Cloud -->
-      <div class="mb-8 bg-card rounded-xl border border-border shadow-soft p-6">
+      <!-- Tag Cloud Card (Full Width) -->
+      <div
+        class="mb-8 bg-card rounded-xl border border-border shadow-soft p-6 w-full"
+      >
+        <div class="flex items-center gap-2 mb-4">
+          <Tag class="h-5 w-5 text-primary" />
+          <span class="font-semibold text-lg">Nube de Etiquetas</span>
+        </div>
         {
           filteredTags.length > 0 ? (
             <div class="flex flex-wrap gap-3 justify-center">
@@ -83,7 +110,7 @@ const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
             </div>
           ) : (
             <div class="text-center py-8">
-              <Hash class="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <Tag class="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <p class="text-muted-foreground">
                 No se encontraron etiquetas con ese término.
               </p>
@@ -91,11 +118,70 @@ const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
           )
         }
       </div>
-      <!-- Stats Card -->
-      <div class="max-w-md mx-auto">
+      <!-- Masonry Layout for Modules (Below Tag Cloud) -->
+      <div
+        class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6"
+      >
+        <!-- Top Tags Card -->
         <div
-          class="bg-card rounded-xl border border-border shadow-soft p-6 flex flex-col gap-4"
+          class="break-inside-avoid bg-card rounded-xl border border-border shadow-soft p-6"
         >
+          <div class="font-semibold text-lg mb-4">Etiquetas Populares</div>
+          <div class="space-y-3">
+            {
+              topTags.map((tag, index) => (
+                <a
+                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  class="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                >
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-primary bg-primary/10 w-6 h-6 rounded-full flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    <span class="font-medium text-foreground">#{tag}</span>
+                  </div>
+                  <span class="text-xs text-muted-foreground">
+                    {tagCounts[tag]}
+                  </span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+        <!-- Trending Tags Card -->
+        <div
+          class="break-inside-avoid bg-card rounded-xl border border-border shadow-soft p-6"
+        >
+          <div class="flex items-center gap-2 mb-4">
+            <TrendingUp class="h-4 w-4 text-green-500" />
+            <span class="font-semibold text-lg">Tendencias</span>
+          </div>
+          <div class="space-y-2">
+            {
+              trendingTags.map((tag) => (
+                <a
+                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  class="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                >
+                  <span class="text-sm font-medium text-foreground">
+                    #{tag}
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <TrendingUp class="h-3 w-3 text-green-500" />
+                    <span class="text-xs text-muted-foreground">
+                      {tagCounts[tag]}
+                    </span>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+        <!-- Stats Card -->
+        <div
+          class="break-inside-avoid bg-card rounded-xl border border-border shadow-soft p-6 flex flex-col gap-4"
+        >
+          <div class="font-semibold text-lg mb-4">Estadísticas</div>
           <div class="flex justify-between">
             <span class="text-sm text-muted-foreground">Total etiquetas:</span>
             <span class="font-medium text-foreground">{totalTags}</span>
@@ -104,6 +190,53 @@ const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
             <span class="text-sm text-muted-foreground">Posts etiquetados:</span
             >
             <span class="font-medium text-foreground">{totalTaggedPosts}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-muted-foreground">En tendencia:</span>
+            <span class="font-medium text-foreground"
+              >{trendingTags.length}</span
+            >
+          </div>
+        </div>
+        <!-- Recent Tags Card -->
+        <div
+          class="break-inside-avoid bg-card rounded-xl border border-border shadow-soft p-6"
+        >
+          <div class="font-semibold text-lg mb-4">Etiquetas Recientes</div>
+          <div class="flex flex-wrap gap-2">
+            {
+              recentTags.map((tag) => (
+                <a
+                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  class="inline-block px-2 py-1 rounded bg-muted/50 hover:bg-primary/10 text-xs font-medium text-foreground hover:text-primary transition-colors"
+                >
+                  #{tag}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+        <!-- Categories Card -->
+        <div
+          class="break-inside-avoid bg-card rounded-xl border border-border shadow-soft p-6"
+        >
+          <div class="font-semibold text-lg mb-4">Categorías</div>
+          <div class="space-y-2">
+            {
+              uniqueCategories.map((category) => (
+                <a
+                  href={`/search?q=${encodeURIComponent(category)}`}
+                  class="block p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                >
+                  <span class="text-sm font-medium text-foreground">
+                    {category}
+                  </span>
+                  <span class="text-xs text-muted-foreground ml-2">
+                    ({categoryCounts[category]} posts)
+                  </span>
+                </a>
+              ))
+            }
           </div>
         </div>
       </div>
