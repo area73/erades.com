@@ -2,11 +2,12 @@
 
 import plugin from "tailwindcss/plugin";
 import defaultTheme from "tailwindcss/defaultTheme";
-
+console.log("Tailwind config loaded");
 export default {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./src/**/*.{astro,js,ts,jsx,tsx}"],
   prefix: "",
+
   theme: {
     container: {
       center: true,

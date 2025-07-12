@@ -17,15 +17,15 @@ interface BlogDoc {
   [key: string]: string | string[];
 }
 
+function isIdObject(val: unknown): val is { id: string } {
+  return typeof val === "object" && val !== null && "id" in val;
+}
+
 function extractIds(results: unknown): string[] {
   // FlexSearch Document puede devolver arrays de ids o arrays de objetos con .id
   if (Array.isArray(results)) {
     if (results.length === 0) return [];
-    if (
-      typeof results[0] === "object" &&
-      results[0] !== null &&
-      "id" in results[0]
-    ) {
+    if (isIdObject(results[0])) {
       return (results as { id: string }[]).map((r) => r.id);
     }
     if (typeof results[0] === "string") {
@@ -63,9 +63,6 @@ export const GET: APIRoute = async ({ request }) => {
     cache: true,
   });
   docs.forEach((doc: BlogDoc, i) => {
-    if (i < 5) {
-      console.error(`[DEBUG] doc[${i}].content:`, doc.content.slice(0, 1000));
-    }
     docIndex.add(doc);
     contentIndex.add(doc.id, doc.content);
   });
@@ -95,14 +92,11 @@ export const GET: APIRoute = async ({ request }) => {
       ...(Array.isArray(contentResultIds) ? contentResultIds : []),
     ]),
   ];
-  console.error("[search.astro] QUERY:", query);
-  console.error("[search.astro] RESULT IDS:", allIds);
 
   // Devuelve los documentos completos
   const results = allIds
     .map((id) => docs.find((doc) => doc.id === id))
     .filter(Boolean);
-  console.error("[search.astro] RESULTS:", results.length);
 
   return new Response(JSON.stringify(results), {
     headers: {
