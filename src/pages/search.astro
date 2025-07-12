@@ -111,7 +111,7 @@ if (!categories.includes("all")) categories.unshift("all");
           `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
       />
       <div class="max-w-5xl mx-auto px-4 py-8">
-        <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
+        <ul class="grid grid-cols-1 md:grid-cols-3 gap-8 list-none m-0 p-0">
           {
             paginatedResults.length === 0 && query ? (
               <li class="col-span-full text-center py-12">
@@ -142,5 +142,5 @@ if (!categories.includes("all")) categories.unshift("all");
         }
       </div>
     </div>
-  </section></Layout
->
+  </section>
+</Layout>
