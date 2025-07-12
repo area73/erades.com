@@ -67,8 +67,17 @@ if (post && post.data) {
       </body>
     </html>
   ) : (
-    <BlogPost {...dataWithDates}>
-      <Content />
+    <BlogPost
+      title={dataWithDates.title}
+      description={dataWithDates.description}
+      pubDate={dataWithDates.pubDate}
+      tags={dataWithDates.tags}
+      categories={dataWithDates.categories}
+      draft={dataWithDates.draft}
+      updatedDate={dataWithDates.updatedDate}
+      heroImage={dataWithDates.heroImage}
+    >
+      {Content ? <Content /> : null}
     </BlogPost>
   )
 }

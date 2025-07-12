@@ -2,12 +2,24 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/BlogPost.astro";
 import { getTagCounts, getSortedTags, getFontSize } from "./tags/tag-utils";
+import { Hash, Search } from "@lucide/astro";
 
 const posts = await getCollection("blog");
 const tagCounts = getTagCounts(posts);
 const uniqueTags = getSortedTags(tagCounts);
 const minCount = Math.min(...Object.values(tagCounts));
 const maxCount = Math.max(...Object.values(tagCounts));
+
+const query = Astro.url.searchParams.get("q")?.toLowerCase() || "";
+const filteredTags = uniqueTags.filter((tag) =>
+  tag.toLowerCase().includes(query)
+);
+const totalTags = uniqueTags.length;
+const totalTaggedPosts = Object.values(tagCounts).reduce(
+  (acc, n) => acc + n,
+  0
+);
+const trendingTags = uniqueTags.slice(0, 8); // Placeholder: top 8 tags
 ---
 
 <Layout
@@ -19,19 +31,82 @@ const maxCount = Math.max(...Object.values(tagCounts));
   draft={false}
   heroImage="/blog-placeholder-about.jpg"
 >
-  <section>
-    <div class="flex flex-wrap gap-4 justify-center py-8">
-      {
-        uniqueTags.map((tag: string) => (
-          <a
-            href={`/tags/${encodeURIComponent(tag)}/`}
-            style={`font-size: ${getFontSize(tagCounts[tag], minCount, maxCount)};`}
-            class="font-semibold text-foreground hover:text-accent transition-all"
-          >
-            {tag} ({tagCounts[tag]})
-          </a>
-        ))
-      }
+  <section class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <Hash class="h-8 w-8 text-primary" />
+          <h1 class="font-serif text-4xl font-bold text-foreground">
+            Etiquetas
+          </h1>
+        </div>
+        <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Explora todos los temas del blog organizados por etiquetas. Encuentra
+          contenido específico que te interese.
+        </p>
+      </div>
+      <!-- Search -->
+      <div class="max-w-md mx-auto mb-8">
+        <form method="get" class="relative">
+          <Search
+            class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
+          <input
+            type="search"
+            name="q"
+            value={query}
+            placeholder="Buscar etiquetas..."
+            class="pl-10 pr-4 h-11 w-full rounded-md border bg-secondary text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
+            autocomplete="off"
+          />
+        </form>
+      </div>
+      <!-- Tag Cloud -->
+      <div class="mb-8 bg-card rounded-xl border border-border shadow-soft p-6">
+        {
+          filteredTags.length > 0 ? (
+            <div class="flex flex-wrap gap-3 justify-center">
+              {filteredTags.map((tag) => (
+                <a
+                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  style={`font-size: ${getFontSize(tagCounts[tag], minCount, maxCount)};`}
+                  class="inline-block font-medium transition-colors duration-200 cursor-pointer text-foreground hover:text-primary px-2 py-1 rounded bg-muted/50 hover:bg-primary/10"
+                  title={`Ver posts con la etiqueta ${tag}`}
+                >
+                  <span class="align-middle">#{tag}</span>
+                  <span class="text-xs text-muted-foreground ml-1 align-top">
+                    ({tagCounts[tag]})
+                  </span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-8">
+              <Hash class="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <p class="text-muted-foreground">
+                No se encontraron etiquetas con ese término.
+              </p>
+            </div>
+          )
+        }
+      </div>
+      <!-- Stats Card -->
+      <div class="max-w-md mx-auto">
+        <div
+          class="bg-card rounded-xl border border-border shadow-soft p-6 flex flex-col gap-4"
+        >
+          <div class="flex justify-between">
+            <span class="text-sm text-muted-foreground">Total etiquetas:</span>
+            <span class="font-medium text-foreground">{totalTags}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-muted-foreground">Posts etiquetados:</span
+            >
+            <span class="font-medium text-foreground">{totalTaggedPosts}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>
