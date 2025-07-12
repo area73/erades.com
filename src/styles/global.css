@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: "Raleway";
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
