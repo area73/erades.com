@@ -7,6 +7,7 @@ import BlogFilters from "../components/BlogFilters.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import BlogCard from "../components/BlogCard.astro";
 import NoResults from "../components/NoResults.astro";
+import ResultsInfo from "../components/ResultsInfo.astro";
 import { Search as SearchIcon } from "@lucide/astro";
 
 const query = Astro.url.searchParams.get("q") || "";
@@ -90,17 +91,11 @@ if (!categories.includes("all")) categories.unshift("all");
   <section>
     <div class="max-w-[1200px] mx-auto pt-8 transition-main">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-foreground mb-2">
-          Resultados de búsqueda
-        </h1>
-        {
-          query && (
-            <p class="text-muted-foreground">
-              Mostrando {paginatedResults.length} de {filteredResults.length}{" "}
-              resultados para "{query}"
-            </p>
-          )
-        }
+        <ResultsInfo
+          shown={paginatedResults.length}
+          total={filteredResults.length}
+          query={query}
+        />
       </div>
       <BlogFilters
         categories={categories}
