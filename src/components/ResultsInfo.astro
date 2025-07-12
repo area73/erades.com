@@ -1,4 +1,6 @@
 ---
+import { s } from "astro-expressive-code/hast";
+
 interface Props {
   shown: number;
   total: number;
@@ -7,11 +9,15 @@ interface Props {
 const { shown, total, query } = Astro.props;
 ---
 
-<h1 class="text-3xl font-bold text-foreground mb-2">Resultados de búsqueda</h1>
-{
-  query && (
-    <p class="text-muted-foreground">
-      Mostrando {shown} de {total} resultados para "{query}"
-    </p>
-  )
-}
+<>
+  <h1 class="text-3xl font-bold text-foreground mb-2">
+    Resultados de búsqueda
+  </h1>
+  {
+    query && (
+      <p class="text-muted-foreground">
+        Mostrando {shown} de {total} resultados para "{query}"
+      </p>
+    )
+  }
+</>
