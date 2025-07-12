@@ -19,8 +19,6 @@ if (query) {
   const res = await fetch(apiUrl);
   results = await res.json();
 }
-console.log("[search.astro] QUERY:", query);
-console.log("[search.astro] RESULTS LENGTH:", results.length);
 
 const pageParam = Number(Astro.url.searchParams.get("page")) || 1;
 const RESULTS_PER_PAGE = 10;
