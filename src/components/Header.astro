@@ -5,6 +5,7 @@ import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
 import HeaderSearchBox from "./HeaderSearchBox.astro";
 import { Sun, Moon, ChevronDown, Linkedin, X } from "@lucide/astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 let isDark = false;
 if (typeof window !== "undefined") {
@@ -46,36 +47,7 @@ if (typeof window !== "undefined") {
       </div>
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-2">
-          <button
-            id="theme-toggle-btn"
-            type="button"
-            aria-label="Toggle dark mode"
-            class="h-9 w-9 flex items-center justify-center rounded-full bg-transparent hover:bg-secondary/50 transition-colors focus:outline-none"
-          >
-            <span id="theme-icon"></span>
-          </button>
-          <script is:inline>
-            if (typeof window !== "undefined") {
-              const btn = document.getElementById("theme-toggle-btn");
-              const iconSpan = document.getElementById("theme-icon");
-              const getSvg = (isDark) =>
-                isDark
-                  ? `<span class="inline-flex"><Moon class="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" /></span>`
-                  : `<span class="inline-flex"><Sun class="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" /></span>`;
-              const setIcon = () => {
-                const isDark =
-                  document.documentElement.classList.contains("dark");
-                iconSpan.innerHTML = getSvg(isDark);
-              };
-              setIcon();
-              btn.addEventListener("click", () => {
-                const isDark =
-                  document.documentElement.classList.toggle("dark");
-                localStorage.setItem("theme", isDark ? "dark" : "light");
-                setIcon();
-              });
-            }
-          </script>
+          <ThemeToggle />
           <div class="relative">
             <button
               id="avatar-btn"
