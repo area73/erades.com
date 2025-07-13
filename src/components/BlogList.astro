@@ -60,11 +60,20 @@ const {
   </div>
   <!-- Resultados -->
   <div class="mb-2 px-4 text-right">
+    {
+      totalPages > 1 && (
+        <Paginator
+          currentPage={currentPage}
+          totalPages={totalPages}
+          getPageHref={getPageHref}
+        />
+      )
+    }
     <ResultsInfo shown={paginatedPosts.length} total={posts.length} />
   </div>
   {
     viewMode === "grid" ? (
-      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end text-right">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end">
         {paginatedPosts.map((post: any) => (
           <li>
             <BlogCard post={post} variant="grid" />
@@ -72,7 +81,7 @@ const {
         ))}
       </ul>
     ) : (
-      <ul class="space-y-6 list-none m-0 p-0 text-right">
+      <ul class="space-y-6 list-none m-0 p-0">
         {paginatedPosts.map((post: any) => (
           <li>
             <BlogCard post={post} variant="list" />
