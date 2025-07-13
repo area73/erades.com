@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/BlogPost.astro";
+import BlogList from "../../../components/BlogList.astro";
+import { filterPostsByTag } from "../tag-utils";
+import { sortPosts, SORT_BY_OPTIONS } from "../../../utils/sort-utils";
+
+const tag = Astro.params.tag ?? "";
+const page = Number(Astro.params.page) || 1;
+const allPosts = await getCollection("blog");
+const postsWithTag = filterPostsByTag(allPosts, tag);
+
+// Extraer categorías únicas de los posts filtrados
+const categories = [
+  "Todas",
+  ...Array.from(
+    new Set(
+      postsWithTag.flatMap((post) =>
+        Array.isArray(post.data.categories) ? post.data.categories : []
+      )
+    )
+  ),
+];
+
+const url = new URL(Astro.request.url);
+const selectedCategory = url.searchParams.get("category") || "Todas";
+const sortByRaw = url.searchParams.get("sortBy") || "date-desc";
+const sortBy = SORT_BY_OPTIONS.includes(sortByRaw as any)
+  ? (sortByRaw as (typeof SORT_BY_OPTIONS)[number])
+  : "date-desc";
+const viewMode: "grid" | "list" =
+  (url.searchParams.get("view") as "grid" | "list") || "grid";
+
+function filterByCategory(posts: any[], category: string): any[] {
+  if (category === "Todas") return posts;
+  return posts.filter((post) => {
+    const cats = Array.isArray(post.data.categories)
+      ? post.data.categories
+      : [];
+    return cats.includes(category);
+  });
+}
+
+const filteredPosts = filterByCategory(postsWithTag, selectedCategory);
+const sortedPosts = sortPosts(filteredPosts, sortBy);
+
+// Paginación
+const POSTS_PER_PAGE = 6;
+const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
+const currentPage = page;
+const paginatedPosts = sortedPosts.slice(
+  (currentPage - 1) * POSTS_PER_PAGE,
+  currentPage * POSTS_PER_PAGE
+);
+
+const getCategoryHref = (cat: string) => {
+  const params = new URLSearchParams();
+  if (cat !== "Todas") params.set("category", cat);
+  if (sortBy) params.set("sortBy", sortBy);
+  return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
+};
+const getPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  if (selectedCategory !== "Todas") params.set("category", selectedCategory);
+  if (sortBy) params.set("sortBy", sortBy);
+  return (
+    (page === 1 ? `/tags/${tag}/` : `/tags/${tag}/${page}/`) +
+    (params.toString() ? `?${params.toString()}` : "")
+  );
+};
+---
+
+<Layout
+  title={`Posts tagged: ${tag}`}
+  description={`All posts tagged with '${tag}'.`}
+  tags={[]}
+  categories={categories.filter((c) => c !== "Todas")}
+  draft={false}
+>
+  <BlogList
+    posts={sortedPosts}
+    categories={categories}
+    selectedCategory={selectedCategory}
+    sortBy={sortBy}
+    viewMode={viewMode}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    paginatedPosts={paginatedPosts}
+    getCategoryHref={getCategoryHref}
+    getPageHref={getPageHref}
+    tag={tag}
+  />
+</Layout>

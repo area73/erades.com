@@ -43,7 +43,8 @@ function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
 }
 
-let sortBy = "date-desc";
+const rawSortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
+const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
 let viewMode: "grid" | "list" = "grid";
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
@@ -81,11 +82,13 @@ const paginatedPosts = filteredPosts.slice(
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
   if (cat.toLowerCase() !== "todas") params.set("category", cat.toLowerCase());
+  if (sortBy) params.set("sortBy", sortBy);
   return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "todas") params.set("category", selectedCategory);
+  if (sortBy) params.set("sortBy", sortBy);
   return (
     (page === 1 ? "/blog/" : `/blog/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
