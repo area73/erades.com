@@ -22,14 +22,12 @@ const posts = filterPostsByTag(await getCollection("blog"), tag);
 <Layout
   title={`Posts tagged: ${tag}`}
   description={`All posts tagged with '${tag}'.`}
-  pubDate={new Date()}
   tags={[]}
   categories={[]}
   draft={false}
-  heroImage="/blog-placeholder-about.jpg"
 >
   <section>
-    <h2 class="text-2xl font-bold mb-4">Posts tagged: {tag}</h2>
+    <h2 class="text-2xl font-bold mb-4">Artículos tageados: {tag}</h2>
     <ul>
       {
         posts.map((post: any) => (
