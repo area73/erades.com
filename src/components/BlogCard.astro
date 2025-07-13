@@ -68,7 +68,7 @@ const readTime = getReadTime(post.data.content || "");
           {Array.isArray(post.data.tags) && post.data.tags.length > 0 && (
             <div class="flex flex-wrap gap-2 mt-4">
               {post.data.tags.map((tag: string) => (
-                <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-muted-foreground border border-border">
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-secondary-foreground border border-border">
                   #{tag}
                 </span>
               ))}

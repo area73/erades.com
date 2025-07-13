@@ -217,3 +217,8 @@ añado esto para poder usar clases de tailwindCSS cuando se definen comom por ej
   --color-header-background: hsl(215 16% 98%);
   /*Puedes añadir aquí el resto de tus colores personalizados*/
 }
+
+html.dark {
+  /* --color-muted-foreground: hsl(215 16% 14%);*/
+  --color-header-background: hsl(215 16% 14%);
+}
