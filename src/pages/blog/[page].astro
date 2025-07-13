@@ -39,7 +39,8 @@ const categories = [
 
 // Obtener la categoría seleccionada de la query string
 const url = new URL(Astro.request.url);
-const selectedCategory = url.searchParams.get("category") || "Todas";
+const selectedCategory =
+  url.searchParams.get("category")?.toLowerCase() || "todas";
 
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
@@ -50,12 +51,14 @@ let viewMode: "grid" | "list" = "grid";
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
   let filtered =
-    category === "Todas"
+    category === "todas"
       ? posts
       : posts.filter((post) =>
           Array.isArray(post.data.categories)
-            ? post.data.categories.includes(category)
-            : category === "Sin categoría"
+            ? post.data.categories.some(
+                (cat: string) => cat.toLowerCase() === category
+              )
+            : category === "uncategorized"
         );
   const safeSort = isSortBy(sort) ? sort : "date-desc";
   return sortPosts(filtered, safeSort);
@@ -73,14 +76,14 @@ const paginatedPosts = filteredPosts.slice(
 
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
-  if (cat !== "Todas") params.set("category", cat);
+  if (cat !== "todas") params.set("category", cat);
   return (
     `/blog/${currentPage}/` + (params.toString() ? `?${params.toString()}` : "")
   );
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
-  if (selectedCategory !== "Todas") params.set("category", selectedCategory);
+  if (selectedCategory !== "todas") params.set("category", selectedCategory);
   return (
     (page === 1 ? "/blog/" : `/blog/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
