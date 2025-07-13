@@ -6,6 +6,7 @@ import { SITE_TITLE } from "../consts";
 import HeaderSearchBox from "./HeaderSearchBox.astro";
 import { Sun, Moon, ChevronDown, Linkedin, X } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import SocialProfileMenu from "./SocialProfileMenu.astro";
 
 let isDark = false;
 if (typeof window !== "undefined") {
@@ -63,39 +64,12 @@ if (typeof window !== "undefined") {
               />
               <ChevronDown class="ml-2 h-4 w-4 text-muted-foreground" />
             </button>
-            <div
-              id="avatar-menu"
-              class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover ring-1 ring-border focus:outline-none z-50"
-            >
-              <div class="py-3 px-4 border-b">
-                <div class="text-sm font-medium leading-none">
-                  Rodrigo Erades
-                </div>
-                <div class="text-xs text-muted-foreground truncate">
-                  rerades@siete3.com
-                </div>
-              </div>
-              <div class="py-1">
-                <a
-                  href="https://linkedin.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
-                >
-                  <Linkedin class="h-4 w-4 text-muted-foreground" />
-                  LinkedIn
-                </a>
-                <a
-                  href="https://x.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
-                >
-                  <X class="h-4 w-4 text-muted-foreground" />
-                  X
-                </a>
-              </div>
-            </div>
+            <SocialProfileMenu
+              name="Rodrigo Erades"
+              email="rerades@siete3.com"
+              linkedinUrl="https://linkedin.com/"
+              xUrl="https://x.com/"
+            />
             <script is:inline>
               if (typeof window !== "undefined") {
                 const btn = document.getElementById("avatar-btn");
@@ -119,7 +93,6 @@ if (typeof window !== "undefined") {
                     toggleMenu(false);
                   }
                 });
-                // Opcional: cerrar con Escape
                 document.addEventListener("keydown", (e) => {
                   if (open && e.key === "Escape") toggleMenu(false);
                 });
