@@ -4,9 +4,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import BlogList from "../../components/BlogList.astro";
 import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
-
 export const prerender = true;
-
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -38,9 +36,10 @@ const categories = [
 ];
 
 // Obtener la categoría seleccionada de la query string
-const url = new URL(Astro.request.url);
 const selectedCategory =
-  url.searchParams.get("category")?.toLowerCase() || "todas";
+  Astro.url.searchParams.get("category")?.toLowerCase() || "todas";
+console.log("[debug] selectedCategory:", selectedCategory);
+console.log("[debug] total posts before filter:", posts.length);
 
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
@@ -50,16 +49,32 @@ let sortBy = "date-desc";
 let viewMode: "grid" | "list" = "grid";
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
-  let filtered =
-    category === "todas"
-      ? posts
-      : posts.filter((post) =>
-          Array.isArray(post.data.categories)
-            ? post.data.categories.some(
-                (cat: string) => cat.toLowerCase() === category
-              )
-            : category === "uncategorized"
+  let filtered;
+  if (category === "todas") {
+    filtered = posts;
+  } else {
+    filtered = posts.filter((post) => {
+      if (Array.isArray(post.data.categories)) {
+        const match = post.data.categories.some((cat: string) => {
+          const isMatch = cat.toLowerCase() === category;
+          console.log(
+            `[debug] post '${post.data.title}' category '${cat}' match:`,
+            isMatch
+          );
+          return isMatch;
+        });
+        return match;
+      } else {
+        const isUncategorized = category === "uncategorized";
+        console.log(
+          `[debug] post '${post.data.title}' has no categories, isUncategorized:`,
+          isUncategorized
         );
+        return isUncategorized;
+      }
+    });
+  }
+  console.log("[debug] total posts after filter:", filtered.length);
   const safeSort = isSortBy(sort) ? sort : "date-desc";
   return sortPosts(filtered, safeSort);
 }
@@ -76,10 +91,8 @@ const paginatedPosts = filteredPosts.slice(
 
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
-  if (cat !== "todas") params.set("category", cat);
-  return (
-    `/blog/${currentPage}/` + (params.toString() ? `?${params.toString()}` : "")
-  );
+  if (cat.toLowerCase() !== "todas") params.set("category", cat.toLowerCase());
+  return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
