@@ -163,6 +163,7 @@ Then after having an fmap function that returns the same type object we can also
 <br>
 
 An finally we can say then that an object will be a functor if it fulfills these rules:
+
 **1) It is a wrapper object to contain our data**<br>
 **2) had a map function to iterate over its own data**<br>
 **3) preserves identity**<br>
