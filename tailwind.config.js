@@ -1,12 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 
 import plugin from "tailwindcss/plugin";
-import defaultTheme from "tailwindcss/defaultTheme";
+import animate from "tailwindcss-animate";
+
 console.log("Tailwind config loaded");
 export default {
   darkMode: "class",
   content: ["./src/**/*.{astro,js,ts,jsx,tsx}"],
   prefix: "",
+  safelist: ["pre", "code"],
   theme: {
     container: {
       center: true,
@@ -15,7 +17,6 @@ export default {
         "2xl": "1400px",
       },
     },
-
     extend: {
       fontFamily: {
         sans: ["Raleway", "Inter", "system-ui", "sans-serif"],
@@ -91,6 +92,5 @@ export default {
       },
     },
   },
-
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 };

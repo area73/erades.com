@@ -44,7 +44,6 @@
   navigation: auto;
 }
 
-/* Optional: Animate opacity for all view transitions */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 1.5s;
@@ -145,6 +144,8 @@ body {
 
 html.dark {
   /* Modo oscuro elegante */
+  /* --color-muted-foreground: hsl(215 16% 14%);*/
+  --color-header-background: hsl(215 16% 14%);
   --background: hsl(215 28% 8%);
   --foreground: hsl(60, 20%, 95%);
 
@@ -218,7 +219,49 @@ añado esto para poder usar clases de tailwindCSS cuando se definen comom por ej
   /*Puedes añadir aquí el resto de tus colores personalizados*/
 }
 
-html.dark {
-  /* --color-muted-foreground: hsl(215 16% 14%);*/
-  --color-header-background: hsl(215 16% 14%);
+code {
+  background-color: var(--color-muted);
+  margin-top: 2rem;
+  padding: 0.5rem;
+
+  border-radius: 0.375rem;
+  /*display: inline-block;*/
+  font-size: 0.875em;
+}
+
+.expressive-code pre {
+  margin: 1rem 0 !important;
+}
+
+.bibliography {
+  margin-top: 2rem;
+  padding: 1.5rem 1rem;
+  background: var(--color-muted, #f3f5f6);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px #0001;
+}
+.bibliography > h2,
+.bibliography > h3,
+.bibliography > h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary, #3182ed);
+}
+.bibliography ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+.bibliography li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+.bibliography a {
+  color: var(--color-primary, #3182ed);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.bibliography a:hover {
+  color: var(--color-primary-hover, #1471eb);
 }
