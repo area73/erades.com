@@ -2,7 +2,7 @@
 title: "Lexical and Dynamic scope"
 description: "Understanding lexical and dynamic scoping in JavaScript, including the eval keyword and its performance implications"
 pubDate: "2018-01-14"
-tags: ["scope", "eval", "javascript"]
+tags: ["scope", "eval", "javascript", "declarative"]
 categories: ["javascript"]
 draft: false
 heroImage: "/blog-placeholder-18.jpg"
