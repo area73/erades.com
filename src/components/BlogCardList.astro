@@ -13,14 +13,15 @@ const href = post.data?.path || (post.id ? `/blog/${post.id}/` : "#");
     class="rounded-xl overflow-hidden shadow-sm bg-card border border-border hover:shadow-medium transition-all duration-300"
   >
     <div class="grid md:grid-cols-4 gap-6">
-      <div class="md:col-span-1">
+      <div class="md:col-span-1 h-full">
         <div
-          class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden"
+          class="h-full w-full bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden flex"
         >
           <img
             src={post.data.heroImage}
             alt={post.data.title}
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+            style="display: block;"
           />
         </div>
       </div>
