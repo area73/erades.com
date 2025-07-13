@@ -71,13 +71,11 @@ if (!categories.includes("all")) categories.unshift("all");
 >
   <section>
     <div class="max-w-[1200px] mx-auto pt-8 transition-main">
-      <div class="mb-8">
-        <ResultsInfo
-          shown={paginatedResults.length}
-          total={filteredResults.length}
-          query={query}
-        />
-      </div>
+      <h1
+        class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
+      >
+        Resultados de búsqueda
+      </h1>
       <BlogFilters
         categories={categories}
         selectedCategory={categoryParam}
@@ -86,7 +84,14 @@ if (!categories.includes("all")) categories.unshift("all");
         getCategoryHref={(cat: string) =>
           `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
       />
-      <div class="mx-auto px-4 py-8">
+      <div class="mb-8 mx-auto px-4 text-right">
+        <ResultsInfo
+          shown={paginatedResults.length}
+          total={filteredResults.length}
+          query={query}
+        />
+      </div>
+      <div class="mx-auto px-4">
         <ul class="grid grid-cols-1 md:grid-cols-3 gap-8 list-none m-0 p-0">
           {
             paginatedResults.length === 0 && query ? (
