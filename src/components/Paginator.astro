@@ -12,6 +12,8 @@ interface Props {
   nextLabel?: string;
   /** Si deshabilitar los enlaces cuando no son navegables */
   disableInactive?: boolean;
+  /** Clase adicional para el contenedor */
+  customClass?: string;
 }
 const {
   currentPage,
@@ -20,12 +22,15 @@ const {
   prevLabel = "Anterior",
   nextLabel = "Siguiente",
   disableInactive = true,
+  customClass,
 } = Astro.props as Props;
 ---
 
 {
   totalPages > 1 && (
-    <div class="flex justify-center mt-12">
+    <div
+      class={`flex justify-center mt-12${customClass ? ` ${customClass}` : ""}`}
+    >
       <div class="flex gap-2">
         {currentPage === 1 ? (
           <span class="inline-flex items-center px-3 py-1 rounded border border-border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed">
