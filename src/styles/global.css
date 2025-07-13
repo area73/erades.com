@@ -57,6 +57,35 @@
     border-color: var(--border);
   }
 
+  h1 {
+    font-size: var(--text-4xl);
+    line-height: var(--line-height-2xl);
+  }
+  h2 {
+    font-size: var(--text-xl);
+    line-height: var(--line-height-2xl);
+  }
+  h3 {
+    font-size: var(--text-lg);
+    line-height: var(--line-height-lg);
+  }
+  h4 {
+    font-size: var(--text-md);
+  }
+  h5 {
+    font-size: var(--text-sm);
+    line-height: var(--line-height-sm);
+  }
+  h6 {
+    font-size: var(--text-xs);
+    line-height: var(--line-height-xs);
+  }
+  p {
+    font-size: var(--text-md);
+    line-height: var(--line-height-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
   :root {
     /* Colores base - paleta moderna y sofisticada */
     --background: hsl(0 0% 99%);
@@ -127,6 +156,13 @@
     --shadow-large: 0 8px 40px hsl(215 25% 15%/0.15);
 
     /* Espaciado del sistema */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 4rem;
+    --spacing-2xl: 8rem;
+    /* border radius */
     --radius: 0.75rem;
     --radius-sm: 0.5rem;
     --radius-lg: 1rem;
@@ -209,6 +245,19 @@ html.dark {
 añado esto para poder usar clases de tailwindCSS cuando se definen comom por ejemplo text-muted-foreground
 */
 @theme {
+  --text-2xl: 2rem;
+  --text-xl: 1.5rem;
+  --text-lg: 1.25rem;
+  --text-md: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+  --line-height-2xl: 4rem;
+  --line-height-xl: 3rem;
+  --line-height-lg: 2.5rem;
+  --line-height-md: 2rem;
+  --line-height-sm: 1.75rem;
+  --line-height-xs: 1.5rem;
+
   --color-muted: hsl(215 16% 96%);
   --color-muted-foreground: var(--muted-foreground);
   --color-secondary: hsl(215 16% 95%);
@@ -221,7 +270,8 @@ añado esto para poder usar clases de tailwindCSS cuando se definen comom por ej
 
 code {
   background-color: var(--color-muted);
-  margin-top: 2rem;
+  color: var(--color-primary);
+
   padding: 0.5rem;
 
   border-radius: 0.375rem;
@@ -230,7 +280,7 @@ code {
 }
 
 .expressive-code pre {
-  margin: 1rem 0 !important;
+  margin: 0rem 0 2rem 0 !important;
 }
 
 .bibliography {
