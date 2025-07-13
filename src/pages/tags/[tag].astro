@@ -1,30 +1,22 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../../layouts/BlogPost.astro";
-import BlogList from "../../../components/BlogList.astro";
-import { filterPostsByTag } from "../tag-utils";
-import { sortPosts, SORT_BY_OPTIONS } from "../../../utils/sort-utils";
+import Layout from "../../layouts/BlogPost.astro";
+import BlogList from "../../components/BlogList.astro";
+import { filterPostsByTag } from "./tag-utils";
+import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 
-export const prerender = true;
+// Elimina getStaticPaths, ya no es necesario en SSR
+// export async function getStaticPaths() {
+//   const posts = await getCollection("blog");
+//   const tags = posts.map((post) => post.data.tags || []).flat();
+//   const uniqueTags = [...new Set(tags)];
+//   return uniqueTags.map((tag) => ({
+//     params: { tag },
+//     props: { tag },
+//   }));
+// }
 
-export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  const tags = posts.map((post) => post.data.tags || []).flat();
-  const uniqueTags = [...new Set(tags)];
-  // Para cada tag, calcula cuántas páginas necesita
-  const POSTS_PER_PAGE = 6;
-  const paths = [];
-  for (const tag of uniqueTags) {
-    const filtered = filterPostsByTag(posts, tag);
-    const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
-    for (let page = 2; page <= totalPages; page++) {
-      paths.push({ params: { tag, page: String(page) }, props: { tag, page } });
-    }
-  }
-  return paths;
-}
-
-const { tag, page } = Astro.props;
+const tag = Astro.params.tag ?? "";
 const allPosts = await getCollection("blog");
 const postsWithTag = filterPostsByTag(allPosts, tag);
 
@@ -42,12 +34,12 @@ const categories = [
 
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get("category") || "Todas";
-const sortBy = url.searchParams.get("sortBy") || "date-desc";
-let viewMode = (url.searchParams.get("view") as "grid" | "list") || "grid";
-
-function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
-  return SORT_BY_OPTIONS.includes(value as any);
-}
+const sortByRaw = url.searchParams.get("sortBy") || "date-desc";
+const sortBy = SORT_BY_OPTIONS.includes(sortByRaw as any)
+  ? (sortByRaw as (typeof SORT_BY_OPTIONS)[number])
+  : "date-desc";
+const viewMode: "grid" | "list" =
+  (url.searchParams.get("view") as "grid" | "list") || "grid";
 
 function filterByCategory(posts: any[], category: string): any[] {
   if (category === "Todas") return posts;
@@ -60,14 +52,12 @@ function filterByCategory(posts: any[], category: string): any[] {
 }
 
 const filteredPosts = filterByCategory(postsWithTag, selectedCategory);
-const sortedPosts = isSortBy(sortBy)
-  ? sortPosts(filteredPosts, sortBy)
-  : filteredPosts;
+const sortedPosts = sortPosts(filteredPosts, sortBy);
 
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
-const currentPage = Number(page);
+const currentPage = 1;
 const paginatedPosts = sortedPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
@@ -75,9 +65,8 @@ const paginatedPosts = sortedPosts.slice(
 
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
-  if (cat !== "Todas") params.set("category", cat); // Usa el valor real
+  if (cat !== "Todas") params.set("category", cat);
   if (sortBy) params.set("sortBy", sortBy);
-  // Siempre ir a la página 1 al cambiar de categoría
   return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
@@ -109,5 +98,6 @@ const getPageHref = (page: number) => {
     paginatedPosts={paginatedPosts}
     getCategoryHref={getCategoryHref}
     getPageHref={getPageHref}
+    tag={tag}
   />
 </Layout>
