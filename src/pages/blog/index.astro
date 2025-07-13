@@ -1,12 +1,8 @@
 ---
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
+import Layout from "../../layouts/BlogPost.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
-import FormattedDate from "../../components/FormattedDate.astro";
-import Paginator from "../../components/Paginator.astro";
-import BlogFilters from "../../components/BlogFilters.astro";
-import BlogCard from "../../components/BlogCard.astro";
+import BlogList from "../../components/BlogList.astro";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -17,26 +13,26 @@ const categories = [
   "Todas",
   ...Array.from(
     new Set(
-      posts.map(
-        (post) =>
-          (post.data.categories && post.data.categories[0]) || "Sin categoría"
+      posts.flatMap((post) =>
+        Array.isArray(post.data.categories) ? post.data.categories : []
       )
     )
   ),
 ];
 
-let selectedCategory = "Todas";
+const url = new URL(Astro.request.url);
+const selectedCategory = url.searchParams.get("category") || "Todas";
 let sortBy = "date-desc";
-let viewMode = "grid"; // "grid" o "list"
+let viewMode: "grid" | "list" = "grid"; // "grid" o "list"
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
   let filtered =
     category === "Todas"
       ? posts
-      : posts.filter(
-          (post) =>
-            ((post.data.categories && post.data.categories[0]) ||
-              "Sin categoría") === category
+      : posts.filter((post) =>
+          Array.isArray(post.data.categories)
+            ? post.data.categories.includes(category)
+            : category === "Sin categoría"
         );
   switch (sort) {
     case "date-asc":
@@ -81,73 +77,39 @@ const paginatedPosts = filteredPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
 );
+
+const getCategoryHref = (cat: string) => {
+  const params = new URLSearchParams();
+  if (cat !== "Todas") params.set("category", cat);
+  return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
+};
+const getPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  if (selectedCategory !== "Todas") params.set("category", selectedCategory);
+  return (
+    (page === 1 ? "/blog/" : `/blog/${page}/`) +
+    (params.toString() ? `?${params.toString()}` : "")
+  );
+};
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-  </head>
-  <body class="bg-background text-foreground min-h-screen">
-    <Header />
-    <main class="max-w-6xl mx-auto pt-8 px-4 transition-main">
-      <section>
-        <div class="mb-8">
-          <h1 class="text-4xl font-bold text-foreground mb-4 font-serif">
-            Todos los Posts
-          </h1>
-          <p class="text-xl text-muted-foreground">
-            Explora la colección completa de artículos sobre tecnología,
-            desarrollo y diseño.
-          </p>
-        </div>
-        <!-- Filtros -->
-        <div class="max-w-5xl mx-auto px-4 py-8">
-          <BlogFilters
-            categories={categories}
-            selectedCategory={selectedCategory}
-            sortBy={sortBy}
-            viewMode={viewMode}
-            getCategoryHref={(cat: string) =>
-              cat === "Todas"
-                ? `/blog/`
-                : `/blog/?category=${encodeURIComponent(cat)}`}
-          />
-        </div>
-
-        <!-- Resultados -->
-        <div class="mb-6">
-          <p class="text-sm text-muted-foreground">
-            Mostrando {paginatedPosts.length} de {filteredPosts.length} posts
-          </p>
-        </div>
-        {
-          viewMode === "grid" ? (
-            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 p-0">
-              {paginatedPosts.map((post: any) => (
-                <li>
-                  <BlogCard post={post} variant="grid" />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <ul class="space-y-6 list-none m-0 p-0">
-              {paginatedPosts.map((post: any) => (
-                <li>
-                  <BlogCard post={post} />
-                </li>
-              ))}
-            </ul>
-          )
-        }
-        <!-- Paginador -->
-        {
-          totalPages > 1 && (
-            <Paginator currentPage={currentPage} totalPages={totalPages} />
-          )
-        }
-      </section>
-    </main>
-    <div class="h-20"></div>
-  </body>
-</html>
+<Layout
+  title="Todos los Posts"
+  description={SITE_DESCRIPTION}
+  tags={[]}
+  categories={categories.filter((c) => c !== "Todas")}
+  draft={false}
+>
+  <BlogList
+    posts={filteredPosts}
+    categories={categories}
+    selectedCategory={selectedCategory}
+    sortBy={sortBy}
+    viewMode={viewMode}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    paginatedPosts={paginatedPosts}
+    getCategoryHref={getCategoryHref}
+    getPageHref={getPageHref}
+  />
+</Layout>

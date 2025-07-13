@@ -1,0 +1,88 @@
+---
+import BlogFilters from "./BlogFilters.astro";
+import BlogCard from "./BlogCard.astro";
+import Paginator from "./Paginator.astro";
+
+interface Props {
+  posts: any[];
+  categories: string[];
+  selectedCategory: string;
+  sortBy: string;
+  viewMode: "grid" | "list";
+  currentPage: number;
+  totalPages: number;
+  paginatedPosts: any[];
+  getCategoryHref: (cat: string) => string;
+  getPageHref: (page: number) => string;
+}
+const {
+  posts,
+  categories,
+  selectedCategory,
+  sortBy,
+  viewMode,
+  currentPage,
+  totalPages,
+  paginatedPosts,
+  getCategoryHref,
+  getPageHref,
+} = Astro.props as Props;
+---
+
+<section>
+  <div class="mb-16 text-center">
+    <h1 class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6">
+      Todos los Posts
+    </h1>
+    <p class="text-xl text-muted-foreground">
+      Explora la colección completa de artículos sobre tecnología, desarrollo y
+      diseño.
+    </p>
+  </div>
+  <!-- Filtros -->
+  <div class="mx-auto">
+    <BlogFilters
+      categories={categories}
+      selectedCategory={selectedCategory}
+      sortBy={sortBy}
+      viewMode={viewMode}
+      getCategoryHref={getCategoryHref}
+    />
+  </div>
+  <!-- Resultados -->
+  <div class="mb-2 px-4 text-right">
+    <p class="text-sm text-muted-foreground inline-block">
+      Mostrando {paginatedPosts.length} de {posts.length} posts
+    </p>
+  </div>
+  {
+    viewMode === "grid" ? (
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end text-right">
+        {paginatedPosts.map((post: any) => (
+          <li>
+            <BlogCard post={post} variant="grid" />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <ul class="space-y-6 list-none m-0 p-0 text-right">
+        {paginatedPosts.map((post: any) => (
+          <li>
+            <BlogCard post={post} variant="list" />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <!-- Paginador -->
+  {
+    totalPages > 1 && (
+      <Paginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        getPageHref={getPageHref}
+      />
+    )
+  }
+  <div class="h-20"></div>
+</section>
