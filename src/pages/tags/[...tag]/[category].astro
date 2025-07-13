@@ -11,20 +11,28 @@ export async function getStaticPaths() {
   const posts = await getCollection("blog");
   const tags = posts.map((post) => post.data.tags || []).flat();
   const uniqueTags = [...new Set(tags)];
-  // Para cada tag, calcula cuántas páginas necesita
-  const POSTS_PER_PAGE = 6;
+  const categoriesSet = new Set(
+    posts.flatMap((post) =>
+      Array.isArray(post.data.categories) ? post.data.categories : []
+    )
+  );
+  const uniqueCategories = [...categoriesSet];
   const paths = [];
   for (const tag of uniqueTags) {
     const filtered = filterPostsByTag(posts, tag);
-    const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
-    for (let page = 2; page <= totalPages; page++) {
-      paths.push({ params: { tag, page: String(page) }, props: { tag, page } });
+    const categoriesForTag = new Set(
+      filtered.flatMap((post) =>
+        Array.isArray(post.data.categories) ? post.data.categories : []
+      )
+    );
+    for (const category of categoriesForTag) {
+      paths.push({ params: { tag, category }, props: { tag, category } });
     }
   }
   return paths;
 }
 
-const { tag, page } = Astro.props;
+const { tag, category } = Astro.props;
 const allPosts = await getCollection("blog");
 const postsWithTag = filterPostsByTag(allPosts, tag);
 
@@ -40,10 +48,10 @@ const categories = [
   ),
 ];
 
-const url = new URL(Astro.request.url);
-const selectedCategory = url.searchParams.get("category") || "Todas";
-const sortBy = url.searchParams.get("sortBy") || "date-desc";
-let viewMode = (url.searchParams.get("view") as "grid" | "list") || "grid";
+const selectedCategory = category || "Todas";
+const sortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
+let viewMode: "grid" | "list" =
+  (Astro.url.searchParams.get("view") as "grid" | "list") || "grid";
 
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
@@ -67,33 +75,37 @@ const sortedPosts = isSortBy(sortBy)
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
-const currentPage = Number(page);
+const currentPage = 1;
 const paginatedPosts = sortedPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
 );
 
 const getCategoryHref = (cat: string) => {
-  const params = new URLSearchParams();
-  if (cat !== "Todas") params.set("category", cat); // Usa el valor real
-  if (sortBy) params.set("sortBy", sortBy);
-  // Siempre ir a la página 1 al cambiar de categoría
-  return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
+  if (cat === "Todas") {
+    return `/tags/${tag}/` + (sortBy ? `?sortBy=${sortBy}` : "");
+  }
+  return `/tags/${tag}/${cat}/` + (sortBy ? `?sortBy=${sortBy}` : "");
 };
 const getPageHref = (page: number) => {
-  const params = new URLSearchParams();
-  if (selectedCategory !== "Todas") params.set("category", selectedCategory);
-  if (sortBy) params.set("sortBy", sortBy);
+  if (selectedCategory === "Todas") {
+    return (
+      (page === 1 ? `/tags/${tag}/` : `/tags/${tag}/${page}/`) +
+      (sortBy ? `?sortBy=${sortBy}` : "")
+    );
+  }
   return (
-    (page === 1 ? `/tags/${tag}/` : `/tags/${tag}/${page}/`) +
-    (params.toString() ? `?${params.toString()}` : "")
+    (page === 1
+      ? `/tags/${tag}/${selectedCategory}/`
+      : `/tags/${tag}/${selectedCategory}/${page}/`) +
+    (sortBy ? `?sortBy=${sortBy}` : "")
   );
 };
 ---
 
 <Layout
-  title={`Posts tagged: ${tag}`}
-  description={`All posts tagged with '${tag}'.`}
+  title={`Posts tagged: ${tag}${selectedCategory !== "Todas" ? `, category: ${selectedCategory}` : ""}`}
+  description={`All posts tagged with '${tag}'${selectedCategory !== "Todas" ? ` and category '${selectedCategory}'` : ""}.`}
   tags={[]}
   categories={categories.filter((c) => c !== "Todas")}
   draft={false}

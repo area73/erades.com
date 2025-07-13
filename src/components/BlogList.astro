@@ -15,6 +15,7 @@ interface Props {
   paginatedPosts: any[];
   getCategoryHref: (cat: string) => string;
   getPageHref: (page: number) => string;
+  tag?: string;
 }
 const {
   posts,
@@ -27,6 +28,7 @@ const {
   paginatedPosts,
   getCategoryHref,
   getPageHref,
+  tag,
 } = Astro.props as Props;
 ---
 
@@ -52,6 +54,7 @@ const {
       selectedCategory={selectedCategory}
       sortBy={sortBy}
       viewMode={viewMode}
+      tag={tag}
       getCategoryHref={getCategoryHref}
     />
   </div>

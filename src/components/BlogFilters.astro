@@ -5,12 +5,19 @@ interface Props {
   selectedCategory: string;
   sortBy: string;
   viewMode: string;
-  // Los siguientes props son para manejar cambios (en este caso, solo render, no eventos)
-  // Si se quiere manejar eventos, se debe hacer con JS client-side
+  tag?: string;
   getCategoryHref?: (cat: string) => string;
 }
-const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
+const { categories, selectedCategory, sortBy, viewMode, tag, getCategoryHref } =
   Astro.props as Props;
+
+function getCategoryHrefLocal(cat: string) {
+  if (!tag) return getCategoryHref ? getCategoryHref(cat) : "#";
+  if (cat === "Todas") {
+    return `/tags/${tag}/` + (sortBy ? `?sortBy=${sortBy}` : "");
+  }
+  return `/tags/${tag}/${cat}/` + (sortBy ? `?sortBy=${sortBy}` : "");
+}
 ---
 
 <form
@@ -23,32 +30,21 @@ const { categories, selectedCategory, sortBy, viewMode, getCategoryHref } =
       <span class="text-sm text-muted-foreground">Categoría:</span>
       <div class="flex gap-2">
         {
-          categories.map((category) =>
-            getCategoryHref ? (
-              <a
-                href={getCategoryHref(category)}
-                class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.toLowerCase() === category.toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
-                aria-current={
-                  selectedCategory.toLowerCase() === category.toLowerCase()
-                    ? "page"
-                    : undefined
-                }
-                tabindex={0}
-              >
-                {category}
-              </a>
-            ) : (
-              <button
-                type="button"
-                class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.toLowerCase() === category.toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
-                aria-pressed={
-                  selectedCategory.toLowerCase() === category.toLowerCase()
-                }
-              >
-                {category}
-              </button>
-            )
-          )
+          categories.map((category) => (
+            <a
+              href={getCategoryHrefLocal(category)}
+              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
+              aria-current={
+                selectedCategory.trim().toLowerCase() ===
+                category.trim().toLowerCase()
+                  ? "page"
+                  : undefined
+              }
+              tabindex={0}
+            >
+              {category}
+            </a>
+          ))
         }
       </div>
     </div>

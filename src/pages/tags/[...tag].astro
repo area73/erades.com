@@ -19,57 +19,64 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.props;
 const allPosts = await getCollection("blog");
-const posts = filterPostsByTag(allPosts, tag);
+const postsWithTag = filterPostsByTag(allPosts, tag);
 
 // Extraer categorías únicas de los posts filtrados
 const categories = [
   "Todas",
   ...Array.from(
     new Set(
-      posts.flatMap((post) =>
+      postsWithTag.flatMap((post) =>
         Array.isArray(post.data.categories) ? post.data.categories : []
       )
     )
   ),
 ];
 
-const url = new URL(Astro.request.url);
-const selectedCategory = url.searchParams.get("category") || "Todas";
-const sortBy = url.searchParams.get("sortBy") || "date-desc";
-let viewMode = (url.searchParams.get("view") as "grid" | "list") || "grid";
+let selectedCategory = "Todas";
+let sortBy = "date-desc";
+let viewMode: "grid" | "list" = "grid";
+if (typeof Astro.request !== "undefined") {
+  const url = new URL(Astro.request.url);
+  selectedCategory = url.searchParams.get("category") || "Todas";
+  sortBy = url.searchParams.get("sortBy") || "date-desc";
+  const vm = url.searchParams.get("view");
+  viewMode = vm === "list" ? "list" : "grid";
+}
 
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
 }
 
-function filterPosts(posts: any[], category: string, sort: string): any[] {
-  let filtered =
-    category === "Todas"
-      ? posts
-      : posts.filter((post) =>
-          Array.isArray(post.data.categories)
-            ? post.data.categories.includes(category)
-            : category === "Sin categoría"
-        );
-  const safeSort = isSortBy(sort) ? sort : "date-desc";
-  return sortPosts(filtered, safeSort);
+function filterByCategory(posts: any[], category: string): any[] {
+  if (category === "Todas") return posts;
+  return posts.filter((post) => {
+    const cats = Array.isArray(post.data.categories)
+      ? post.data.categories
+      : [];
+    return cats.includes(category);
+  });
 }
 
-let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
+const filteredPosts = filterByCategory(postsWithTag, selectedCategory);
+const sortedPosts = isSortBy(sortBy)
+  ? sortPosts(filteredPosts, sortBy)
+  : filteredPosts;
 
 // Paginación
 const POSTS_PER_PAGE = 6;
-const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
 const currentPage = 1; // Solo página 1 en este archivo, las siguientes serían /tags/[...tag]/[page].astro
-const paginatedPosts = filteredPosts.slice(
+const paginatedPosts = sortedPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
 );
 
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
-  if (cat !== "Todas") params.set("category", cat);
+  if (cat !== "Todas") params.set("category", cat); // Usa el valor real
   if (sortBy) params.set("sortBy", sortBy);
+  // Siempre ir a la página 1 al cambiar de categoría
   return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
@@ -91,7 +98,7 @@ const getPageHref = (page: number) => {
   draft={false}
 >
   <BlogList
-    posts={filteredPosts}
+    posts={sortedPosts}
     categories={categories}
     selectedCategory={selectedCategory}
     sortBy={sortBy}
@@ -101,5 +108,6 @@ const getPageHref = (page: number) => {
     paginatedPosts={paginatedPosts}
     getCategoryHref={getCategoryHref}
     getPageHref={getPageHref}
+    tag={tag}
   />
 </Layout>

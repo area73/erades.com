@@ -38,8 +38,6 @@ const categories = [
 // Obtener la categoría seleccionada de la query string
 const selectedCategory =
   Astro.url.searchParams.get("category")?.toLowerCase() || "todas";
-console.log("[debug] selectedCategory:", selectedCategory);
-console.log("[debug] total posts before filter:", posts.length);
 
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
@@ -57,24 +55,15 @@ function filterPosts(posts: any[], category: string, sort: string): any[] {
       if (Array.isArray(post.data.categories)) {
         const match = post.data.categories.some((cat: string) => {
           const isMatch = cat.toLowerCase() === category;
-          console.log(
-            `[debug] post '${post.data.title}' category '${cat}' match:`,
-            isMatch
-          );
           return isMatch;
         });
         return match;
       } else {
         const isUncategorized = category === "uncategorized";
-        console.log(
-          `[debug] post '${post.data.title}' has no categories, isUncategorized:`,
-          isUncategorized
-        );
         return isUncategorized;
       }
     });
   }
-  console.log("[debug] total posts after filter:", filtered.length);
   const safeSort = isSortBy(sort) ? sort : "date-desc";
   return sortPosts(filtered, safeSort);
 }
