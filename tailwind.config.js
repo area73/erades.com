@@ -7,6 +7,19 @@ export default {
   darkMode: "class",
   content: ["./src/**/*.{astro,js,ts,jsx,tsx}"],
   prefix: "",
+  safelist: [
+    "bg-primary",
+    "text-primary-foreground",
+    "border-primary",
+    "bg-card",
+    "text-foreground",
+    "border-border",
+    "hover:bg-primary/10",
+    "bg-secondary",
+    "text-secondary-foreground",
+    "opacity-50",
+    "cursor-not-allowed",
+  ],
 
   theme: {
     container: {

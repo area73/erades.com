@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import Layout from "../../layouts/BlogPost.astro";
 import { filterPostsByTag } from "./tag-utils";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   const tags = posts.map((post) => post.data.tags || []).flat();
