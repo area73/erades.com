@@ -2,18 +2,37 @@
 import type { HTMLAttributes } from "astro/types";
 import { Home, FileText, Info, Tag, Hash } from "@lucide/astro";
 
+const ICONS = {
+  "/": Home,
+  "/blog": FileText,
+  "/about": Info,
+  "/tags": Hash,
+} as const;
+
 type Props = HTMLAttributes<"a">;
 
 const { href, ...rest } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
+const Icon = ICONS[href as keyof typeof ICONS];
 ---
 
-<a href={href} class="inline-flex items-center" {...rest}>
-  {href === "/" && <Home class="h-4 w-4 mr-2 text-muted-foreground" />}
-  {href === "/blog" && <FileText class="h-4 w-4 mr-2 text-muted-foreground" />}
-  {href === "/about" && <Info class="h-4 w-4 mr-2 text-muted-foreground" />}
-  {href === "/tags" && <Hash class="h-4 w-4 mr-2 text-muted-foreground" />}
+<a
+  href={href}
+  class={"inline-flex items-center" +
+    (isActive ? " text-primary font-bold" : "")}
+  {...rest}
+>
+  {
+    Icon && (
+      <Icon
+        class={
+          "h-4 w-4 mr-2 " +
+          (isActive ? "text-primary" : "text-muted-foreground")
+        }
+      />
+    )
+  }
   <slot />
 </a>
