@@ -24,11 +24,18 @@ const categories = [
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get("category") || "Todas";
 
+console.log("[BLOG] url:", url.href);
+
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
 }
 
-let sortBy = "date-desc";
+const rawSortBy = url.searchParams.get("sortBy") || "date-desc";
+const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
+
+console.log("[BLOG] rawSortBy:", rawSortBy, "sortBy:", sortBy);
+console.log("[BLOG] selectedCategory:", selectedCategory);
+
 let viewMode: "grid" | "list" = "grid"; // "grid" o "list"
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
@@ -46,6 +53,10 @@ function filterPosts(posts: any[], category: string, sort: string): any[] {
 
 let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
 
+console.log(
+  "[BLOG] filteredPosts:",
+  filteredPosts.map((p) => p.data?.title)
+);
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
