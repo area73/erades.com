@@ -3,6 +3,7 @@ import Layout from "../../layouts/BlogPost.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import BlogList from "../../components/BlogList.astro";
+import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 
 export const prerender = true;
 
@@ -39,6 +40,11 @@ const categories = [
 // Obtener la categoría seleccionada de la query string
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get("category") || "Todas";
+
+function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
+  return SORT_BY_OPTIONS.includes(value as any);
+}
+
 let sortBy = "date-desc";
 let viewMode: "grid" | "list" = "grid";
 
@@ -51,37 +57,8 @@ function filterPosts(posts: any[], category: string, sort: string): any[] {
             ? post.data.categories.includes(category)
             : category === "Sin categoría"
         );
-  switch (sort) {
-    case "date-asc":
-      filtered = filtered
-        .slice()
-        .sort(
-          (a: any, b: any) =>
-            a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
-        );
-      break;
-    case "date-desc":
-      filtered = filtered
-        .slice()
-        .sort(
-          (a: any, b: any) =>
-            b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-        );
-      break;
-    case "title":
-      filtered = filtered
-        .slice()
-        .sort((a: any, b: any) => a.data.title.localeCompare(b.data.title));
-      break;
-    case "author":
-      filtered = filtered
-        .slice()
-        .sort((a: any, b: any) =>
-          (a.data.author || "").localeCompare(b.data.author || "")
-        );
-      break;
-  }
-  return filtered;
+  const safeSort = isSortBy(sort) ? sort : "date-desc";
+  return sortPosts(filtered, safeSort);
 }
 
 let filteredPosts = filterPosts(posts, selectedCategory, sortBy);

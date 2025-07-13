@@ -9,6 +9,7 @@ import BlogCard from "../components/BlogCard.astro";
 import NoResults from "../components/NoResults.astro";
 import ResultsInfo from "../components/ResultsInfo.astro";
 import { Search as SearchIcon } from "@lucide/astro";
+import { sortPosts, SORT_BY_OPTIONS } from "../utils/sort-utils";
 
 const query = Astro.url.searchParams.get("q") || "";
 
@@ -35,32 +36,14 @@ const filteredResults =
 const totalPages = Math.ceil(filteredResults.length / RESULTS_PER_PAGE);
 const currentPage = Math.max(1, Math.min(pageParam, totalPages || 1));
 
-const sortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
-// Ordenar los resultados filtrados según sortBy
-let sortedResults = [...filteredResults];
-switch (sortBy) {
-  case "date-asc":
-    sortedResults.sort(
-      (a: any, b: any) =>
-        new Date(a.pubDate || a.data?.pubDate || 0).valueOf() -
-        new Date(b.pubDate || b.data?.pubDate || 0).valueOf()
-    );
-    break;
-  case "date-desc":
-    sortedResults.sort(
-      (a: any, b: any) =>
-        new Date(b.pubDate || b.data?.pubDate || 0).valueOf() -
-        new Date(a.pubDate || a.data?.pubDate || 0).valueOf()
-    );
-    break;
-  case "title":
-    sortedResults.sort((a: any, b: any) =>
-      (a.title || a.data?.title || "").localeCompare(
-        b.title || b.data?.title || ""
-      )
-    );
-    break;
+function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
+  return SORT_BY_OPTIONS.includes(value as any);
 }
+
+const rawSortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
+const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
+// Ordenar los resultados filtrados según sortBy
+const sortedResults = sortPosts(filteredResults, sortBy);
 
 const paginatedResults = sortedResults.slice(
   (currentPage - 1) * RESULTS_PER_PAGE,
