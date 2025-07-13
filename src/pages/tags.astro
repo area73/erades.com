@@ -68,21 +68,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
         </p>
       </div>
       <!-- Search -->
-      <div class="max-w-md mx-auto mb-8">
-        <form method="get" class="relative">
-          <Search
-            class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-          />
-          <input
-            type="search"
-            name="q"
-            value={query}
-            placeholder="Buscar etiquetas..."
-            class="pl-10 pr-4 h-11 w-full rounded-md border bg-secondary text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
-            autocomplete="off"
-          />
-        </form>
-      </div>
+
       <!-- Tag Cloud Card (Full Width) -->
       <div
         class="mb-8 bg-card rounded-xl border border-border shadow-soft p-6 w-full"
