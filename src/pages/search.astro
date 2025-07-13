@@ -24,9 +24,9 @@ if (query) {
 const pageParam = Number(Astro.url.searchParams.get("page")) || 1;
 const RESULTS_PER_PAGE = 10;
 // Filtrar resultados por categoría seleccionada
-const categoryParam = Astro.url.searchParams.get("category") || "all";
+const categoryParam = Astro.url.searchParams.get("category") || "Todas";
 const filteredResults =
-  categoryParam === "all"
+  categoryParam === "Todas"
     ? results
     : results.filter((post: any) =>
         Array.isArray(post.categories)
@@ -59,7 +59,7 @@ const categories = [
     )
   ),
 ] as string[];
-if (!categories.includes("all")) categories.unshift("all");
+if (!categories.includes("Todas")) categories.unshift("Todas");
 ---
 
 <Layout
@@ -96,7 +96,7 @@ if (!categories.includes("all")) categories.unshift("all");
           {
             paginatedResults.length === 0 && query ? (
               <li class="col-span-full text-center py-12">
-                <NoResults query={query} onResetHref="?category=all" />
+                <NoResults query={query} onResetHref="?category=Todas" />
               </li>
             ) : (
               paginatedResults.map((doc: any) => {
