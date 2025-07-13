@@ -36,7 +36,8 @@ const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
 console.log("[BLOG] rawSortBy:", rawSortBy, "sortBy:", sortBy);
 console.log("[BLOG] selectedCategory:", selectedCategory);
 
-let viewMode: "grid" | "list" = "grid"; // "grid" o "list"
+const rawViewMode = url.searchParams.get("viewMode");
+let viewMode: "grid" | "list" = rawViewMode === "list" ? "list" : "grid";
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
   let filtered =
