@@ -7,9 +7,17 @@ interface Props {
   viewMode: string;
   tag?: string;
   getCategoryHref?: (cat: string) => string;
+  customClass?: string;
 }
-const { categories, selectedCategory, sortBy, viewMode, tag, getCategoryHref } =
-  Astro.props as Props;
+const {
+  categories,
+  selectedCategory,
+  sortBy,
+  viewMode,
+  tag,
+  getCategoryHref,
+  customClass,
+} = Astro.props as Props;
 
 function getCategoryHrefLocal(cat: string) {
   if (!tag) return getCategoryHref ? getCategoryHref(cat) : "#";
@@ -23,7 +31,7 @@ function getCategoryHrefLocal(cat: string) {
 <form
   id="filters"
   method="get"
-  class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border border-border"
+  class={`bg-amber-200 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border${customClass ? ` ${customClass}` : ""}`}
 >
   <div class="flex flex-wrap items-center gap-4">
     <div class="flex items-center gap-2">
