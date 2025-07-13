@@ -211,6 +211,8 @@ añado esto para poder usar clases de tailwindCSS cuando se definen comom por ej
   --color-muted: hsl(215 16% 96%);
   --color-muted-foreground: var(--muted-foreground);
   --color-secondary: hsl(215 16% 95%);
+  --color-primary: hsl(12, 80%, 49%);
+  --color-primary-foreground: hsl(215 16% 95%);
   --color-secondary-foreground: hsl(215 20% 65%);
   /*Puedes añadir aquí el resto de tus colores personalizados*/
 }
