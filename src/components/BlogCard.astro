@@ -22,15 +22,6 @@ const readTime = getReadTime(post.data.content || "");
   variant === "grid" ? (
     <a href={href} class="block group h-full">
       <div class="bg-card rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden border border-border h-full flex flex-col">
-        {post.data.heroImage && (
-          <div class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-t-xl overflow-hidden">
-            <img
-              src={post.data.heroImage}
-              alt={post.data.title}
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-        )}
         <div class="p-6 flex flex-col flex-1">
           {Array.isArray(post.data.categories) &&
             post.data.categories.length > 0 && (
