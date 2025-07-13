@@ -6,8 +6,7 @@ interface Props {
 }
 const { post, variant = "grid" } = Astro.props;
 
-const href =
-  post.data?.path || (post.data?.id ? `/blog/${post.data.id}/` : "#");
+const href = post.data?.path || (post.id ? `/blog/${post.id}/` : "#");
 
 const getReadTime = (content: string): number => {
   // 250 palabras por minuto como estándar
