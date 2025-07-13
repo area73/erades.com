@@ -172,7 +172,7 @@ Sometimes rather than trying to find the most generic version of a signature, it
 We could do that like bellow:
 
 `getIndex :: a -> [a] -> Number`
-`         :: String -> String -> Number`
+`:: String -> String -> Number`
 
 ```javascript
 const getIndex = curry((needle, haystack) => haystack.indexOf(needle));

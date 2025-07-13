@@ -10,6 +10,14 @@ export default {
   prefix: "",
   safelist: ["pre", "code"],
   theme: {
+    fontSize: {
+      h1: "2.5rem",
+      h2: "2rem",
+      h3: "1.875rem",
+      h4: "1.5rem",
+      h5: "1.25rem",
+      h6: "1rem",
+    },
     container: {
       center: true,
       padding: "2rem",

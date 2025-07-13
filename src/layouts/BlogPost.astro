@@ -48,7 +48,9 @@ const { title, description, pubDate, updatedDate, tags, categories } =
               </div>
             )
           }
-          <slot />
+          <div class="prose max-w-none">
+            <slot />
+          </div>
         </div>
       </article>
     </main>
