@@ -8,12 +8,12 @@ draft: false
 heroImage: "/blog-placeholder-21.jpg"
 ---
 
-# statement branching
+## statement branching
 
 Any construct that alters the sequence of statement execution within the global or functional scope. <br>
 These include:<br>
 
-```
+```js
 if
 else
 switch
@@ -28,7 +28,7 @@ Statements are designed to execute non-linearly. Aside from the obvious bloating
 Conditional logic contained within a statement that has no effect on the statement execution seqeunce.<br>
 The following operators facilitate micro-branching: <br>
 
-```
+```js
 ternary (<cond> ? a : b)
 &&
 ||

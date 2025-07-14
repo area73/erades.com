@@ -52,8 +52,11 @@ async function translatePost(filePath: string, from: string, to: string) {
   // Traduce el contenido markdown
   const translatedContent = await translateText(content, from, to);
 
-  // Reconstruye el markdown traducido
-  const dest = matter.stringify(translatedContent, newData);
+  // Reconstruye el markdown traducido con frontmatter en formato JSON
+  const frontmatter = `---json\n${JSON.stringify(newData, null, 2)}\n---\n`;
+  const dest = `${frontmatter}${
+    translatedContent.startsWith("\n") ? "" : "\n"
+  }${translatedContent}`;
 
   const destPath = filePath.replace(`/${from}/`, `/${to}/`);
   fs.mkdirSync(path.dirname(destPath), { recursive: true });
