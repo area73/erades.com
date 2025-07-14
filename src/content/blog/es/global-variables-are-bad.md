@@ -1,13 +1,14 @@
 ---
-title: "Las variables globales son malas"
-description:
-  "Explorando los peligros de las variables globales en JavaScript, incluyendo la contaminación del alcance, problemas de concurrencia y mejores prácticas para
-  la declaración de variables"
-pubDate: "2018-06-14"
-tags: ["javascript", "globals"]
-categories: ["javascript"]
+title: Las variables globales son malas
+description: Explorando los peligros de las variables globales en JavaScript, incluyendo la contaminación del alcance, problemas de concurrencia y mejores prácticas para la declaración de variables
+pubDate: 2018-06-14
+tags:
+  - javascript
+  - globals
+categories:
+  - javascript
 draft: false
-heroImage: "/blog-placeholder-14.jpg"
+heroImage: /blog-placeholder-14.jpg
 ---
 
 ## Extraído de un Gist, una explicación muy bien hecha

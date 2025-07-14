@@ -7,6 +7,12 @@ import HeaderSearchBox from "./HeaderSearchBox.astro";
 import { Sun, Moon, ChevronDown, Linkedin, X } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import SocialProfileMenu from "./SocialProfileMenu.astro";
+import { t } from "../i18n";
+
+interface Props {
+  lang: string;
+}
+const { lang } = Astro.props;
 
 let isDark = false;
 if (typeof window !== "undefined") {
@@ -27,7 +33,7 @@ if (typeof window !== "undefined") {
       >
         <img
           src="/area73-small.png"
-          alt="Area 73 logo"
+          alt={t(lang as "en" | "es", "logo.alt")}
           class="h-12 w-12 object-contain"
         />
       </a>
@@ -35,21 +41,51 @@ if (typeof window !== "undefined") {
     <nav
       class="flex items-center gap-6 text-[16px] font-medium font-[Inter] text-muted-foreground"
     >
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Posts</HeaderLink>
-      <HeaderLink href="/about">About</HeaderLink>
-      <HeaderLink href="/tags">Tags y Categorías</HeaderLink>
+      <HeaderLink href="/" aria-label={t(lang as "en" | "es", "menu.home")}
+        >{t(lang as "en" | "es", "menu.home")}</HeaderLink
+      >
+      <HeaderLink href="/blog" aria-label={t(lang as "en" | "es", "menu.blog")}
+        >{t(lang as "en" | "es", "menu.blog")}</HeaderLink
+      >
+      <HeaderLink
+        href="/about"
+        aria-label={t(lang as "en" | "es", "menu.about")}
+        >{t(lang as "en" | "es", "menu.about")}</HeaderLink
+      >
+      <HeaderLink href="/tags" aria-label={t(lang as "en" | "es", "menu.tags")}
+        >{t(lang as "en" | "es", "menu.tags")}</HeaderLink
+      >
     </nav>
     <div class="flex items-center gap-6 min-w-0">
       <div class="hidden md:block">
         <div class="w-[420px] max-w-full">
-          <HeaderSearchBox />
+          <HeaderSearchBox lang={lang} />
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2">
-          <ThemeToggle />
-          <div class="relative">
+        <ThemeToggle />
+        <div class="flex items-center gap-1 ml-2">
+          <button
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "es"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "es" ? "page" : undefined}
+            onclick="window.location.replace(window.location.pathname.replace(/^\/(en|es)/, '/es').startsWith('/es') ? window.location.pathname.replace(/^\/(en|es)/, '/es') : '/es' + window.location.pathname);"
+          >
+            ES
+          </button>
+          <button
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "en"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "en" ? "page" : undefined}
+            onclick="window.location.replace(window.location.pathname.replace(/^\/(en|es)/, '/en').startsWith('/en') ? window.location.pathname.replace(/^\/(en|es)/, '/en') : '/en' + window.location.pathname);"
+          >
+            EN
+          </button>
+          <div class="relative ml-2">
             <button
               id="avatar-btn"
               type="button"
@@ -59,7 +95,7 @@ if (typeof window !== "undefined") {
             >
               <img
                 src="/avatar.png"
-                alt="User avatar"
+                alt={t(lang as "en" | "es", "avatar.alt")}
                 class="h-8 w-8 rounded-full object-cover"
               />
               <ChevronDown class="ml-2 h-4 w-4 text-muted-foreground" />
@@ -69,6 +105,7 @@ if (typeof window !== "undefined") {
               email="rerades@siete3.com"
               linkedinUrl="https://linkedin.com/"
               xUrl="https://x.com/"
+              lang={lang}
             />
             <script is:inline>
               if (typeof window !== "undefined") {

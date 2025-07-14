@@ -1,13 +1,16 @@
 ---
-title: "Ámbito léxico y dinámico"
-description:
-  " Entendiendo el ámbito léxico y dinámico en JavaScript, incluyendo la palabra
-  clave eval y sus implicaciones en el rendimiento"
-pubDate: "2018-01-14"
-tags: ["scope", "eval", "javascript", "declarative"]
-categories: ["javascript"]
+title: Ámbito léxico y dinámico
+description: Entendiendo el ámbito léxico y dinámico en JavaScript, incluyendo la palabra clave eval y sus implicaciones en el rendimiento
+pubDate: 2018-01-14
+tags:
+  - scope
+  - eval
+  - javascript
+  - declarative
+categories:
+  - javascript
 draft: false
-heroImage: "/blog-placeholder-18.jpg"
+heroImage: /blog-placeholder-18.jpg
 ---
 
 # Alcance léxico

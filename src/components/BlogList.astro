@@ -16,6 +16,7 @@ interface Props {
   getCategoryHref: (cat: string) => string;
   getPageHref: (page: number) => string;
   tag?: string;
+  lang: string;
 }
 const {
   posts,
@@ -29,6 +30,7 @@ const {
   getCategoryHref,
   getPageHref,
   tag,
+  lang,
 } = Astro.props as Props;
 ---
 
@@ -77,7 +79,7 @@ const {
       <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end">
         {paginatedPosts.map((post: any) => (
           <li>
-            <BlogCard post={post} variant="grid" />
+            <BlogCard post={post} variant="grid" lang={lang} />
           </li>
         ))}
       </ul>
@@ -85,7 +87,7 @@ const {
       <ul class="space-y-6 list-none m-0 p-0">
         {paginatedPosts.map((post: any) => (
           <li>
-            <BlogCard post={post} variant="list" />
+            <BlogCard post={post} variant="list" lang={lang} />
           </li>
         ))}
       </ul>

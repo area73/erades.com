@@ -2,9 +2,11 @@
 import { Search } from "@lucide/astro";
 interface Props {
   query?: string;
+  lang: string;
 }
 
-const { query = "" } = Astro.props;
+const { query = "", lang } = Astro.props;
+import { t } from "../i18n";
 ---
 
 <div class="relative flex items-center max-w-md w-full mx-8">
@@ -16,12 +18,13 @@ const { query = "" } = Astro.props;
     </span>
     <input
       type="text"
-      placeholder="Buscar en el blog..."
+      placeholder={t(lang as "en" | "es", "search.placeholder")}
       class="m-4 pl-10 pr-4 h-11 w-full rounded-md border bg-secondary text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
       value={query}
       name="q"
-      aria-label="Buscar en el blog"
+      aria-label={t(lang as "en" | "es", "search.ariaLabel")}
       autocomplete="off"
+      title={t(lang as "en" | "es", "search.title")}
     />
     {
       /**

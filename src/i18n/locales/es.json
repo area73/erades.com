@@ -1,7 +1,20 @@
 {
   "menu": {
     "home": "Inicio",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "Acerca de",
+    "tags": "Tags y Categorías"
+  },
+  "logo": { "alt": "Logo de Area 73" },
+  "avatar": { "alt": "Avatar de usuario" },
+  "search": {
+    "placeholder": "Buscar en el blog...",
+    "ariaLabel": "Buscar en el blog",
+    "title": "Buscar"
+  },
+  "social": {
+    "linkedin": "Perfil de LinkedIn",
+    "x": "Perfil de X"
   },
   "title": "Mi Blog",
   "updated": "Última actualización el"

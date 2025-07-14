@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/BlogPost.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import Layout from "../../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
 import { getCollection } from "astro:content";
-import BlogList from "../../components/BlogList.astro";
-import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
+import BlogList from "../../../components/BlogList.astro";
+import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -80,9 +80,12 @@ const getPageHref = (page: number) => {
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
+const lang = Astro.params.lang;
+console.log("LANG PARAM index:", lang);
 ---
 
 <Layout
+  lang={lang}
   title="Todos los Posts"
   description={SITE_DESCRIPTION}
   tags={[]}
@@ -100,5 +103,6 @@ const getPageHref = (page: number) => {
     paginatedPosts={paginatedPosts}
     getCategoryHref={getCategoryHref}
     getPageHref={getPageHref}
+    lang={lang}
   />
 </Layout>

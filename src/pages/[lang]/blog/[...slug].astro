@@ -1,16 +1,19 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import BlogPost from "../../layouts/BlogPost.astro";
+import BlogPost from "../../../layouts/BlogPost.astro";
 import { render } from "astro:content";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: post,
-  }));
+  const langs = ["es", "en"];
+  return langs.flatMap((lang) =>
+    posts.map((post) => ({
+      params: { lang, slug: post.id },
+      props: post,
+    }))
+  );
 }
 type Props = CollectionEntry<"blog">;
 
@@ -28,11 +31,12 @@ if (post && post.data) {
     ...(updatedDate ? { updatedDate } : {}),
   };
 }
+const lang = Astro.params.lang;
 ---
 
 {
   !post || !post.data ? (
-    <html lang="es">
+    <html lang={lang}>
       <body>
         <main class="max-w-2xl mx-auto pt-16 px-4 text-center">
           <h1 class="text-3xl font-bold mb-4">Post no encontrado</h1>
@@ -47,7 +51,7 @@ if (post && post.data) {
       </body>
     </html>
   ) : !pubDate ? (
-    <html lang="es">
+    <html lang={lang}>
       <body>
         <main class="max-w-2xl mx-auto pt-16 px-4 text-center">
           <h1 class="text-3xl font-bold mb-4">Post inválido</h1>
@@ -63,6 +67,7 @@ if (post && post.data) {
     </html>
   ) : (
     <BlogPost
+      lang={lang}
       title={dataWithDates?.title || ""}
       description={dataWithDates?.description || ""}
       pubDate={dataWithDates?.pubDate}

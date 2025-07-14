@@ -1,7 +1,20 @@
 {
   "menu": {
     "home": "Home",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "About",
+    "tags": "Tags & Categories"
+  },
+  "logo": { "alt": "Area 73 logo" },
+  "avatar": { "alt": "User avatar" },
+  "search": {
+    "placeholder": "Search the blog...",
+    "ariaLabel": "Search the blog",
+    "title": "Search"
+  },
+  "social": {
+    "linkedin": "LinkedIn profile",
+    "x": "X profile"
   },
   "title": "My Blog",
   "updated": "Last updated on"

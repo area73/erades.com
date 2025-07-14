@@ -1,11 +1,14 @@
 ---
-title: "Propiedades de atributos de objetos"
-description: "Explorando los atributos de las propiedades de los objetos JavaScript: value, configurable, enumerable y writable"
-pubDate: "2018-01-12"
-tags: ["javascript", "object properties"]
-categories: ["javascript"]
+title: Propiedades de atributos de objetos
+description: Explorando los atributos de las propiedades de los objetos JavaScript; value, configurable, enumerable y writable
+pubDate: 2018-01-12
+tags:
+  - javascript
+  - object properties
+categories:
+  - javascript
 draft: false
-heroImage: "/blog-placeholder-19.jpg"
+heroImage: /blog-placeholder-19.jpg
 ---
 
 # Entendiendo los atributos de las propiedades de objetos en JavaScript

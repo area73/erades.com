@@ -1,13 +1,15 @@
 ---
-title: "declaración de ramificación Vs micro-ramificación"
-description:
-  " Comparando la bifurcación de declaraciones tradicionales con técnicas de
-  micro-bifurcación en JavaScript para un código más mantenible y funcional"
-pubDate: "2018-06-06"
-tags: ["statement brnaching", "micro-branching strategies"]
-categories: ["javascript", "functional"]
+title: declaración de ramificación Vs micro-ramificación
+description: Comparando la bifurcación de declaraciones tradicionales con técnicas de micro-bifurcación en JavaScript para un código más mantenible y funcional
+pubDate: 2018-06-06
+tags:
+  - statement brnaching
+  - micro-branching strategies
+categories:
+  - javascript
+  - functional
 draft: false
-heroImage: "/blog-placeholder-21.jpg"
+heroImage: /blog-placeholder-21.jpg
 ---
 
 # ramificación de sentencias
