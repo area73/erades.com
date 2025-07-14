@@ -3,54 +3,83 @@ import path from "path";
 import OpenAI from "openai";
 import matter from "gray-matter";
 
+// Lee los idiomas desde argumentos de línea de comandos
+const [, , from = "es", to = "en"] = process.argv;
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function translateText(text: string): Promise<string> {
+function getSystemPrompt(from: string, to: string) {
+  return `You are a translator from ${
+    from === "es" ? "Spanish" : "English"
+  } to ${
+    to === "es" ? "Spanish" : "English"
+  }. Only translate, do not explain. Keep the markdown format.`;
+}
+
+async function translateText(
+  text: string,
+  from: string,
+  to: string
+): Promise<string> {
   const { choices } = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [
+      { role: "system", content: getSystemPrompt(from, to) },
       {
-        role: "system",
-        content: "You are a translator from Spanish to English.",
+        role: "user",
+        content: `Translate this text to ${
+          to === "es" ? "Spanish" : "English"
+        }:\n\n${text}`,
       },
-      { role: "user", content: `Translate this text to English:\n\n${text}` },
     ],
   });
   return choices[0].message.content?.trim() ?? text;
 }
 
-async function translatePost(filePath: string) {
+async function translatePost(filePath: string, from: string, to: string) {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
 
   // Traduce solo title y description del frontmatter si existen
   const newData = { ...data };
   if (typeof data.title === "string") {
-    newData.title = await translateText(data.title);
+    newData.title = await translateText(data.title, from, to);
   }
   if (typeof data.description === "string") {
-    newData.description = await translateText(data.description);
+    newData.description = await translateText(data.description, from, to);
   }
 
   // Traduce el contenido markdown
-  const translatedContent = await translateText(content);
+  const translatedContent = await translateText(content, from, to);
 
   // Reconstruye el markdown traducido
   const dest = matter.stringify(translatedContent, newData);
 
-  const destPath = filePath.replace("/es/", "/en/");
+  const destPath = filePath.replace(`/${from}/`, `/${to}/`);
   fs.mkdirSync(path.dirname(destPath), { recursive: true });
   fs.writeFileSync(destPath, dest);
   console.log(`Traducido: ${filePath} → ${destPath}`);
 }
 
-// Recorre todos los posts en es/blog y traduce
+// Traduce todos los posts en la carpeta de origen
 async function main() {
-  const srcDir = path.join("src", "content", "es", "blog");
+  const srcDir = path.join("src", "content", "blog", from);
+  if (!fs.existsSync(srcDir)) {
+    console.error(`No existe la carpeta: ${srcDir}`);
+    process.exit(1);
+  }
   const files = fs.readdirSync(srcDir);
   for (const file of files) {
     if (file.endsWith(".md")) {
-      await translatePost(path.join(srcDir, file));
+      const srcPath = path.join(srcDir, file);
+      const destPath = srcPath.replace(`/${from}/`, `/${to}/`);
+      if (fs.existsSync(destPath)) {
+        console.log(
+          `Saltado: ${srcPath} → ${destPath} (ya existe el fichero traducido)`
+        );
+        continue;
+      }
+      await translatePost(srcPath, from, to);
     }
   }
 }

@@ -40,9 +40,45 @@ I think of it as follows :<br>
 lhs lookup is a container lookup <br>
 rhs lookup is a value lookup<br>
 
-# Dynamic scope
+## Dynamic scope
 
-### Bibliograpy:<br>
+Dynamic scope refers to a scoping mechanism where variables are resolved by searching up the call stack, rather than by the structure of the code (as in lexical scope). In dynamic scoping, the context in which a function is called determines the variable bindings, not where the function was defined.
 
-https://stackoverflow.com/questions/36383795/javascript-lhs-and-rhs-lookup
+JavaScript uses lexical (static) scoping, but some behaviors—such as the value of `this`—can resemble dynamic scope because `this` is determined by how a function is invoked, not where it is written.
+
+### Example: Simulating Dynamic Scope with `this`
+
+```javascript
+var name = "global";
+
+function printName() {
+  console.log(this.name);
+}
+
+var obj = {
+  name: "object",
+  printName: printName,
+};
+
+printName(); // "global" (this refers to global object)
+obj.printName(); // "object" (this refers to obj)
+```
+
+In the example above, the value of `this` inside `printName` depends on how the function is called, not where it was defined. This is similar to dynamic scoping.
+
+### Key Differences
+
+- **Lexical scope**: Variable resolution is based on where functions and blocks are written in the code.
+- **Dynamic scope**: Variable resolution is based on the call stack at runtime.
+
+JavaScript does not have true dynamic scope for variables, but understanding how `this` and certain constructs work can help avoid confusion.
+
+---
+
+<div class="bibliography">
+Bibliography:<br>
+
+https://stackoverflow.com/questions/36383795/javascript-lhs-and-rhs-lookup<br>
 Plural sight course: Advanced javascript, by kyle Simpson
+
+</div>

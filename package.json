@@ -12,7 +12,8 @@
     "coverage": "vitest run --coverage",
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --max-warnings=0 --fix",
-    "translate": "dotenv -e .env -- tsx scripts/translate-posts.ts"
+    "translate:es-en": "dotenv -e .env -- tsx scripts/translate-posts.ts es en",
+    "translate:en-es": "dotenv -e .env -- tsx scripts/translate-posts.ts en es"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

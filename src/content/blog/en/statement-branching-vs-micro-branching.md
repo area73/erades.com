@@ -8,7 +8,7 @@ draft: false
 heroImage: "/blog-placeholder-21.jpg"
 ---
 
-## statement branching
+# statement branching
 
 Any construct that alters the sequence of statement execution within the global or functional scope. <br>
 These include:<br>
