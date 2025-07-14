@@ -1,13 +1,14 @@
 ---
-title: "Encadenamiento de métodos en javascript"
-description:
-  " Comprendiendo el encadenamiento de métodos en JavaScript para crear interfaces
-  fluidas y mejorar la legibilidad del código a través de llamadas a métodos secuenciales"
-pubDate: "2018-01-08"
-tags: ["javascript", "method chaining"]
-categories: ["javascript"]
+title: Encadenamiento de métodos en javascript
+description: Comprendiendo el encadenamiento de métodos en JavaScript para crear interfaces fluidas y mejorar la legibilidad del código a través de llamadas a métodos secuenciales
+pubDate: 2018-01-08
+tags:
+  - javascript
+  - method chaining
+categories:
+  - javascript
 draft: false
-heroImage: "/blog-placeholder-20.jpg"
+heroImage: /blog-placeholder-20.jpg
 ---
 
 # Encadenamiento de métodos en Javascript
@@ -37,76 +38,6 @@ Y esta es la definición de nuestra clase
 ```javascript
 // Definición de la clase
 // ------------------------
-class Person {
-  constructor() {
-    console.log("persona creada");
-  }
-
-  setName(name) {
-    this.name = name;
-  }
-
-  setEyeColor(eyeColor) {
-    this.eyeColor = eyeColor;
-  }
-
-  setHairColor(hairColor) {
-    this.HairColor = hairColor;
-  }
-
-  setHeight(height) {
-    this.height = height;
-  }
-}
-```
-
-Ahora si queremos crear una persona y ejecutar todos los métodos lo haremos así :
-
-```javascript
-// Ejecución
-// ---------
-
-var pers = new Person();
-pers.setName("Joe");
-pers.setEyeColor("blue");
-pers.setHairColor("black");
-pers.setHeight("1.75");
-
-console.log(pers);
-```
-
-Hasta ahora todo bien.
-
-Pero esto podría mejorarse haciendo encadenamiento de métodos. De esta manera eliminaremos la llamada del objeto pers cada vez que queramos ejecutar una función de ese objeto.
-<br/>Entonces nuestra ejecución será algo así:
-
-```javascript
-var pers = new Person()
-  .setName("Joe")
-  .setEyeColor("blue")
-  .setHairColor("black")
-  .setHeight("1.75");
-console.log(pers);
-```
-
-O aún mejor, podemos aplicar algún formato y ni siquiera necesitamos asignar una variable a la persona ya que estamos haciendo encadenamiento de métodos, reescribiendo la sintaxis anterior como:
-
-```javascript
-console.log(
-  new Person()
-    .setName("Joe")
-    .setEyeColor("blue")
-    .setHairColor("black")
-    .setHeight("1.75")
-);
-```
-
-El problema viene ahora porque si ejecutamos la frase anterior, nos encontraremos con un error de compilador.
-Esto se debe a que cuando creamos una nueva persona, ninguno de los métodos que definimos antes está devolviendo un valor, por lo que después de la primera llamada al método, el compilador no sabe en qué objeto ejecutar la próxima función.
-
-Para resolver esto necesitaremos redefinir nuestros métodos para que devuelvan el mismo objeto, así
-
-```javascript
 class Person {
   constructor() {
     console.log("persona creada");

@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/BlogPost.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import Layout from "../../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
 import { getCollection } from "astro:content";
-import BlogList from "../../components/BlogList.astro";
-import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
+import BlogList from "../../../components/BlogList.astro";
+import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
 export const prerender = true;
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")).sort(
@@ -11,10 +11,12 @@ export async function getStaticPaths() {
   );
   const POSTS_PER_PAGE = 6;
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-
-  return Array.from({ length: totalPages }).map((_, i) => ({
-    params: { page: String(i + 1) },
-  }));
+  const langs = ["es", "en"];
+  return langs.flatMap((lang) =>
+    Array.from({ length: totalPages }).map((_, i) => ({
+      params: { lang, page: String(i + 1) },
+    }))
+  );
 }
 
 const { page } = Astro.params;
@@ -94,9 +96,12 @@ const getPageHref = (page: number) => {
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
+const lang = Astro.params.lang;
+console.log("LANG PARAM page:", lang);
 ---
 
 <Layout
+  lang={lang}
   title="Todos los Posts"
   description={SITE_DESCRIPTION}
   tags={[]}
@@ -114,5 +119,6 @@ const getPageHref = (page: number) => {
     paginatedPosts={paginatedPosts}
     getCategoryHref={getCategoryHref}
     getPageHref={getPageHref}
+    lang={lang}
   />
 </Layout>

@@ -13,7 +13,7 @@ function getSystemPrompt(from: string, to: string) {
     from === "es" ? "Spanish" : "English"
   } to ${
     to === "es" ? "Spanish" : "English"
-  }. Only translate, do not explain. Keep the markdown format.`;
+  }. Only translate, do not explain, don't add any string about the translation, just the translation. Keep the markdown format.`;
 }
 
 async function translateText(
@@ -52,38 +52,45 @@ async function translatePost(filePath: string, from: string, to: string) {
   // Traduce el contenido markdown
   const translatedContent = await translateText(content, from, to);
 
-  // Reconstruye el markdown traducido con frontmatter en formato JSON
-  const frontmatter = `---json\n${JSON.stringify(newData, null, 2)}\n---\n`;
-  const dest = `${frontmatter}${
-    translatedContent.startsWith("\n") ? "" : "\n"
-  }${translatedContent}`;
-
+  // Reconstruye el markdown traducido
+  const dest = matter.stringify(translatedContent, newData);
   const destPath = filePath.replace(`/${from}/`, `/${to}/`);
   fs.mkdirSync(path.dirname(destPath), { recursive: true });
   fs.writeFileSync(destPath, dest);
   console.log(`Traducido: ${filePath} → ${destPath}`);
 }
 
-// Traduce todos los posts en la carpeta de origen
+function getAllMarkdownFiles(dir: string): string[] {
+  let results: string[] = [];
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getAllMarkdownFiles(filePath));
+    } else if (file.endsWith(".md")) {
+      results.push(filePath);
+    }
+  }
+  return results;
+}
+
 async function main() {
   const srcDir = path.join("src", "content", "blog", from);
   if (!fs.existsSync(srcDir)) {
     console.error(`No existe la carpeta: ${srcDir}`);
     process.exit(1);
   }
-  const files = fs.readdirSync(srcDir);
-  for (const file of files) {
-    if (file.endsWith(".md")) {
-      const srcPath = path.join(srcDir, file);
-      const destPath = srcPath.replace(`/${from}/`, `/${to}/`);
-      if (fs.existsSync(destPath)) {
-        console.log(
-          `Saltado: ${srcPath} → ${destPath} (ya existe el fichero traducido)`
-        );
-        continue;
-      }
-      await translatePost(srcPath, from, to);
+  const files = getAllMarkdownFiles(srcDir);
+  for (const srcPath of files) {
+    const destPath = srcPath.replace(`/${from}/`, `/${to}/`);
+    if (fs.existsSync(destPath)) {
+      console.log(
+        `Saltado: ${srcPath} → ${destPath} (ya existe el fichero traducido)`
+      );
+      continue;
     }
+    await translatePost(srcPath, from, to);
   }
 }
 

@@ -2,10 +2,11 @@
 import FormattedDate from "./FormattedDate.astro";
 interface Props {
   post: any;
+  lang: string;
 }
-const { post } = Astro.props;
+const { post, lang } = Astro.props;
 
-const href = post.data?.path || (post.id ? `/blog/${post.id}/` : "#");
+const href = `/${lang}/blog/${post.id}/`;
 ---
 
 <a href={href} class="block group">

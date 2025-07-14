@@ -2,19 +2,21 @@
 import { t } from "../../i18n/index";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 
-const { lang } = Astro.params;
+const { lang = "es" } = Astro.params;
 ---
 
 <BlogLayout
-  lang={lang}
+  lang={lang as "es" | "en"}
   frontmatter={{
-    title: t(lang, "title"),
-    description: t(lang, "title"),
-    pubDate: undefined,
-    updatedDate: undefined,
+    title: t(lang as "es" | "en", "title"),
+    description: t(lang as "es" | "en", "title"),
+    pubDate: new Date(),
+    updatedDate: new Date(),
     tags: [],
+    categories: [],
+    draft: false,
   }}
 >
-  <h2>{t(lang, "menu.home")}</h2>
+  <h2>{t(lang as "es" | "en", "menu.home")}</h2>
   <p>Welcome to the multilingual Astro starter!</p>
 </BlogLayout>

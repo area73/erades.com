@@ -20,8 +20,13 @@ const { title, description, pubDate, updatedDate, tags } = frontmatter;
 <html lang={lang}>
   <head>
     <BaseHead title={title} description={description} />
-    <link rel="alternate" href="/es/" hreflang="es" />
-    <link rel="alternate" href="/en/" hreflang="en" />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="alternate" href={`/${lang}/`} hreflang={lang} />
+    <link
+      rel="alternate"
+      href={`/${lang === "es" ? "en" : "es"}/${Astro.url.pathname.split("/").slice(2).join("/")}`}
+      hreflang={lang === "es" ? "en" : "es"}
+    />
   </head>
   <body class="bg-background text-foreground min-h-screen">
     <Header lang={lang} />
