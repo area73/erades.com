@@ -5,21 +5,26 @@ import Header from "../components/Header.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import "../styles/global.css";
 
-type Props = Omit<CollectionEntry<"blog">["data"], "pubDate"> & {
-  pubDate?: Date;
-};
+interface Props {
+  lang: string;
+  frontmatter: Omit<CollectionEntry<"blog">["data"], "pubDate"> & {
+    pubDate?: Date;
+  };
+  children?: any;
+}
 
-const { title, description, pubDate, updatedDate, tags, categories } =
-  Astro.props;
+const { lang, frontmatter } = Astro.props as Props;
+const { title, description, pubDate, updatedDate, tags } = frontmatter;
 ---
 
-<html lang="en">
+<html lang={lang}>
   <head>
     <BaseHead title={title} description={description} />
+    <link rel="alternate" href="/es/" hreflang="es" />
+    <link rel="alternate" href="/en/" hreflang="en" />
   </head>
-
   <body class="bg-background text-foreground min-h-screen">
-    <Header />
+    <Header lang={lang} />
     <main class="max-w-[1200px] mx-auto py-8 w-[calc(100%-2em)]">
       <article class="pb-8">
         <div class="prose w-[1200] max-w-[calc(100%-2em)] mx-auto p-4">
@@ -35,7 +40,8 @@ const { title, description, pubDate, updatedDate, tags, categories } =
                     <FormattedDate date={pubDate} />
                     {updatedDate && (
                       <div class="italic text-xs">
-                        Last updated on <FormattedDate date={updatedDate} />
+                        <slot name="updatedLabel" />{" "}
+                        <FormattedDate date={updatedDate} />
                       </div>
                     )}
                   </div>
