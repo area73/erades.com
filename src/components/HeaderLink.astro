@@ -14,20 +14,23 @@ type Props = HTMLAttributes<"a"> & { lang: string };
 const { href, lang, ...rest } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
-const Icon = ICONS[href as keyof typeof ICONS];
-
-// Asegura que el href siempre tiene el prefijo de idioma
 const hrefStr = typeof href === "string" ? href : String(href ?? "");
 const hrefWithLang = hrefStr.startsWith(`/${lang}`)
   ? hrefStr
   : `/${lang}${hrefStr.startsWith("/") ? hrefStr : "/" + hrefStr}`;
+const clean = (str: string) => str.replace(/\/$/, "");
+const current = clean(pathname);
+const target = clean(hrefWithLang);
+const isHome = target === `/${lang}`;
+const isActive = current === target || current.startsWith(target + "/");
+const Icon = ICONS[href as keyof typeof ICONS];
 ---
 
 <a
   href={hrefWithLang}
   class={"inline-flex items-center" +
     (isActive ? " text-primary font-bold" : "")}
+  aria-current={isActive ? "page" : undefined}
   {...rest}
 >
   {
