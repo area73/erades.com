@@ -31,7 +31,7 @@ function getCategoryHrefLocal(cat: string) {
 <form
   id="filters"
   method="get"
-  class={`bg-white flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border${customClass ? ` ${customClass}` : ""}`}
+  class={`bg-white dark:bg-gray-700 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border${customClass ? ` ${customClass}` : ""}`}
 >
   <div class="flex flex-wrap items-center gap-4">
     <div class="flex items-center gap-2">
@@ -41,7 +41,7 @@ function getCategoryHrefLocal(cat: string) {
           categories.map((category) => (
             <a
               href={getCategoryHrefLocal(category)}
-              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground border-border hover:bg-primary/10"}`}
+              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foregroundhover:bg-primary/10"}`}
               aria-current={
                 selectedCategory.trim().toLowerCase() ===
                 category.trim().toLowerCase()
@@ -65,7 +65,7 @@ function getCategoryHrefLocal(cat: string) {
       <div class="relative w-40">
         <select
           name="sortBy"
-          class="w-full h-10 px-3 pr-8 py-2 rounded-md border border-border bg-input text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+          class="w-full h-10 px-3 pr-8 py-2 rounded-md borderbg-input text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
           onchange="this.form.submit()"
         >
           <option value="date-desc" selected={sortBy === "date-desc"}

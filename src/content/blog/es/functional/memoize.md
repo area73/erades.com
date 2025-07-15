@@ -10,7 +10,7 @@ tags:
   - functors
 categories:
   - functional
-draft: true
+draft: false
 heroImage: "/blog-placeholder-9.jpg"
 ---
 
