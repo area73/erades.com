@@ -72,13 +72,13 @@ const paginatedPosts = filteredPosts.slice(
 const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
   if (cat !== "Todas") params.set("category", cat);
-  return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
+  return `/${lang}/blog/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "Todas") params.set("category", selectedCategory);
   return (
-    (page === 1 ? "/blog/" : `/blog/${page}/`) +
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
