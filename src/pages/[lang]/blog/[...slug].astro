@@ -9,13 +9,21 @@ export async function getStaticPaths() {
   const posts = await getCollection("blog");
   const langs = ["es", "en"];
   return langs.flatMap((lang) =>
-    posts.map((post) => ({
-      params: { lang, slug: post.id },
-      props: post,
-    }))
+    posts
+      .filter((post) => post.id.startsWith(`${lang}/`))
+      .map((post) => ({
+        params: { lang, slug: post.id.replace(`${lang}/`, "") },
+        props: post,
+      }))
   );
 }
 type Props = CollectionEntry<"blog">;
+
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
 
 const post = Astro.props;
 let Content, pubDate, updatedDate, dataWithDates;
@@ -31,7 +39,6 @@ if (post && post.data) {
     ...(updatedDate ? { updatedDate } : {}),
   };
 }
-const lang = Astro.params.lang;
 ---
 
 {

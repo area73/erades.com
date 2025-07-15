@@ -5,9 +5,11 @@ import { getCollection } from "astro:content";
 import BlogList from "../../../components/BlogList.astro";
 import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
 
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Extraer categorías únicas
 const categories = [
@@ -80,17 +82,16 @@ const getPageHref = (page: number) => {
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
-const lang = Astro.params.lang;
 console.log("LANG PARAM index:", lang);
 ---
 
 <Layout
-  lang={lang}
-  title="Todos los Posts"
+  title={SITE_TITLE}
   description={SITE_DESCRIPTION}
   tags={[]}
-  categories={categories.filter((c) => c !== "Todas")}
+  categories={categories}
   draft={false}
+  lang={lang}
 >
   <BlogList
     posts={filteredPosts}

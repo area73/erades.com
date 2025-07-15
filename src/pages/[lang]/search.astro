@@ -10,6 +10,7 @@ import NoResults from "../../components/NoResults.astro";
 import ResultsInfo from "../../components/ResultsInfo.astro";
 import { Search as SearchIcon } from "@lucide/astro";
 import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
+import { getCollection } from "astro:content";
 
 const query = Astro.url.searchParams.get("q") || "";
 
@@ -42,6 +43,9 @@ function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
 
 const rawSortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
 const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
+
+const rawViewMode = Astro.url.searchParams.get("viewMode");
+let viewMode: "grid" | "list" = rawViewMode === "list" ? "list" : "grid";
 // Ordenar los resultados filtrados según sortBy
 const sortedResults = sortPosts(filteredResults, sortBy);
 
@@ -60,6 +64,12 @@ const categories = [
   ),
 ] as string[];
 if (!categories.includes("Todas")) categories.unshift("Todas");
+
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
 ---
 
 <Layout
@@ -68,6 +78,7 @@ if (!categories.includes("Todas")) categories.unshift("Todas");
   tags={[]}
   categories={[]}
   draft={false}
+  lang={lang}
 >
   <section>
     <div class="max-w-[1200px] mx-auto pt-8 transition-main">
@@ -78,9 +89,9 @@ if (!categories.includes("Todas")) categories.unshift("Todas");
         categories={categories}
         selectedCategory={categoryParam}
         sortBy={sortBy}
-        viewMode={"grid"}
+        viewMode={viewMode}
         getCategoryHref={(cat: string) =>
-          `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}`}
+          `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}&viewMode=${viewMode}`}
       />
       <div class="mb-8 mx-auto px-4 text-right">
         <ResultsInfo
@@ -90,18 +101,34 @@ if (!categories.includes("Todas")) categories.unshift("Todas");
         />
       </div>
       <div class="mx-auto px-4">
-        <ul class="grid grid-cols-1 md:grid-cols-3 gap-8 list-none m-0 p-0">
+        {
+          totalPages > 1 && (
+            <Paginator
+              currentPage={currentPage}
+              totalPages={totalPages}
+              getPageHref={(page) =>
+                `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`
+              }
+            />
+          )
+        }
+        <ul
+          class={`grid ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1"} gap-8 list-none m-0 p-0`}
+        >
           {
             paginatedResults.length === 0 && query ? (
               <li class="col-span-full text-center py-12">
-                <NoResults query={query} onResetHref="?category=Todas" />
+                <NoResults
+                  query={query}
+                  onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
+                />
               </li>
             ) : (
               paginatedResults.map((doc: any) => {
                 const post = doc.data ? doc : { data: doc };
                 return (
                   <li>
-                    <BlogCard post={post} variant="grid" />
+                    <BlogCard post={post} variant={viewMode} lang={lang} />
                   </li>
                 );
               })
@@ -114,7 +141,7 @@ if (!categories.includes("Todas")) categories.unshift("Todas");
               currentPage={currentPage}
               totalPages={totalPages}
               getPageHref={(page) =>
-                `?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}`
+                `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`
               }
             />
           )

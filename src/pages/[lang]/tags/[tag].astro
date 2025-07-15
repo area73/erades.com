@@ -16,8 +16,12 @@ import { sortPosts, SORT_BY_OPTIONS } from "../../../utils/sort-utils";
 //   }));
 // }
 
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const allPosts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
 const tag = Astro.params.tag ?? "";
-const allPosts = await getCollection("blog");
 const postsWithTag = filterPostsByTag(allPosts, tag);
 
 // Extraer categorías únicas de los posts filtrados
@@ -39,7 +43,7 @@ const sortBy = SORT_BY_OPTIONS.includes(sortByRaw as any)
   ? (sortByRaw as (typeof SORT_BY_OPTIONS)[number])
   : "date-desc";
 const viewMode: "grid" | "list" =
-  (url.searchParams.get("view") as "grid" | "list") || "grid";
+  (url.searchParams.get("viewMode") as "grid" | "list") || "grid";
 
 function filterByCategory(posts: any[], category: string): any[] {
   if (category === "Todas") return posts;
@@ -67,14 +71,18 @@ const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
   if (cat !== "Todas") params.set("category", cat);
   if (sortBy) params.set("sortBy", sortBy);
-  return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
+  if (viewMode) params.set("viewMode", viewMode);
+  return (
+    `/${lang}/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "")
+  );
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "Todas") params.set("category", selectedCategory);
   if (sortBy) params.set("sortBy", sortBy);
+  if (viewMode) params.set("viewMode", viewMode);
   return (
-    (page === 1 ? `/tags/${tag}/` : `/tags/${tag}/${page}/`) +
+    (page === 1 ? `/${lang}/tags/${tag}/` : `/${lang}/tags/${tag}/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
@@ -86,6 +94,7 @@ const getPageHref = (page: number) => {
   tags={[]}
   categories={categories.filter((c) => c !== "Todas")}
   draft={false}
+  lang={lang}
 >
   <BlogList
     posts={sortedPosts}
@@ -99,5 +108,6 @@ const getPageHref = (page: number) => {
     getCategoryHref={getCategoryHref}
     getPageHref={getPageHref}
     tag={tag}
+    lang={lang}
   />
 </Layout>

@@ -9,17 +9,23 @@ const ICONS = {
   "/tags": Hash,
 } as const;
 
-type Props = HTMLAttributes<"a">;
+type Props = HTMLAttributes<"a"> & { lang: string };
 
-const { href, ...rest } = Astro.props;
+const { href, lang, ...rest } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
 const Icon = ICONS[href as keyof typeof ICONS];
+
+// Asegura que el href siempre tiene el prefijo de idioma
+const hrefStr = typeof href === "string" ? href : String(href ?? "");
+const hrefWithLang = hrefStr.startsWith(`/${lang}`)
+  ? hrefStr
+  : `/${lang}${hrefStr.startsWith("/") ? hrefStr : "/" + hrefStr}`;
 ---
 
 <a
-  href={href}
+  href={hrefWithLang}
   class={"inline-flex items-center" +
     (isActive ? " text-primary font-bold" : "")}
   {...rest}

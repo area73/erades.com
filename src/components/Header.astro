@@ -38,20 +38,34 @@ if (typeof window !== "undefined") {
     <nav
       class="flex items-center gap-6 text-[16px] font-medium font-[Inter] text-muted-foreground"
     >
-      <HeaderLink href="/" aria-label={t(lang as "en" | "es", "menu.home")}
-        >{t(lang as "en" | "es", "menu.home")}</HeaderLink
-      >
-      <HeaderLink href="/blog" aria-label={t(lang as "en" | "es", "menu.blog")}
-        >{t(lang as "en" | "es", "menu.blog")}</HeaderLink
-      >
       <HeaderLink
-        href="/about"
+        href={`/${lang}`}
+        aria-label={t(lang as "en" | "es", "menu.home")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.home")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/blog`}
+        aria-label={t(lang as "en" | "es", "menu.blog")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.blog")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/about`}
         aria-label={t(lang as "en" | "es", "menu.about")}
-        >{t(lang as "en" | "es", "menu.about")}</HeaderLink
+        lang={lang}
       >
-      <HeaderLink href="/tags" aria-label={t(lang as "en" | "es", "menu.tags")}
-        >{t(lang as "en" | "es", "menu.tags")}</HeaderLink
+        {t(lang as "en" | "es", "menu.about")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/tags`}
+        aria-label={t(lang as "en" | "es", "menu.tags")}
+        lang={lang}
       >
+        {t(lang as "en" | "es", "menu.tags")}
+      </HeaderLink>
     </nav>
     <div class="flex items-center gap-6 min-w-0">
       <div class="hidden md:block">

@@ -50,7 +50,7 @@ const {
   }
 
   <!-- Filtros -->
-  <div class="mx-auto sticky top-30">
+  <div class="mx-auto sticky top-30 z-10">
     <BlogFilters
       categories={categories}
       selectedCategory={selectedCategory}
@@ -97,11 +97,11 @@ const {
   {
     totalPages > 1 && (
       <Paginator
+        customClass="mt-6"
         currentPage={currentPage}
         totalPages={totalPages}
         getPageHref={getPageHref}
       />
     )
   }
-  <div class="h-20"></div>
 </section>
