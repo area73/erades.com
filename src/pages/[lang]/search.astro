@@ -24,16 +24,35 @@ if (query) {
 
 const pageParam = Number(Astro.url.searchParams.get("page")) || 1;
 const RESULTS_PER_PAGE = 10;
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
 // Filtrar resultados por categoría seleccionada
 const categoryParam = Astro.url.searchParams.get("category") || "Todas";
+// Filtrar resultados para excluir drafts, posts sin id válido y que sean del idioma actual
 const filteredResults =
   categoryParam === "Todas"
-    ? results
-    : results.filter((post: any) =>
-        Array.isArray(post.categories)
-          ? post.categories.includes(categoryParam)
-          : false
-      );
+    ? results.filter(
+        (post: any) =>
+          post.id &&
+          typeof post.id === "string" &&
+          post.id.length > 0 &&
+          post.draft !== true &&
+          post.id.startsWith(`${lang}/`)
+      )
+    : results
+        .filter((post: any) =>
+          Array.isArray(post.categories)
+            ? post.categories.includes(categoryParam)
+            : false
+        )
+        .filter(
+          (post: any) =>
+            post.id &&
+            typeof post.id === "string" &&
+            post.id.length > 0 &&
+            post.draft !== true &&
+            post.id.startsWith(`${lang}/`)
+        );
 const totalPages = Math.ceil(filteredResults.length / RESULTS_PER_PAGE);
 const currentPage = Math.max(1, Math.min(pageParam, totalPages || 1));
 
@@ -65,8 +84,6 @@ const categories = [
 ] as string[];
 if (!categories.includes("Todas")) categories.unshift("Todas");
 
-const { lang: langParam } = Astro.params;
-const lang = langParam ?? "es";
 const posts = (await getCollection("blog")).filter(
   (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
 );
@@ -125,7 +142,8 @@ const posts = (await getCollection("blog")).filter(
               </li>
             ) : (
               paginatedResults.map((doc: any) => {
-                const post = doc.data ? doc : { data: doc };
+                // Si doc.data existe, fusiona id y data en el objeto post
+                const post = doc.data ? { ...doc.data, id: doc.id } : doc;
                 return (
                   <li>
                     <BlogCard post={post} variant={viewMode} lang={lang} />
