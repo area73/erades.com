@@ -71,7 +71,7 @@ if (typeof window !== "undefined") {
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-accent")}
             aria-current={lang === "es" ? "page" : undefined}
-            onclick="window.location.replace(window.location.pathname.replace(/^\/(en|es)/, '/es').startsWith('/es') ? window.location.pathname.replace(/^\/(en|es)/, '/es') : '/es' + window.location.pathname);"
+            onclick="window.location.pathname = window.location.pathname.replace(/^\/(en|es)/, '/es');"
           >
             ES
           </button>
@@ -81,7 +81,7 @@ if (typeof window !== "undefined") {
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-accent")}
             aria-current={lang === "en" ? "page" : undefined}
-            onclick="window.location.replace(window.location.pathname.replace(/^\/(en|es)/, '/en').startsWith('/en') ? window.location.pathname.replace(/^\/(en|es)/, '/en') : '/en' + window.location.pathname);"
+            onclick="window.location.pathname = window.location.pathname.replace(/^\/(en|es)/, '/en');"
           >
             EN
           </button>
