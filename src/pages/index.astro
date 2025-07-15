@@ -6,5 +6,5 @@ const lang =
     .startsWith("en")
     ? "en"
     : "es");
-Astro.redirect("/" + lang);
+return Astro.redirect("/" + lang);
 ---
