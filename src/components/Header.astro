@@ -1,10 +1,7 @@
 ---
-// @ts-expect-error TS7016: React 19 types are built-in, ignore missing declaration error
-import { useState } from "react";
 import HeaderLink from "./HeaderLink.astro";
-import { SITE_TITLE } from "../consts";
 import HeaderSearchBox from "./HeaderSearchBox.astro";
-import { Sun, Moon, ChevronDown, Linkedin, X } from "@lucide/astro";
+import { ChevronDown } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import SocialProfileMenu from "./SocialProfileMenu.astro";
 import { t } from "../i18n";
@@ -66,25 +63,50 @@ if (typeof window !== "undefined") {
         <ThemeToggle />
         <div class="flex items-center gap-1 ml-2">
           <button
+            id="lang-es"
             class={"px-2 py-1 rounded text-xs font-bold transition " +
               (lang === "es"
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-accent")}
             aria-current={lang === "es" ? "page" : undefined}
-            onclick="window.location.pathname = window.location.pathname.replace(/^\/(en|es)/, '/es');"
           >
             ES
           </button>
           <button
+            id="lang-en"
             class={"px-2 py-1 rounded text-xs font-bold transition " +
               (lang === "en"
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-accent")}
             aria-current={lang === "en" ? "page" : undefined}
-            onclick="window.location.pathname = window.location.pathname.replace(/^\/(en|es)/, '/en');"
           >
             EN
           </button>
+          <script is:inline>
+            if (typeof window !== "undefined") {
+              document
+                .getElementById("lang-es")
+                ?.addEventListener("click", () => {
+                  document.cookie =
+                    "lang=es; path=/; max-age=" + 60 * 60 * 24 * 365;
+                  window.location.pathname = window.location.pathname.replace(
+                    /^\/(en|es)/,
+                    "/es"
+                  );
+                });
+              document
+                .getElementById("lang-en")
+                ?.addEventListener("click", () => {
+                  document.cookie =
+                    "lang=en; path=/; max-age=" + 60 * 60 * 24 * 365;
+                  localStorage.removeItem("lang");
+                  window.location.pathname = window.location.pathname.replace(
+                    /^\/(en|es)/,
+                    "/en"
+                  );
+                });
+            }
+          </script>
           <div class="relative ml-2">
             <button
               id="avatar-btn"

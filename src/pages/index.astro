@@ -1,70 +1,10 @@
 ---
-import Layout from "../layouts/BlogPost.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
-import { getCollection } from "astro:content";
-import FormattedDate from "../components/FormattedDate.astro";
-import BlogCard from "../components/BlogCard.astro";
-
-const posts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const featured = posts.slice(0, 3);
+const lang =
+  Astro.cookies.get("lang")?.value ??
+  ((Astro.request.headers.get("accept-language") || "")
+    .toLowerCase()
+    .startsWith("en")
+    ? "en"
+    : "es");
+Astro.redirect("/" + lang);
 ---
-
-<Layout
-  title={SITE_TITLE}
-  description={SITE_DESCRIPTION}
-  tags={[]}
-  categories={[]}
-  draft={false}
->
-  <section>
-    <div class="mx-auto">
-      <!-- Hero Section -->
-      <div class="text-center mb-16">
-        <h1
-          class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
-        >
-          Bienvenido a {SITE_TITLE}
-        </h1>
-        <p
-          class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
-        >
-          Un espacio donde comparto ideas, conocimientos y experiencias sobre
-          tecnología, desarrollo y diseño moderno.
-        </p>
-      </div>
-
-      <!-- Featured Content -->
-      <ul class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          featured.map((post) => (
-            <li>
-              <BlogCard post={post} variant="grid" lang="es" />
-            </li>
-          ))
-        }
-      </ul>
-
-      <!-- Call to Action -->
-      <div class="text-center mt-16">
-        <div class="bg-card rounded-xl p-8 shadow-medium">
-          <h2
-            class="font-serif text-2xl font-semibold text-card-foreground mb-4"
-          >
-            ¿Listo para explorar?
-          </h2>
-          <p class="text-muted-foreground mb-12">
-            Descubre todos los artículos y encuentra contenido que te inspire.
-          </p>
-          <a
-            href="/blog"
-            class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foreground border-border hover:bg-primary/10"
-          >
-            Ver Todos los Posts
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-</Layout>

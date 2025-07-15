@@ -1,22 +1,15 @@
 ---
 import { t } from "../../i18n/index";
-import BlogLayout from "../../layouts/BlogLayout.astro";
-
 const { lang = "es" } = Astro.params;
 ---
 
-<BlogLayout
-  lang={lang as "es" | "en"}
-  frontmatter={{
-    title: t(lang as "es" | "en", "title"),
-    description: t(lang as "es" | "en", "title"),
-    pubDate: new Date(),
-    updatedDate: new Date(),
-    tags: [],
-    categories: [],
-    draft: false,
-  }}
->
-  <h2>{t(lang as "es" | "en", "menu.home")}</h2>
-  <p>Welcome to the multilingual Astro starter!</p>
-</BlogLayout>
+<main class="max-w-2xl mx-auto py-16 px-4 text-center">
+  <h1 class="text-4xl font-bold mb-4">{t(lang as "es" | "en", "title")}</h1>
+  <p class="text-lg text-muted-foreground mb-8">
+    {
+      lang === "es"
+        ? "Bienvenido a la portada en español. Aquí puedes personalizar el contenido de bienvenida."
+        : "Welcome to the English homepage. You can customize this welcome content."
+    }
+  </p>
+</main>

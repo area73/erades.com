@@ -1,15 +1,15 @@
 ---
-import Layout from "../layouts/BlogPost.astro";
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Paginator from "../components/Paginator.astro";
-import BlogFilters from "../components/BlogFilters.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
-import BlogCard from "../components/BlogCard.astro";
-import NoResults from "../components/NoResults.astro";
-import ResultsInfo from "../components/ResultsInfo.astro";
+import Layout from "../../layouts/BlogPost.astro";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Paginator from "../../components/Paginator.astro";
+import BlogFilters from "../../components/BlogFilters.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import BlogCard from "../../components/BlogCard.astro";
+import NoResults from "../../components/NoResults.astro";
+import ResultsInfo from "../../components/ResultsInfo.astro";
 import { Search as SearchIcon } from "@lucide/astro";
-import { sortPosts, SORT_BY_OPTIONS } from "../utils/sort-utils";
+import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 
 const query = Astro.url.searchParams.get("q") || "";
 

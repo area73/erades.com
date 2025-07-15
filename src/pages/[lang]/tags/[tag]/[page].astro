@@ -1,22 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/BlogPost.astro";
-import BlogList from "../../components/BlogList.astro";
-import { filterPostsByTag } from "./tag-utils";
-import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
-
-// Elimina getStaticPaths, ya no es necesario en SSR
-// export async function getStaticPaths() {
-//   const posts = await getCollection("blog");
-//   const tags = posts.map((post) => post.data.tags || []).flat();
-//   const uniqueTags = [...new Set(tags)];
-//   return uniqueTags.map((tag) => ({
-//     params: { tag },
-//     props: { tag },
-//   }));
-// }
+import Layout from "../../../../layouts/BlogLayout.astro";
+import BlogList from "../../../../components/BlogList.astro";
+import { filterPostsByTag } from "../tag-utils";
+import { sortPosts, SORT_BY_OPTIONS } from "../../../../utils/sort-utils";
 
 const tag = Astro.params.tag ?? "";
+const page = Number(Astro.params.page) || 1;
 const allPosts = await getCollection("blog");
 const postsWithTag = filterPostsByTag(allPosts, tag);
 
@@ -57,7 +47,7 @@ const sortedPosts = sortPosts(filteredPosts, sortBy);
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
-const currentPage = 1;
+const currentPage = page;
 const paginatedPosts = sortedPosts.slice(
   (currentPage - 1) * POSTS_PER_PAGE,
   currentPage * POSTS_PER_PAGE
