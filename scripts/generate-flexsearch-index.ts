@@ -39,7 +39,7 @@ async function main() {
       heroImage: typeof data.heroImage === "string" ? data.heroImage : "",
       content,
       path: `/blog/${relPath.replace(/\.mdx?$/, "")}`.toLowerCase(),
-      id: String(i), // id único string
+      id: relPath.replace(/\.mdx?$/, "").toLowerCase(), // slug completo como id
     });
   }
   console.log(`[FlexSearch] Parsed ${docs.length} documents.`);
