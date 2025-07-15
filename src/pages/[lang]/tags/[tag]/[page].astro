@@ -60,14 +60,16 @@ const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
   if (cat !== "Todas") params.set("category", cat);
   if (sortBy) params.set("sortBy", sortBy);
-  return `/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "");
+  return (
+    `/${lang}/tags/${tag}/` + (params.toString() ? `?${params.toString()}` : "")
+  );
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "Todas") params.set("category", selectedCategory);
   if (sortBy) params.set("sortBy", sortBy);
   return (
-    (page === 1 ? `/tags/${tag}/` : `/tags/${tag}/${page}/`) +
+    (page === 1 ? `/${lang}/tags/${tag}/` : `/${lang}/tags/${tag}/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };

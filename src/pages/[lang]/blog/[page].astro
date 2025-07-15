@@ -93,8 +93,9 @@ const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "todas") params.set("category", selectedCategory);
   if (sortBy) params.set("sortBy", sortBy);
+  // Siempre incluye el prefijo de idioma
   return (
-    (page === 1 ? "/blog/" : `/blog/${page}/`) +
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
