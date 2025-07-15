@@ -107,7 +107,7 @@
     "categories": [
       "functional"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-9.jpg",
     "content": "\n```javascript\n// A more functional memoizer\n\n//We can beef up our module by adding functions later\nvar Memoizer = (function () {\n  //Private data\n  var cache = {};\n  //named functions are awesome!\n  function cacher(func) {\n    return function () {\n      var key = JSON.stringify(arguments);\n      if (cache[key]) {\n        return cache[key];\n      } else {\n        val = func.apply(this, arguments);\n        cache[key] = val;\n        return val;\n      }\n    };\n  }\n  //Public data\n  return {\n    memo: function (func) {\n      return cacher(func);\n    },\n  };\n})();\n\nvar fib = Memoizer.memo(function (n) {\n  if (n < 2) {\n    return 1;\n  } else {\n    return fib(n - 2) + fib(n - 1);\n  }\n});\n```\n",
     "path": "/blog/en/functional/memoize",
@@ -127,7 +127,7 @@
     "categories": [
       "functional"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-8.jpg",
     "content": "\nSo let's remember first what's a functor:\n\n    1. It is a wrapper object to contain our data\n    2. had a map function to iterate over its own data\n    3. preserves identity\n    4. can be composable\n\nBut functors by themselves aren't compelling, because they're not expected to\nknow how to handle cases with **null data**.<br> `Ramda's R.compose`, for instance,\nwill break if a null function reference is passed into it. This isn't a flaw\nin the design; it's intentional.\n\n- Functors map functions of one type to another.\n\n- More-specialized behavior can be found in functional data types called monads.\n\n- Among other things, monads can streamline error handling in your code,allowing\n  you to write fluent function compositions.\n\n- What's their relationship to functors? **Monads are the containers\n  that functors \"reach into.\"**\n",
     "path": "/blog/en/functional/monads",
@@ -148,7 +148,7 @@
     "categories": [
       "functional"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-16.jpg",
     "content": "\nThe primary goal of transducers is to run a pipeline of transformations of an input stream of\nvalues **without creating intermediate values**. The functions describing computations are\ndecoupled, so this makes program design cleaner and easier to develop and maintain.\n\nA transducer is a function that accepts a transformer and returns a transformer and can be composed directly\n\nTransducers can:\n\n- Be Composable\n- They only enumerates over the elements **onces** (very efficient for working with data streams)\n- can be use for lazy or eager evaluation\n- You can combine transducer to generate another transducer (High order reducers ¿?)\n\nThere are two strategies:\n\n- **Pull:** lazy evaluation\n- **Push:** eager evaluation\n\n**Pull** waits until a consumer asks for the next value (for example an Iterable)\n\n**Push** enumerates over the source values and pushes them through the tubes ASAP (Array.reduce())\n\nTransducers compose top to bottom (left to right)\n\n**Example:**\n\nGiven an array of autobots we want to:\n\n1. ﬁlter out values that don't contain the letter 'r',\n2. uppercase\n3. reverse each value\n\n**First approach without a tranducer**\n\n```javascript\nconst R = require(\"ramda\"); // Ramda functional library\n\nlet autobots = [\n  \"Optimus Prime\",\n  \"Bumblebee\",\n  \"Ironhide\",\n  \"Sunstreaker\",\n  \"Ratchet\",\n];\n\n// Filter for autobots that contain 'r', uppercase, then reverse\nlet transform = R.compose(\n  R.filter((x) => /r/i.test(x)),\n  R.map(R.toUpper),\n  R.map(R.reverse)\n);\n\ntransform(autobots);\n// => [ 'EMIRP SUMITPO', 'EDIHNORI', 'REKAERTSNUS', 'TEHCTAR' ]\n```\n\n**Same approach with tranducer**\n\n```javascript\nconst R = require(\"ramda\"); // Ramda functional library\n\nlet autobots = [\n  \"Optimus Prime\",\n  \"Bumblebee\",\n  \"Ironhide\",\n  \"Sunstreaker\",\n  \"Ratchet\",\n];\n\n// Filter for autobots that contain 'r', uppercase, then reverse\nlet transform = R.compose(\n  R.filter((x) => /r/i.test(x)),\n  R.map(R.toUpper),\n  R.map(R.reverse)\n);\n\ntransform(autobots);\n// => [ 'EMIRP SUMITPO', 'EDIHNORI', 'REKAERTSNUS', 'TEHCTAR' ]\n```\n\nWe get the same exact result (in this situation), but something very different and very powerful\nis happening under the hood. **In the first example, the entire list was transformed at each step**.<br>\nThis means that we had to iterate over the list three times. However, **in the second example**\nwhere we used the transducer, **we only had to iterate over the list once!**\n\n<div class=\"bibliography\">\nBibliogrphy:<br><br>\n\n- [effectfulJS](https://github.com/awto/effectfuljs/tree/master/packages/transducers)\n- [Understanding Transducers in JavaScript](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624)\n- [MAGICAL, MYSTICAL JAVASCRIPT TRANSDUCERS](https://jrsinclair.com/articles/2019/magical-mystical-js-transducers/)\n- [Transducers: Efficient Data Processing Pipelines in JavaScript](https://medium.com/javascript-scene/transducers-efficient-data-processing-pipelines-in-javascript-7985330fe73d).\n</div>\n",
     "path": "/blog/en/functional/transducers",
@@ -306,7 +306,7 @@
     "categories": [
       "experiment"
     ],
-    "draft": false,
+    "draft": true,
     "heroImage": "/blog-placeholder-11.jpg",
     "content": "\n<script type=\"module\" src=\"/js/experiments/system01.js\"></script>\n\n<canvas></canvas>\n",
     "path": "/blog/es/experiments/particle-system-01",
@@ -404,7 +404,7 @@
     "categories": [
       "functional"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-9.jpg",
     "content": "\n```javascript\n// Un memoizador más funcional\n\n// Podemos potenciar nuestro módulo añadiendo funciones más adelante\nvar Memoizer = (function () {\n  // Datos privados\n  var cache = {};\n  // ¡Las funciones nombradas son increíbles!\n  function cacher(func) {\n    return function () {\n      var key = JSON.stringify(arguments);\n      if (cache[key]) {\n        return cache[key];\n      } else {\n        val = func.apply(this, arguments);\n        cache[key] = val;\n        return val;\n      }\n    };\n  }\n  // Datos públicos\n  return {\n    memo: function (func) {\n      return cacher(func);\n    },\n  };\n})();\n\nvar fib = Memoizer.memo(function (n) {\n  if (n < 2) {\n    return 1;\n  } else {\n    return fib(n - 2) + fib(n - 1);\n  }\n});\n```\n",
     "path": "/blog/es/functional/memoize",
@@ -445,7 +445,7 @@
     "categories": [
       "functional"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-16.jpg",
     "content": "\nEl objetivo principal de los transductores es ejecutar una canalización de transformaciones en una secuencia de entrada de valores **sin crear valores intermedios**. Las funciones que describen los cálculos están decopladas, por lo que esto hace que el diseño del programa sea más limpio y fácil de desarrollar y mantener.\n\nUn transductor es una función que acepta un transformador y devuelve un transformador y puede componerse directamente.\n\nLos transductores pueden:\n\n- Ser Componibles\n- Solo enumeran los elementos **una vez** (muy eficiente para trabajar con flujos de datos)\n- pueden usarse para evaluación perezosa o ansiosa\n- Puedes combinar un transductor para generar otro transductor (¿Reductores de alto orden?)\n\nHay dos estrategias:\n\n- **Tirar:** evaluación perezosa\n- **Empujar:** evaluación ansiosa\n\n**Tirar** espera hasta que un consumidor pida el siguiente valor (por ejemplo un Iterable)\n\n**Empujar** enumera los valores fuente y los empuja a través de los tubos lo antes posible (Array.reduce())\n\nLos transductores se componen de arriba a abajo (de izquierda a derecha)\n\n**Ejemplo:**\n\nDado un arreglo de autobots queremos:\n\n1. filtrar los valores que no contienen la letra 'r',\n2. cambiar a mayúsculas\n3. invertir cada valor\n\n**Primer enfoque sin un transductor**\n\n```javascript\nconst R = require(\"ramda\"); // Librería funcional Ramda\n\nlet autobots = [\n  \"Optimus Prime\",\n  \"Bumblebee\",\n  \"Ironhide\",\n  \"Sunstreaker\",\n  \"Ratchet\",\n];\n\n// Filtrar autobots que contienen 'r', cambiar a mayúsculas, luego invertir\nlet transform = R.compose(\n  R.filter((x) => /r/i.test(x)),\n  R.map(R.toUpper),\n  R.map(R.reverse)\n);\n\ntransform(autobots);\n// => [ 'EMIRP SUMITPO', 'EDIHNORI', 'REKAERTSNUS', 'TEHCTAR' ]\n```\n\n**Mismo enfoque con transductor**\n\n```javascript\nconst R = require(\"ramda\"); // Librería funcional Ramda\n\nlet autobots = [\n  \"Optimus Prime\",\n  \"Bumblebee\",\n  \"Ironhide\",\n  \"Sunstreaker\",\n  \"Ratchet\",\n];\n\n// Filtrar autobots que contienen 'r', cambiar a mayúsculas, luego invertir\nlet transform = R.compose(\n  R.filter((x) => /r/i.test(x)),\n  R.map(R.toUpper),\n  R.map(R.reverse)\n);\n\ntransform(autobots);\n// => [ 'EMIRP SUMITPO', 'EDIHNORI', 'REKAERTSNUS', 'TEHCTAR' ]\n```\n\nObtenemos exactamente el mismo resultado (en esta situación), pero algo muy diferente y muy poderoso ocurre por debajo. **En el primer ejemplo, se transformó toda la lista en cada paso**.<br>\nEsto significa que tuvimos que iterar sobre la lista tres veces. Sin embargo, **en el segundo ejemplo** donde usamos el transductor, **¡solo tuvimos que iterar sobre la lista una vez!**\n\n<div class=\"bibliography\">\nBibliografía:<br><br>\n\n- [effectfulJS](https://github.com/awto/effectfuljs/tree/master/packages/transducers)\n- [Entendiendo Transductores en JavaScript](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624)\n- [MÁGICOS Y MÍSTICOS TRANSDUCTORES DE JAVASCRIPT](https://jrsinclair.com/articles/2019/magical-mystical-js-transducers/)\n- [Transductores: Canalizaciones de procesamiento de datos eficientes en JavaScript](https://medium.com/javascript-scene/transducers-efficient-data-processing-pipelines-in-javascript-7985330fe73d).\n</div>\n",
     "path": "/blog/es/functional/transducers",
