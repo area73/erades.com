@@ -4,7 +4,7 @@ description: "Exploring monads as specialized functors for handling null data an
 pubDate: "2019-11-11"
 tags: ["declarative", "Pure functions", "Inmutable", "currying", "functors"]
 categories: ["functional"]
-draft: true
+draft: false
 heroImage: "/blog-placeholder-8.jpg"
 ---
 

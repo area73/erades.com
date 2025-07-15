@@ -4,7 +4,7 @@ pubDate: "2019-01-11"
 description: "Explorando técnicas de animación de sistemas de partículas utilizando Canvas y JavaScript para crear efectos visuales dinámicos"
 tags: ["particle system"]
 categories: ["experiment"]
-draft: false
+draft: true
 heroImage: "/blog-placeholder-11.jpg"
 ---
 

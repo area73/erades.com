@@ -11,7 +11,7 @@ tags:
   - transducers
 categories:
   - functional
-draft: true
+draft: false
 heroImage: "/blog-placeholder-16.jpg"
 ---
 

@@ -181,6 +181,14 @@ body {
 html.dark {
   /* Modo oscuro elegante */
   /* --color-muted-foreground: hsl(215 16% 14%);*/
+  --color-muted: hsl(180, 2%, 20%);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: hsl(0, 0%, 23%);
+  --color-primary: hsl(12, 80%, 49%);
+  --color-primary-foreground: hsl(215 16% 95%);
+  --color-primary-background: hsl(215 16% 95%);
+  --color-secondary-foreground: hsl(215 20% 65%);
+
   --color-header-background: hsl(215 16% 14%);
   --background: hsl(215 28% 8%);
   --foreground: hsl(60, 20%, 95%);
@@ -198,7 +206,7 @@ html.dark {
   --secondary: hsl(215 28% 14%);
   --secondary-foreground: hsl(215 20% 95%);
 
-  --muted: hsl(215 28% 12%);
+  --muted: hsl(214, 26%, 5%);
   --muted-foreground: hsl(144, 20%, 95%);
 
   --accent: hsl(215 28% 14%);

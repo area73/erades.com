@@ -4,7 +4,7 @@ description: "A more function memoizer"
 pubDate: "2019-11-11"
 tags: ["declarative", "Pure functions", "Inmutable", "currying", "functors"]
 categories: ["functional"]
-draft: true
+draft: false
 heroImage: "/blog-placeholder-9.jpg"
 ---
 
