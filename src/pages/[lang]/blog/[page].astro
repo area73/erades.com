@@ -22,9 +22,11 @@ export async function getStaticPaths() {
 const { page } = Astro.params;
 const currentPage = Number(page) || 1;
 
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const categories = [
   "Todas",
@@ -96,17 +98,16 @@ const getPageHref = (page: number) => {
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
-const lang = Astro.params.lang;
 console.log("LANG PARAM page:", lang);
 ---
 
 <Layout
-  lang={lang}
-  title="Todos los Posts"
+  title={SITE_TITLE}
   description={SITE_DESCRIPTION}
   tags={[]}
-  categories={categories.filter((c) => c !== "Todas")}
+  categories={categories}
   draft={false}
+  lang={lang}
 >
   <BlogList
     posts={filteredPosts}

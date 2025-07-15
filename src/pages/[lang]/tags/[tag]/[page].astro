@@ -4,10 +4,13 @@ import Layout from "../../../../layouts/BlogLayout.astro";
 import BlogList from "../../../../components/BlogList.astro";
 import { filterPostsByTag } from "../tag-utils";
 import { sortPosts, SORT_BY_OPTIONS } from "../../../../utils/sort-utils";
+import tag from "@lucide/astro/icons/tag";
 
-const tag = Astro.params.tag ?? "";
-const page = Number(Astro.params.page) || 1;
-const allPosts = await getCollection("blog");
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const allPosts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
 const postsWithTag = filterPostsByTag(allPosts, tag);
 
 // Extraer categorías únicas de los posts filtrados
@@ -76,6 +79,7 @@ const getPageHref = (page: number) => {
   tags={[]}
   categories={categories.filter((c) => c !== "Todas")}
   draft={false}
+  lang={lang}
 >
   <BlogList
     posts={sortedPosts}

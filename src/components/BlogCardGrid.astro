@@ -5,8 +5,9 @@ interface Props {
   lang: string;
 }
 const { post, lang } = Astro.props;
-
-const href = `/${lang}/blog/${post.id}/`;
+const langPrefix = `${lang}/`;
+const postId = post && typeof post.id === "string" ? post.id : "";
+const href = `/${lang}/blog/${postId.startsWith(langPrefix) ? postId.slice(langPrefix.length) : postId}/`;
 const getReadTime = (content: string): number => {
   if (!content) return 1;
   const words = content.split(/\s+/).length;

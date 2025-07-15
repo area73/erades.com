@@ -1,5 +1,8 @@
 ---
 import Layout from "../../layouts/BlogPost.astro";
+
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
 ---
 
 <Layout
@@ -9,6 +12,7 @@ import Layout from "../../layouts/BlogPost.astro";
   tags={[]}
   categories={[]}
   draft={false}
+  lang={lang}
 >
   <p>
     Soy ingeniero con más de 20 años de experiencia en el sector tecnológico. A

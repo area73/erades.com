@@ -4,8 +4,10 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import BlogCard from "../../components/BlogCard.astro";
 
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
 const posts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft)
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const featured = posts.slice(0, 3);
 ---
@@ -16,6 +18,7 @@ const featured = posts.slice(0, 3);
   tags={[]}
   categories={[]}
   draft={false}
+  lang={lang}
 >
   <section>
     <div class="mx-auto">
@@ -39,7 +42,7 @@ const featured = posts.slice(0, 3);
         {
           featured.map((post) => (
             <li>
-              <BlogCard post={post} variant="grid" lang="es" />
+              <BlogCard post={post} variant="grid" lang={lang} />
             </li>
           ))
         }

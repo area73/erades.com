@@ -5,8 +5,9 @@ interface Props {
   lang: string;
 }
 const { post, lang } = Astro.props;
-
-const href = `/${lang}/blog/${post.id}/`;
+const langPrefix = `${lang}/`;
+const postId = post && typeof post.id === "string" ? post.id : "";
+const href = `/${lang}/blog/${postId.startsWith(langPrefix) ? postId.slice(langPrefix.length) : postId}/`;
 ---
 
 <a href={href} class="block group">

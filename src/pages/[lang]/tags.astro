@@ -12,7 +12,11 @@ import {
 } from "./tags/tag-utils";
 import { Hash, Search, Tag, TrendingUp } from "@lucide/astro";
 
-const posts = await getCollection("blog");
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
 const tagCounts = getTagCounts(posts);
 const uniqueTags = getSortedTags(tagCounts);
 const minCount = Math.min(...Object.values(tagCounts));
@@ -46,11 +50,15 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
 ---
 
 <Layout
-  title="Tags"
-  description="All tags used in blog posts. Click a tag to see related articles."
-  tags={[]}
-  categories={[]}
-  draft={false}
+  lang={lang}
+  frontmatter={{
+    title: "Tags",
+    description:
+      "All tags used in blog posts. Click a tag to see related articles.",
+    tags: [],
+    categories: [],
+    draft: false,
+  }}
 >
   <section class="container mx-auto px-4 py-8">
     <div class="max-w-6xl mx-auto">
@@ -82,7 +90,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
             <div class="flex flex-wrap gap-3 justify-center">
               {filteredTags.map((tag) => (
                 <a
-                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   style={`font-size: ${getFontSize(tagCounts[tag], minCount, maxCount)};`}
                   class="inline-block font-medium transition-colors duration-200 cursor-pointer text-foreground hover:text-primary px-2 py-1 rounded bg-muted/50 hover:bg-primary/10"
                   title={`Ver posts con la etiqueta ${tag}`}
@@ -117,7 +125,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
             {
               topTags.map((tag, index) => (
                 <a
-                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   class="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
                   <div class="flex items-center gap-2">
@@ -146,7 +154,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
             {
               trendingTags.map((tag) => (
                 <a
-                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   class="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
                   <span class="text-sm font-medium text-foreground">
@@ -193,7 +201,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
             {
               recentTags.map((tag) => (
                 <a
-                  href={`/tags/${encodeURIComponent(tag)}/`}
+                  href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   class="inline-block px-2 py-1 rounded bg-muted/50 hover:bg-primary/10 text-xs font-medium text-foreground hover:text-primary transition-colors"
                 >
                   #{tag}
