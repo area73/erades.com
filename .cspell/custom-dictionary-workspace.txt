@@ -1,4 +1,6 @@
+flexsearch
 frontmatter
 Linkedin
 lucide
 openai
+redirección

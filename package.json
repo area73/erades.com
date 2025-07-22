@@ -13,7 +13,10 @@
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --max-warnings=0 --fix",
     "translate:es-en": "dotenv -e .env -- tsx scripts/translate-posts.ts es en",
-    "translate:en-es": "dotenv -e .env -- tsx scripts/translate-posts.ts en es"
+    "translate:en-es": "dotenv -e .env -- tsx scripts/translate-posts.ts en es",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -31,6 +34,7 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4.1.5",
     "@tailwindcss/typography": "0.5.0-alpha.3",
     "@testing-library/dom": "^10.4.0",
