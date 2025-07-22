@@ -11,6 +11,7 @@ import {
   getTrendingTags,
 } from "./tags/tag-utils";
 import { Hash, Search, Tag, TrendingUp } from "@lucide/astro";
+import { t } from "../../i18n";
 
 const { lang: langParam } = Astro.params;
 const lang = langParam ?? "es";
@@ -66,9 +67,9 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
       <div class="text-center mb-12">
         <div class="flex items-center justify-center gap-3 mb-4">
           <Hash class="h-8 w-8 text-primary" />
-          <h1 class="font-serif text-4xl font-bold text-foreground">
-            Etiquetas
-          </h1>
+          <h2 class="font-serif text-4xl font-bold text-foreground">
+            {t(lang as "es" | "en", "menu.tags")}
+          </h2>
         </div>
         <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
           Explora todos los temas del blog organizados por etiquetas. Encuentra
