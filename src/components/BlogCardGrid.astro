@@ -18,7 +18,7 @@ const content = post.content || (post.data && post.data.content) || "";
 const readTime = getReadTime(content);
 ---
 
-<a href={href} class="block group h-full" data-testid="blog-card">
+<a href={href} class="block group h-full" aria-label="grid-card">
   <div
     class="bg-card border rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden borderh-full flex flex-col"
   >

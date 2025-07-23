@@ -5,7 +5,7 @@ test.describe("Navegación a blogpost desde la home", () => {
     page,
   }) => {
     await page.goto("/");
-    const firstPost = page.locator('[data-testid="blog-card"]').first();
+    const firstPost = page.locator('[aria-label="blog-card"]').first();
     const postTitle = await firstPost
       .locator('[data-testid="blog-card-title"]')
       .textContent();

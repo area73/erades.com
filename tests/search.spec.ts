@@ -55,7 +55,7 @@ test.describe("Buscador", () => {
     expect(textAfter).not.toBe(textBefore);
 
     // Comprobar que el número mostrado coincide con la cantidad de blogposts visibles
-    const blogPosts = page.locator('[data-testid="blog-card"]');
+    const blogPosts = page.locator('[aria-label="grid-card"]');
     await expect(blogPosts).toHaveCount(shownAfter ?? 0);
   });
 
@@ -66,7 +66,7 @@ test.describe("Buscador", () => {
     await page.goto("/es/search?q=func");
 
     // Esperar a que los blogposts estén visibles
-    const blogPosts = page.locator('[data-testid="blog-card"]');
+    const blogPosts = page.locator('[aria-label="grid-card"]');
     const count = await blogPosts.count();
     expect(count).toBeGreaterThan(1);
 
@@ -92,5 +92,33 @@ test.describe("Buscador", () => {
     // Comprobar que titlesAfter está ordenado alfabéticamente
     const sorted = [...titlesAfter].sort((a, b) => a.localeCompare(b));
     expect(titlesAfter).toEqual(sorted);
+  });
+
+  test("cambiar la vista de grid a list actualiza los aria-labels", async ({
+    page,
+  }) => {
+    // Ir a la página de búsqueda con una query que devuelva varios posts
+    await page.goto("/es/search?q=func");
+
+    // Esperar a que los blogposts en grid estén visibles
+    const gridPosts = page.locator('[aria-label="grid-card"]');
+    const gridCount = await gridPosts.count();
+    expect(gridCount).toBeGreaterThan(0);
+
+    // Comprobar que no hay posts con aria-label="list-card" inicialmente
+    const listPostsInitial = page.locator('[aria-label="list-card"]');
+    expect(await listPostsInitial.count()).toBe(0);
+
+    // Cambiar a la vista de lista (list)
+    // Suponiendo que hay un botón o toggle con aria-label="Cambiar a vista de lista"
+    const listViewButton = page.getByRole("button", {
+      name: /vista de lista/i,
+    });
+    await listViewButton.click();
+
+    // Esperar a que los grid-cards desaparezcan y aparezcan los list-cards
+    await expect(gridPosts).toHaveCount(0);
+    const listPosts = page.locator('[aria-label="list-card"]');
+    expect(await listPosts.count()).toBeGreaterThan(0);
   });
 });
