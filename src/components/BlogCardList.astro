@@ -12,7 +12,7 @@ const href = `/${lang}/blog/${postId.startsWith(langPrefix) ? postId.slice(langP
 const get = (key: string) => post[key] ?? (post.data && post.data[key]);
 ---
 
-<a href={href} class="block group">
+<a href={href} class="block group" aria-label="list-card">
   <div
     class="rounded-xl overflow-hidden shadow-sm bg-card borderhover:shadow-medium transition-all duration-300"
   >
