@@ -73,7 +73,7 @@ test.describe("Buscador", () => {
     // Obtener los títulos en el orden inicial
     const getTitles = async () => {
       return await blogPosts
-        .locator('[data-testid="blog-card-title"]')
+        .locator('[aria-label="blog-card-title"]')
         .allTextContents();
     };
     const titlesBefore = await getTitles();
@@ -110,9 +110,9 @@ test.describe("Buscador", () => {
     expect(await listPostsInitial.count()).toBe(0);
 
     // Cambiar a la vista de lista (list)
-    // Suponiendo que hay un botón o toggle con aria-label="Cambiar a vista de lista"
-    const listViewButton = page.getByRole("button", {
-      name: /vista de lista/i,
+    // El componente ViewModeToggle usa enlaces con title
+    const listViewButton = page.getByRole("link", {
+      name: "Vista lista",
     });
     await listViewButton.click();
 
@@ -120,5 +120,35 @@ test.describe("Buscador", () => {
     await expect(gridPosts).toHaveCount(0);
     const listPosts = page.locator('[aria-label="list-card"]');
     expect(await listPosts.count()).toBeGreaterThan(0);
+  });
+
+  test("al hacer clic en un blogpost navega al detalle y el título coincide", async ({
+    page,
+  }) => {
+    // Ir a la página de búsqueda con una query que devuelva varios posts
+    await page.goto("/es/search?q=func");
+
+    // Esperar a que los blogposts estén visibles
+    const blogPosts = page.locator('[aria-label="grid-card"]');
+    const count = await blogPosts.count();
+    expect(count).toBeGreaterThan(0);
+
+    // Seleccionar el primer blogpost y obtener su título
+    const firstCard = blogPosts.first();
+    const firstTitle = await firstCard
+      .locator('[aria-label="blog-card-title"]')
+      .textContent();
+
+    // Hacer clic en el primer blogpost
+    await firstCard.click();
+
+    // Esperar a que la url cambie a la de detalle
+    await page.waitForURL(/\/es\/blog\//);
+
+    // Comprobar que el título de la página de detalle coincide
+    const detailTitle = await page
+      .locator('[data-testid="post-title"]')
+      .textContent();
+    expect(detailTitle?.trim()).toBe(firstTitle?.trim());
   });
 });
