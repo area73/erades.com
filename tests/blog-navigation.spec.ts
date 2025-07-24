@@ -5,9 +5,9 @@ test.describe("Navegación a blogpost desde la home", () => {
     page,
   }) => {
     await page.goto("/");
-    const firstPost = page.locator('[aria-label="blog-card"]').first();
+    const firstPost = page.locator('[aria-label="grid-card"]').first();
     const postTitle = await firstPost
-      .locator('[data-testid="blog-card-title"]')
+      .locator('[aria-label="blog-card-title"]')
       .textContent();
     await firstPost.click();
     // Espera a que la navegación termine y verifica el encabezado

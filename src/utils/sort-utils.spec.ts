@@ -1,6 +1,7 @@
 /**
  * Unit tests for sort-utils.ts
  */
+import { describe, it, expect } from "vitest";
 import { sortPosts, type SortablePost } from "./sort-utils";
 
 describe("sortPosts", () => {

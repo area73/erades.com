@@ -55,6 +55,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
           </div>
         </div>
         <h3
+          aria-label="blog-card-title"
           class="font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors"
         >
           {get("title")}

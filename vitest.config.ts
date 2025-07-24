@@ -7,7 +7,7 @@ export default defineConfig({
       "public",
       "node_modules",
       "dist",
-      ".astro",
+      "**/*.astro",
       "src/content.config.ts",
     ],
     coverage: {
@@ -18,9 +18,9 @@ export default defineConfig({
         "public",
         "node_modules",
         "dist",
-        ".astro",
         "**/*.test.*",
         "**/*.spec.*",
+        "**/*.astro",
         "src/content.config.ts",
       ],
       thresholds: {

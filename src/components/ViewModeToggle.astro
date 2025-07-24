@@ -1,0 +1,26 @@
+---
+import { LayoutGrid, List } from "@lucide/astro";
+interface Props {
+  viewMode: string;
+}
+const { viewMode } = Astro.props as Props;
+---
+
+<div class="flex items-center gap-1 bg-secondary rounded-lg p-1">
+  <a
+    href={Astro.url.pathname +
+      `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "grid" }).toString()}`}
+    class={`h-8 w-8 p-0 rounded-full flex items-center justify-center ${viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
+    title="Vista grid"
+  >
+    <LayoutGrid class="h-4 w-4 mx-auto" />
+  </a>
+  <a
+    href={Astro.url.pathname +
+      `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "list" }).toString()}`}
+    class={`h-8 w-8 p-0 rounded-full flex items-center justify-center ${viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-transparent text-muted-foreground"}`}
+    title="Vista lista"
+  >
+    <List class="h-4 w-4 mx-auto" />
+  </a>
+</div>
