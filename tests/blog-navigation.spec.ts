@@ -15,4 +15,9 @@ test.describe("Navegación a blogpost desde la home", () => {
     await expect(header).toBeVisible();
     await expect(header).toHaveText(postTitle || "");
   });
+  test("debe mostrar el título principal en la home", async ({ page }) => {
+    await page.goto("/");
+    await expect(page).toHaveTitle(/Area 73/i);
+    await expect(page.locator("h1")).toBeVisible();
+  });
 });

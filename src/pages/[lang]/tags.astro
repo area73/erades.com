@@ -12,6 +12,7 @@ import {
 } from "./tags/tag-utils";
 import { Hash, Search, Tag, TrendingUp } from "@lucide/astro";
 import { t } from "../../i18n";
+import tag from "@lucide/astro/icons/tag";
 
 const { lang: langParam } = Astro.params;
 const lang = langParam ?? "es";
@@ -79,7 +80,11 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
       <!-- Search -->
 
       <!-- Tag Cloud Card (Full Width) -->
-      <div class="mb-8 bg-card rounded-xl border shadow-soft p-6 w-full">
+      <div
+        role="region"
+        aria-label="nube de etiquetas"
+        class="mb-8 bg-card rounded-xl border shadow-soft p-6 w-full"
+      >
         <div class="flex items-center gap-2 mb-4">
           <Tag class="h-5 w-5 text-primary" />
           <span class="font-semibold text-lg">Nube de Etiquetas</span>
@@ -94,7 +99,9 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
                   class="inline-block font-medium transition-colors duration-200 cursor-pointer text-foreground hover:text-primary px-2 py-1 rounded bg-muted/50 hover:bg-primary/10"
                   title={`Ver posts con la etiqueta ${tag}`}
                 >
-                  <span class="align-middle">#{tag}</span>
+                  <span class="align-middle" aria-label={tag}>
+                    #{tag}
+                  </span>
                   <span class="text-xs text-muted-foreground ml-1 align-top">
                     ({tagCounts[tag]})
                   </span>
@@ -117,6 +124,8 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
       >
         <!-- Top Tags Card -->
         <div
+          role="region"
+          aria-label="etiquetas populares"
           class="break-inside-avoid bg-card rounded-xl border bordershadow-soft p-6"
         >
           <div class="font-semibold text-lg mb-4">Etiquetas Populares</div>
@@ -131,7 +140,9 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
                     <span class="text-xs font-bold text-primary bg-primary/10 w-6 h-6 rounded-full flex items-center justify-center">
                       {index + 1}
                     </span>
-                    <span class="font-medium text-foreground">#{tag}</span>
+                    <span class="font-medium text-foreground" aria-label={tag}>
+                      #{tag}
+                    </span>
                   </div>
                   <span class="text-xs text-muted-foreground">
                     {tagCounts[tag]}
@@ -143,6 +154,8 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
         </div>
         <!-- Trending Tags Card -->
         <div
+          role="region"
+          aria-label="tendencias"
           class="break-inside-avoid bg-card rounded-xl border bordershadow-soft p-6"
         >
           <div class="flex items-center gap-2 mb-4">
@@ -156,7 +169,10 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
                   href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   class="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
-                  <span class="text-sm font-medium text-foreground">
+                  <span
+                    class="text-sm font-medium text-foreground"
+                    aria-label={tag}
+                  >
                     #{tag}
                   </span>
                   <div class="flex items-center gap-1">
@@ -172,27 +188,35 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
         </div>
         <!-- Stats Card -->
         <div
+          role="region"
+          aria-label="estadísticas"
           class="break-inside-avoid bg-card rounded-xl border bordershadow-soft p-6 flex flex-col gap-4"
         >
           <div class="font-semibold text-lg mb-4">Estadísticas</div>
           <div class="flex justify-between">
             <span class="text-sm text-muted-foreground">Total etiquetas:</span>
-            <span class="font-medium text-foreground">{totalTags}</span>
+            <span class="font-medium text-foreground" aria-label="quantity"
+              >{totalTags}</span
+            >
           </div>
           <div class="flex justify-between">
             <span class="text-sm text-muted-foreground">Posts etiquetados:</span
             >
-            <span class="font-medium text-foreground">{totalTaggedPosts}</span>
+            <span class="font-medium text-foreground" aria-label="quantity"
+              >{totalTaggedPosts}</span
+            >
           </div>
           <div class="flex justify-between">
             <span class="text-sm text-muted-foreground">En tendencia:</span>
-            <span class="font-medium text-foreground"
+            <span class="font-medium text-foreground" aria-label="quantity"
               >{trendingTags.length}</span
             >
           </div>
         </div>
         <!-- Recent Tags Card -->
         <div
+          role="region"
+          aria-label="etiquetas recientes"
           class="break-inside-avoid bg-card rounded-xl border borderbordershadow-soft p-6"
         >
           <div class="font-semibold text-lg mb-4">Etiquetas Recientes</div>
@@ -203,7 +227,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
                   href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
                   class="inline-block px-2 py-1 rounded bg-muted/50 hover:bg-primary/10 text-xs font-medium text-foreground hover:text-primary transition-colors"
                 >
-                  #{tag}
+                  <span aria-label={tag}>#{tag}</span>
                 </a>
               ))
             }
@@ -211,6 +235,8 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
         </div>
         <!-- Categories Card -->
         <div
+          role="region"
+          aria-label="categorías"
           class="break-inside-avoid bg-card rounded-xl border bordershadow-soft p-6"
         >
           <div class="font-semibold text-lg mb-4">Categorías</div>
@@ -221,7 +247,10 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
                   href={`/search?q=${encodeURIComponent(category)}`}
                   class="block p-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
-                  <span class="text-sm font-medium text-foreground">
+                  <span
+                    class="text-sm font-medium text-foreground"
+                    aria-label={category}
+                  >
                     {category}
                   </span>
                   <span class="text-xs text-muted-foreground ml-2">
