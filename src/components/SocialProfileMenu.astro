@@ -1,0 +1,50 @@
+---
+interface Props {
+  name: string;
+  email: string;
+  linkedinUrl: string;
+  xUrl: string;
+  lang: string;
+}
+const { name, email, linkedinUrl, xUrl, lang } = Astro.props;
+import { Linkedin, X } from "@lucide/astro";
+import { t } from "../i18n";
+---
+
+<div
+  id="avatar-menu"
+  class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 focus:outline-none z-50"
+>
+  <div class="py-3 px-4 border-b">
+    <div class="text-sm font-medium leading-none">
+      {name}
+    </div>
+    <div class="text-xs text-muted-foreground truncate">
+      {email}
+    </div>
+  </div>
+  <div class="py-1">
+    <a
+      href={linkedinUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
+      aria-label={t(lang as "en" | "es", "social.linkedin")}
+      title={t(lang as "en" | "es", "social.linkedin")}
+    >
+      <Linkedin class="h-4 w-4 text-muted-foreground" />
+      LinkedIn
+    </a>
+    <a
+      href={xUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
+      aria-label={t(lang as "en" | "es", "social.x")}
+      title={t(lang as "en" | "es", "social.x")}
+    >
+      <X class="h-4 w-4 text-muted-foreground" />
+      X
+    </a>
+  </div>
+</div>

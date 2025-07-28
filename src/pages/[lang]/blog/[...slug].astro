@@ -1,0 +1,89 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import BlogPost from "../../../layouts/BlogPost.astro";
+import { render } from "astro:content";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const langs = ["es", "en"];
+  return langs.flatMap((lang) =>
+    posts
+      .filter((post) => post.id.startsWith(`${lang}/`))
+      .map((post) => ({
+        params: { lang, slug: post.id.replace(`${lang}/`, "") },
+        props: post,
+      }))
+  );
+}
+type Props = CollectionEntry<"blog">;
+
+const { lang: langParam } = Astro.params;
+const lang = langParam ?? "es";
+const posts = (await getCollection("blog")).filter(
+  (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
+);
+
+const post = Astro.props;
+let Content, pubDate, updatedDate, dataWithDates;
+if (post && post.data) {
+  ({ Content } = await render(post));
+  pubDate = post.data.pubDate ? new Date(post.data.pubDate) : undefined;
+  updatedDate = post.data.updatedDate
+    ? new Date(post.data.updatedDate)
+    : undefined;
+  dataWithDates = {
+    ...post.data,
+    pubDate,
+    ...(updatedDate ? { updatedDate } : {}),
+  };
+}
+---
+
+{
+  !post || !post.data ? (
+    <html lang={lang}>
+      <body>
+        <main class="max-w-2xl mx-auto pt-16 px-4 text-center">
+          <h2 class="text-3xl font-bold mb-4">Post no encontrado</h2>
+          <p class="text-muted-foreground">
+            No se encontró el post solicitado. Verifica la URL o vuelve al{" "}
+            <a href="/blog/" class="text-primary underline">
+              listado de posts
+            </a>
+            .
+          </p>
+        </main>
+      </body>
+    </html>
+  ) : !pubDate ? (
+    <html lang={lang}>
+      <body>
+        <main class="max-w-2xl mx-auto pt-16 px-4 text-center">
+          <h2 class="text-3xl font-bold mb-4">Post inválido</h2>
+          <p class="text-muted-foreground">
+            El post no tiene fecha de publicación. Vuelve al{" "}
+            <a href="/blog/" class="text-primary underline">
+              listado de posts
+            </a>
+            .
+          </p>
+        </main>
+      </body>
+    </html>
+  ) : (
+    <BlogPost
+      lang={lang}
+      title={dataWithDates?.title || ""}
+      description={dataWithDates?.description || ""}
+      pubDate={dataWithDates?.pubDate}
+      tags={dataWithDates?.tags || []}
+      categories={dataWithDates?.categories || []}
+      draft={!!dataWithDates?.draft}
+      updatedDate={dataWithDates?.updatedDate}
+    >
+      {Content ? <Content /> : null}
+    </BlogPost>
+  )
+}

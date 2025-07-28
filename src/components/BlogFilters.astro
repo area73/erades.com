@@ -1,0 +1,104 @@
+---
+import { SortDesc, ChevronDown, LayoutGrid, List } from "@lucide/astro";
+import ViewModeToggle from "./ViewModeToggle.astro";
+interface Props {
+  categories: string[];
+  selectedCategory: string;
+  sortBy: string;
+  viewMode: string;
+  tag?: string;
+  getCategoryHref?: (cat: string) => string;
+  customClass?: string;
+}
+const {
+  categories,
+  selectedCategory,
+  sortBy,
+  viewMode,
+  tag,
+  getCategoryHref,
+  customClass,
+} = Astro.props as Props;
+
+function getCategoryHrefLocal(cat: string) {
+  if (!tag) return getCategoryHref ? getCategoryHref(cat) : "#";
+  if (cat === "Todas") {
+    return `/tags/${tag}/` + (sortBy ? `?sortBy=${sortBy}` : "");
+  }
+  return `/tags/${tag}/${cat}/` + (sortBy ? `?sortBy=${sortBy}` : "");
+}
+---
+
+<form
+  id="filters"
+  method="get"
+  class={`bg-white dark:bg-gray-700 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border${customClass ? ` ${customClass}` : ""}`}
+>
+  <div class="flex flex-wrap items-center gap-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground">Categoría:</span>
+      <div class="flex gap-2">
+        {
+          categories.map((category) => (
+            <a
+              href={getCategoryHrefLocal(category)}
+              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foregroundhover:bg-primary/10"}`}
+              aria-current={
+                selectedCategory.trim().toLowerCase() ===
+                category.trim().toLowerCase()
+                  ? "page"
+                  : undefined
+              }
+              tabindex={0}
+            >
+              {category}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground flex items-center">
+        <SortDesc class="h-4 w-4 text-muted-foreground" />
+      </span>
+      <div class="relative w-40">
+        <select
+          name="sortBy"
+          class="w-full h-10 px-3 pr-8 py-2 rounded-md borderbg-input text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+          onchange="this.form.submit()"
+        >
+          <option value="date-desc" selected={sortBy === "date-desc"}
+            >Más recientes</option
+          >
+          <option value="date-asc" selected={sortBy === "date-asc"}
+            >Más antiguos</option
+          >
+          <option value="title" selected={sortBy === "title"}>Por título</option
+          >
+        </select>
+        <ChevronDown
+          class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+        />
+      </div>
+    </div>
+    <!-- Selector visual grid/lista -->
+    <ViewModeToggle viewMode={viewMode} />
+  </div>
+  {/* Mantener los parámetros de búsqueda y categoría en el formulario */}
+  {
+    Astro.url.searchParams.get("q") && (
+      <input type="hidden" name="q" value={Astro.url.searchParams.get("q")!} />
+    )
+  }
+  {
+    Astro.url.searchParams.get("category") && (
+      <input
+        type="hidden"
+        name="category"
+        value={Astro.url.searchParams.get("category")!}
+      />
+    )
+  }
+</form>

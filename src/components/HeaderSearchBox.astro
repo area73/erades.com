@@ -1,0 +1,7 @@
+---
+import SearchInput from "./SearchInput.astro";
+---
+
+<form action={`/${Astro.props.lang}/search`} method="get">
+  <SearchInput lang={Astro.props.lang} />
+</form>

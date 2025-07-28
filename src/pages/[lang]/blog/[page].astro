@@ -1,0 +1,125 @@
+---
+import Layout from "../../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
+import { getCollection } from "astro:content";
+import BlogList from "../../../components/BlogList.astro";
+import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
+export const prerender = true;
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  const POSTS_PER_PAGE = 6;
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const langs = ["es", "en"];
+  return langs.flatMap((lang) =>
+    Array.from({ length: totalPages }).map((_, i) => ({
+      params: { lang, page: String(i + 1) },
+    }))
+  );
+}
+
+const { page } = Astro.params;
+const currentPage = Number(page) || 1;
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam === "en" ? "en" : "es") as "es" | "en";
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = [
+  "Todas",
+  ...Array.from(
+    new Set(
+      posts.flatMap((post) =>
+        Array.isArray(post.data.categories) ? post.data.categories : []
+      )
+    )
+  ),
+];
+
+// Obtener la categoría seleccionada de la query string
+const selectedCategory =
+  Astro.url.searchParams.get("category")?.toLowerCase() || "todas";
+
+function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
+  return SORT_BY_OPTIONS.includes(value as any);
+}
+
+const rawSortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
+const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
+let viewMode: "grid" | "list" = "grid";
+
+function filterPosts(posts: any[], category: string, sort: string): any[] {
+  let filtered;
+  if (category === "todas") {
+    filtered = posts;
+  } else {
+    filtered = posts.filter((post) => {
+      if (Array.isArray(post.data.categories)) {
+        const match = post.data.categories.some((cat: string) => {
+          const isMatch = cat.toLowerCase() === category;
+          return isMatch;
+        });
+        return match;
+      } else {
+        const isUncategorized = category === "uncategorized";
+        return isUncategorized;
+      }
+    });
+  }
+  const safeSort = isSortBy(sort) ? sort : "date-desc";
+  return sortPosts(filtered, safeSort);
+}
+
+let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
+
+// Paginación
+const POSTS_PER_PAGE = 6;
+const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+const paginatedPosts = filteredPosts.slice(
+  (currentPage - 1) * POSTS_PER_PAGE,
+  currentPage * POSTS_PER_PAGE
+);
+
+const getCategoryHref = (cat: string) => {
+  const params = new URLSearchParams();
+  if (cat.toLowerCase() !== "todas") params.set("category", cat.toLowerCase());
+  if (sortBy) params.set("sortBy", sortBy);
+  return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
+};
+const getPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  if (selectedCategory !== "todas") params.set("category", selectedCategory);
+  if (sortBy) params.set("sortBy", sortBy);
+  // Siempre incluye el prefijo de idioma
+  return (
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
+    (params.toString() ? `?${params.toString()}` : "")
+  );
+};
+---
+
+<Layout
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  tags={[]}
+  categories={categories}
+  draft={false}
+  lang={lang}
+>
+  <BlogList
+    posts={filteredPosts}
+    categories={categories}
+    selectedCategory={selectedCategory}
+    sortBy={sortBy}
+    viewMode={viewMode}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    paginatedPosts={paginatedPosts}
+    getCategoryHref={getCategoryHref}
+    getPageHref={getPageHref}
+    lang={lang}
+  />
+</Layout>

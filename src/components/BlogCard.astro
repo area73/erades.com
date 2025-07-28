@@ -1,0 +1,18 @@
+---
+import BlogCardGrid from "./BlogCardGrid.astro";
+import BlogCardList from "./BlogCardList.astro";
+interface Props {
+  post: any;
+  variant?: "grid" | "list";
+  lang: string;
+}
+const { post, variant = "grid", lang } = Astro.props;
+---
+
+{
+  variant === "grid" ? (
+    <BlogCardGrid post={post} lang={lang} />
+  ) : (
+    <BlogCardList post={post} lang={lang} />
+  )
+}
