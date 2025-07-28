@@ -8,6 +8,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import BlogCard from "../../components/BlogCard.astro";
 import NoResults from "../../components/NoResults.astro";
 import ResultsInfo from "../../components/ResultsInfo.astro";
+import Show from "../../components/Show.astro";
 import { Search as SearchIcon } from "@lucide/astro";
 import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 import { getCollection } from "astro:content";
@@ -119,17 +120,14 @@ const posts = (await getCollection("blog")).filter(
         />
       </div>
       <div class="mx-auto px-4">
-        {
-          totalPages > 1 && (
-            <Paginator
-              currentPage={currentPage}
-              totalPages={totalPages}
-              getPageHref={(page) =>
-                `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`
-              }
-            />
-          )
-        }
+        <Show when={totalPages > 1}>
+          <Paginator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            getPageHref={(page) =>
+              `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`}
+          />
+        </Show>
         <ul
           class={`grid ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-3 decoration-none" : "grid-cols-1"} gap-8 list-none m-0 p-0`}
         >
@@ -154,17 +152,14 @@ const posts = (await getCollection("blog")).filter(
             )
           }
         </ul>
-        {
-          totalPages > 1 && (
-            <Paginator
-              currentPage={currentPage}
-              totalPages={totalPages}
-              getPageHref={(page) =>
-                `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`
-              }
-            />
-          )
-        }
+        <Show when={totalPages > 1}>
+          <Paginator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            getPageHref={(page) =>
+              `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`}
+          />
+        </Show>
       </div>
     </div>
   </section>
