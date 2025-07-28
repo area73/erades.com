@@ -1,0 +1,37 @@
+---
+import Layout from "../../layouts/BlogPost.astro";
+import { t } from "../../i18n";
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam ?? "es") as "es" | "en";
+---
+
+<Layout
+  title={t(lang, "about.title")}
+  description={t(lang, "about.description")}
+  pubDate={new Date("August 08 2024")}
+  tags={[]}
+  categories={[]}
+  draft={false}
+  lang={lang}
+>
+  <p>
+    {t(lang, "about.paragraphs.p1")}
+  </p>
+
+  <p>
+    {t(lang, "about.paragraphs.p2")}
+  </p>
+
+  <p>
+    {t(lang, "about.paragraphs.p3")}
+  </p>
+
+  <p>
+    {t(lang, "about.paragraphs.p4")}
+  </p>
+
+  <p>
+    {t(lang, "about.paragraphs.p5")}
+  </p>
+</Layout>

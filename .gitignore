@@ -1,3 +1,11 @@
+
+
+__referencias/
+__referencias/ui-reference/
+
+playwright-report/
+test-results/
+
 # build output
 dist/
 # generated types

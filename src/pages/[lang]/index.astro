@@ -1,0 +1,76 @@
+---
+import Layout from "../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import BlogCard from "../../components/BlogCard.astro";
+import { t, tWithInterpolation } from "../../i18n";
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam ?? "es") as "es" | "en";
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featured = posts.slice(0, 3);
+---
+
+<Layout
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  tags={[]}
+  categories={[]}
+  draft={false}
+  lang={lang}
+>
+  <section>
+    <div class="mx-auto">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1
+          class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
+        >
+          {
+            tWithInterpolation(lang, "home.hero.title", {
+              siteTitle: SITE_TITLE,
+            })
+          }
+        </h1>
+        <p
+          class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+        >
+          {t(lang, "home.hero.description")}
+        </p>
+      </div>
+
+      <!-- Featured Content -->
+      <ul class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          featured.map((post) => (
+            <li>
+              <BlogCard post={post} variant="grid" lang={lang} />
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Call to Action -->
+      <div class="text-center mt-16">
+        <div class="bg-card rounded-xl p-8 shadow-medium">
+          <h2
+            class="font-serif text-2xl font-semibold text-card-foreground mb-4"
+          >
+            {t(lang, "home.cta.title")}
+          </h2>
+          <p class="text-muted-foreground mb-12">
+            {t(lang, "home.cta.description")}
+          </p>
+          <a
+            href={`/${lang}/blog/`}
+            class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary/10"
+          >
+            {t(lang, "home.cta.button")}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

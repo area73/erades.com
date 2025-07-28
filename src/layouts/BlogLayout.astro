@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import "../styles/global.css";
+
+interface Props {
+  lang: string;
+  frontmatter: Omit<CollectionEntry<"blog">["data"], "pubDate"> & {
+    pubDate?: Date;
+  };
+  children?: any;
+}
+
+const { lang, frontmatter } = Astro.props as Props;
+const { title, description, pubDate, updatedDate, tags } = frontmatter;
+---
+
+<html lang={lang}>
+  <head>
+    <BaseHead title={title} description={description} />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="alternate" href={`/${lang}/`} hreflang={lang} />
+    <link
+      rel="alternate"
+      href={`/${lang === "es" ? "en" : "es"}/${Astro.url.pathname.split("/").slice(2).join("/")}`}
+      hreflang={lang === "es" ? "en" : "es"}
+    />
+  </head>
+  <body class="bg-background text-foreground min-h-screen">
+    <Header lang={lang} />
+    <main class="max-w-[1200px] mx-auto py-8 w-[calc(100%-2em)]">
+      <article class="pb-8">
+        <div class="prose w-[1200] max-w-[calc(100%-2em)] mx-auto p-4">
+          {
+            pubDate && (
+              <div class="mb-6 py-4 text-center leading-none">
+                <h1 class="font-serif text-4xl font-bold text-foreground mb-6">
+                  {title}
+                </h1>
+                <hr />
+                <div class="flex items-center justify-between my-2">
+                  <div>
+                    <FormattedDate date={pubDate} />
+                    {updatedDate && (
+                      <div class="italic text-xs">
+                        <slot name="updatedLabel" />{" "}
+                        <FormattedDate date={updatedDate} />
+                      </div>
+                    )}
+                  </div>
+                  <div class="flex flex-wrap gap-2 justify-end">
+                    {(tags ?? []).map((tag) => (
+                      <span class="bg-muted px-2 py-1 rounded-full">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )
+          }
+          <div class="prose max-w-none">
+            <slot />
+          </div>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

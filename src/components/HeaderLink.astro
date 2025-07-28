@@ -1,22 +1,47 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { Home, FileText, Info, Tag, Hash } from "@lucide/astro";
 
-type Props = HTMLAttributes<"a">;
+const ICONS = {
+  "/": Home,
+  "/blog": FileText,
+  "/about": Info,
+  "/tags": Hash,
+} as const;
 
-const { href, class: className, ...props } = Astro.props;
+type Props = HTMLAttributes<"a"> & { lang: string };
+
+const { href, lang, ...rest } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
+const hrefStr = typeof href === "string" ? href : String(href ?? "");
+const hrefWithLang = hrefStr.startsWith(`/${lang}`)
+  ? hrefStr
+  : `/${lang}${hrefStr.startsWith("/") ? hrefStr : "/" + hrefStr}`;
+const clean = (str: string) => str.replace(/\/$/, "");
+const current = clean(pathname);
+const target = clean(hrefWithLang);
+const isHome = target === `/${lang}`;
+const isActive = current === target || current.startsWith(target + "/");
+const Icon = ICONS[href as keyof typeof ICONS];
 ---
 
 <a
-  href={href}
-  class:list={[
-    className,
-    "inline-block no-underline",
-    { "font-bold underline": isActive },
-  ]}
-  {...props}
+  href={hrefWithLang}
+  class={"inline-flex items-center" +
+    (isActive ? " text-primary font-bold" : "")}
+  aria-current={isActive ? "page" : undefined}
+  {...rest}
 >
+  {
+    Icon && (
+      <Icon
+        class={
+          "h-4 w-4 mr-2 " +
+          (isActive ? "text-primary" : "text-muted-foreground")
+        }
+      />
+    )
+  }
   <slot />
 </a>

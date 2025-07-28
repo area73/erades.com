@@ -1,0 +1,17 @@
+---
+interface Props {
+  shown: number;
+  total: number;
+  query?: string;
+}
+const { shown, total, query } = Astro.props;
+---
+
+<p class="text-muted-foreground">
+  Mostrando <span class="text-primary">{shown}</span> de <span
+    class="text-primary">{total}</span
+  > resultados
+  <span
+    set:html={query ? `para <span class=" text-primary">${query}</span>` : ""}
+  />
+</p>

@@ -1,0 +1,104 @@
+---
+import Layout from "../../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
+import { getCollection } from "astro:content";
+import BlogList from "../../../components/BlogList.astro";
+import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam === "en" ? "en" : "es") as "es" | "en";
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Extraer categorías únicas
+const categories = [
+  "Todas",
+  ...Array.from(
+    new Set(
+      posts.flatMap((post) =>
+        Array.isArray(post.data.categories) ? post.data.categories : []
+      )
+    )
+  ),
+];
+
+const url = new URL(Astro.request.url);
+const selectedCategory = url.searchParams.get("category") || "Todas";
+
+console.log("[BLOG] url:", url.href);
+
+function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
+  return SORT_BY_OPTIONS.includes(value as any);
+}
+
+const rawSortBy = url.searchParams.get("sortBy") || "date-desc";
+const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
+
+console.log("[BLOG] rawSortBy:", rawSortBy, "sortBy:", sortBy);
+console.log("[BLOG] selectedCategory:", selectedCategory);
+
+const rawViewMode = url.searchParams.get("viewMode");
+let viewMode: "grid" | "list" = rawViewMode === "list" ? "list" : "grid";
+
+function filterPosts(posts: any[], category: string, sort: string): any[] {
+  let filtered =
+    category === "Todas"
+      ? posts
+      : posts.filter((post) =>
+          Array.isArray(post.data.categories)
+            ? post.data.categories.includes(category)
+            : category === "Sin categoría"
+        );
+  const safeSort = isSortBy(sort) ? sort : "date-desc";
+  return sortPosts(filtered, safeSort);
+}
+
+let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
+
+// Paginación
+const POSTS_PER_PAGE = 6;
+const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+const currentPage = 1; // Solo página 1 en este archivo, las siguientes serán /blog/page/[page].astro
+const paginatedPosts = filteredPosts.slice(
+  (currentPage - 1) * POSTS_PER_PAGE,
+  currentPage * POSTS_PER_PAGE
+);
+
+const getCategoryHref = (cat: string) => {
+  const params = new URLSearchParams();
+  if (cat !== "Todas") params.set("category", cat);
+  return `/${lang}/blog/` + (params.toString() ? `?${params.toString()}` : "");
+};
+const getPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  if (selectedCategory !== "Todas") params.set("category", selectedCategory);
+  return (
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
+    (params.toString() ? `?${params.toString()}` : "")
+  );
+};
+---
+
+<Layout
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  tags={[]}
+  categories={categories}
+  draft={false}
+  lang={lang}
+>
+  <BlogList
+    posts={filteredPosts}
+    categories={categories}
+    selectedCategory={selectedCategory}
+    sortBy={sortBy}
+    viewMode={viewMode}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    paginatedPosts={paginatedPosts}
+    getCategoryHref={getCategoryHref}
+    getPageHref={getPageHref}
+    lang={lang}
+  />
+</Layout>

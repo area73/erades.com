@@ -1,0 +1,110 @@
+---
+import BlogFilters from "./BlogFilters.astro";
+import BlogCard from "./BlogCard.astro";
+import Paginator from "./Paginator.astro";
+import ResultsInfo from "./ResultsInfo.astro";
+import { t } from "../i18n";
+
+interface Props {
+  posts: any[];
+  categories: string[];
+  selectedCategory: string;
+  sortBy: string;
+  viewMode: "grid" | "list";
+  currentPage: number;
+  totalPages: number;
+  paginatedPosts: any[];
+  getCategoryHref: (cat: string) => string;
+  getPageHref: (page: number) => string;
+  tag?: string;
+  lang: "es" | "en";
+}
+const {
+  posts,
+  categories,
+  selectedCategory,
+  sortBy,
+  viewMode,
+  currentPage,
+  totalPages,
+  paginatedPosts,
+  getCategoryHref,
+  getPageHref,
+  tag,
+  lang,
+} = Astro.props as Props;
+---
+
+<section>
+  {
+    currentPage === 1 && (
+      <div class="mb-16 text-center">
+        <h2 class="font-serif text-4xl md:text-4xl font-bold text-foreground mb-6">
+          {t(lang, "blogList.title")}
+        </h2>
+        <p class="text-xl text-muted-foreground">
+          {t(lang, "blogList.description")}
+        </p>
+      </div>
+    )
+  }
+
+  <!-- Filtros -->
+  <div class="mx-auto sticky top-30 z-10">
+    <BlogFilters
+      categories={categories}
+      selectedCategory={selectedCategory}
+      sortBy={sortBy}
+      viewMode={viewMode}
+      tag={tag}
+      getCategoryHref={getCategoryHref}
+    />
+  </div>
+  <!-- Resultados -->
+  <div class="mb-2 px-4 text-right">
+    {
+      totalPages > 1 && (
+        <Paginator
+          customClass="relative top-[1.5rem]"
+          currentPage={currentPage}
+          totalPages={totalPages}
+          getPageHref={getPageHref}
+        />
+      )
+    }
+    <ResultsInfo shown={paginatedPosts.length} total={posts.length} />
+  </div>
+  {
+    viewMode === "grid" ? (
+      <ul
+        aria-label="posts-list"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end"
+      >
+        {paginatedPosts.map((post: any) => (
+          <li>
+            <BlogCard post={post} variant="grid" lang={lang} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <ul aria-label="posts-list" class="space-y-6 list-none m-0 p-0">
+        {paginatedPosts.map((post: any) => (
+          <li>
+            <BlogCard post={post} variant="list" lang={lang} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <!-- Paginador -->
+  {
+    totalPages > 1 && (
+      <Paginator
+        customClass="mt-6"
+        currentPage={currentPage}
+        totalPages={totalPages}
+        getPageHref={getPageHref}
+      />
+    )
+  }
+</section>

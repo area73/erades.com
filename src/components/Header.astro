@@ -1,67 +1,179 @@
 ---
-// @ts-expect-error TS7016: React 19 types are built-in, ignore missing declaration error
-import { useState } from "react";
-import { SearchInput } from "./SearchInput";
 import HeaderLink from "./HeaderLink.astro";
-import { SITE_TITLE } from "../consts";
-import HeaderSearchBox from "./HeaderSearchBox.tsx";
+import HeaderSearchBox from "./HeaderSearchBox.astro";
+import { ChevronDown } from "@lucide/astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import SocialProfileMenu from "./SocialProfileMenu.astro";
+import { t } from "../i18n";
+
+interface Props {
+  lang: string;
+}
+const { lang } = Astro.props;
+
+let isDark = false;
+if (typeof window !== "undefined") {
+  isDark = window.document.documentElement.classList.contains("dark");
+}
 ---
 
-<header class="m-0 px-4 py-8 bg-white shadow-md sticky top-0 z-50">
-  <nav class="flex items-center justify-between">
-    <h2 class="m-0 text-base">
-      <a href="/" class="no-underline">{SITE_TITLE}</a>
-    </h2>
-    <div class="grid grid-cols-4 gap-8 sm:gap-2 list-none m-0 p-0">
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Posts</HeaderLink>
-      <HeaderLink href="/about">About</HeaderLink>
-      <HeaderLink href="/categories">Categories</HeaderLink>
-      <HeaderLink href="/tags">Tags</HeaderLink>
-    </div>
-    <div class="flex">
+<header
+  class="w-full sticky top-0 z-40 bg-header-background border-b border-header-border shadow-[0_2px_8px_rgba(0,0,0,0.04)] backdrop-blur supports-[backdrop-filter]:bg-header-background/80"
+>
+  <div
+    class="max-w-[1440px] mx-auto w-full flex items-center justify-between px-6 py-4"
+  >
+    <div class="flex items-center gap-6 min-w-0">
       <a
-        href="https://m.webtoo.ls/@astro"
-        target="_blank"
-        class="text-black hover:text-accent"
+        href="/"
+        class="flex items-center gap-2 font-bold text-lg whitespace-nowrap"
       >
-        <span class="sr-only">Follow Astro on Mastodon</span>
-        <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
-          <path
-            fill="currentColor"
-            d="M11.19 12.195c2.016-.24 3.77-1.475 3.99-2.603.348-1.778.32-4.339.32-4.339 0-3.47-2.286-4.488-2.286-4.488C12.062.238 10.083.017 8.027 0h-.05C5.92.017 3.942.238 2.79.765c0 0-2.285 1.017-2.285 4.488l-.002.662c-.004.64-.007 1.35.011 2.091.083 3.394.626 6.74 3.78 7.57 1.454.383 2.703.463 3.709.408 1.823-.1 2.847-.647 2.847-.647l-.06-1.317s-1.303.41-2.767.36c-1.45-.05-2.98-.156-3.215-1.928a3.614 3.614 0 0 1-.033-.496s1.424.346 3.228.428c1.103.05 2.137-.064 3.188-.189zm1.613-2.47H11.13v-4.08c0-.859-.364-1.295-1.091-1.295-.804 0-1.207.517-1.207 1.541v2.233H7.168V5.89c0-1.024-.403-1.541-1.207-1.541-.727 0-1.091.436-1.091 1.296v4.079H3.197V5.522c0-.859.22-1.541.66-2.046.456-.505 1.052-.764 1.793-.764.856 0 1.504.328 1.933.983L8 4.39l.417-.695c.429-.655 1.077-.983 1.934-.983.74 0 1.336.259 1.791.764.442.505.661 1.187.661 2.046v4.203z"
-          ></path>
-        </svg>
-      </a>
-      <a
-        href="https://twitter.com/astrodotbuild"
-        target="_blank"
-        class="text-black hover:text-accent"
-      >
-        <span class="sr-only">Follow Astro on Twitter</span>
-        <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
-          <path
-            fill="currentColor"
-            d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"
-          ></path>
-        </svg>
-      </a>
-      <a
-        href="https://github.com/withastro/astro"
-        target="_blank"
-        class="text-black hover:text-accent"
-      >
-        <span class="sr-only">Go to Astro's GitHub repo</span>
-        <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
-          <path
-            fill="currentColor"
-            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-          ></path>
-        </svg>
+        <img
+          src="/area73-small.png"
+          alt={t(lang as "en" | "es", "logo.alt")}
+          class="h-12 w-12 object-contain"
+        />
       </a>
     </div>
-    <div class="ml-4">
-      <HeaderSearchBox client:only="react" />
+    <nav
+      class="flex items-center gap-6 text-[16px] font-medium font-[Inter] text-muted-foreground"
+    >
+      <HeaderLink
+        href={`/${lang}`}
+        aria-label={t(lang as "en" | "es", "menu.home")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.home")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/blog`}
+        aria-label={t(lang as "en" | "es", "menu.blog")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.blog")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/about`}
+        aria-label={t(lang as "en" | "es", "menu.about")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.about")}
+      </HeaderLink>
+      <HeaderLink
+        href={`/${lang}/tags`}
+        aria-label={t(lang as "en" | "es", "menu.tags")}
+        lang={lang}
+      >
+        {t(lang as "en" | "es", "menu.tags")}
+      </HeaderLink>
+    </nav>
+    <div class="flex items-center gap-6 min-w-0">
+      <div class="hidden md:block">
+        <div class="w-[420px] max-w-full">
+          <HeaderSearchBox lang={lang} />
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <ThemeToggle />
+        <div class="flex items-center gap-1 ml-2">
+          <button
+            id="lang-es"
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "es"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "es" ? "page" : undefined}
+          >
+            ES
+          </button>
+          <button
+            id="lang-en"
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "en"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "en" ? "page" : undefined}
+          >
+            EN
+          </button>
+          <script is:inline>
+            if (typeof window !== "undefined") {
+              document
+                .getElementById("lang-es")
+                ?.addEventListener("click", () => {
+                  document.cookie =
+                    "lang=es; path=/; max-age=" + 60 * 60 * 24 * 365;
+                  window.location.pathname = window.location.pathname.replace(
+                    /^\/(en|es)/,
+                    "/es"
+                  );
+                });
+              document
+                .getElementById("lang-en")
+                ?.addEventListener("click", () => {
+                  document.cookie =
+                    "lang=en; path=/; max-age=" + 60 * 60 * 24 * 365;
+                  localStorage.removeItem("lang");
+                  window.location.pathname = window.location.pathname.replace(
+                    /^\/(en|es)/,
+                    "/en"
+                  );
+                });
+            }
+          </script>
+          <div class="relative ml-2">
+            <button
+              id="avatar-btn"
+              type="button"
+              class="flex items-center rounded-full border bg-card p-1 focus:outline-none"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <img
+                src="/avatar.png"
+                alt={t(lang as "en" | "es", "avatar.alt")}
+                class="h-8 w-8 rounded-full object-cover"
+              />
+              <ChevronDown class="ml-2 h-4 w-4 text-muted-foreground" />
+            </button>
+            <SocialProfileMenu
+              name="Rodrigo Erades"
+              email="rerades@siete3.com"
+              linkedinUrl="https://linkedin.com/"
+              xUrl="https://x.com/"
+              lang={lang}
+            />
+            <script is:inline>
+              if (typeof window !== "undefined") {
+                const btn = document.getElementById("avatar-btn");
+                const menu = document.getElementById("avatar-menu");
+                let open = false;
+                const toggleMenu = (show) => {
+                  open = typeof show === "boolean" ? show : !open;
+                  menu.classList.toggle("hidden", !open);
+                  btn.setAttribute("aria-expanded", open ? "true" : "false");
+                };
+                btn.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  toggleMenu();
+                });
+                document.addEventListener("click", (e) => {
+                  if (
+                    open &&
+                    !btn.contains(e.target) &&
+                    !menu.contains(e.target)
+                  ) {
+                    toggleMenu(false);
+                  }
+                });
+                document.addEventListener("keydown", (e) => {
+                  if (open && e.key === "Escape") toggleMenu(false);
+                });
+              }
+            </script>
+          </div>
+        </div>
+      </div>
     </div>
-  </nav>
+  </div>
 </header>
