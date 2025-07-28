@@ -32,5 +32,47 @@
   "blogList": {
     "title": "Todos los Posts",
     "description": "Explora la colección completa de artículos sobre tecnología, desarrollo y diseño."
+  },
+  "about": {
+    "title": "Sobre mí",
+    "description": "Ingeniero con más de 20 años de experiencia, apasionado por el desarrollo front, la IA, las buenas prácticas y la optimización web.",
+    "paragraphs": {
+      "p1": "Soy ingeniero con más de 20 años de experiencia en el sector tecnológico. A lo largo de mi carrera he trabajado en múltiples proyectos, siempre con un enfoque en la excelencia técnica, la mejora continua y la aplicación de buenas prácticas en el desarrollo de software.",
+      "p2": "Este blog personal nace como un espacio para experimentar, compartir pruebas de concepto y profundizar en temas que me resultan especialmente interesantes. Aquí documento mis aprendizajes, retos y soluciones, con el objetivo de aportar valor a la comunidad y mantenerme en constante evolución profesional.",
+      "p3": "Actualmente, mi principal interés está en el desarrollo front-end moderno, la optimización del rendimiento web (WPO), la accesibilidad y la integración de la inteligencia artificial en los procesos de ingeniería. Creo firmemente en la importancia de un código limpio, mantenible y eficiente, así como en la necesidad de estar al día con las mejores prácticas y tendencias del sector.",
+      "p4": "Me apasiona explorar cómo la IA puede transformar la forma en la que diseñamos y desarrollamos productos digitales, y busco aplicar este conocimiento tanto en mis proyectos personales como profesionales. Este blog es mi laboratorio, mi cuaderno de bitácora y mi forma de contribuir al ecosistema tecnológico.",
+      "p5": "Si compartes estos intereses o simplemente quieres intercambiar ideas, no dudes en ponerte en contacto conmigo. ¡Bienvenido a mi espacio de experimentación y aprendizaje!"
+    }
+  },
+  "tags": {
+    "title": "Tags",
+    "description": "All tags used in blog posts. Click a tag to see related articles.",
+    "header": {
+      "description": "Explora todos los temas del blog organizados por etiquetas. Encuentra contenido específico que te interese."
+    },
+    "tagCloud": {
+      "title": "Nube de Etiquetas",
+      "noResults": "No se encontraron etiquetas con ese término.",
+      "viewTag": "Ver posts con la etiqueta {tag}"
+    },
+    "topTags": {
+      "title": "Etiquetas Populares"
+    },
+    "trending": {
+      "title": "Tendencias"
+    },
+    "stats": {
+      "title": "Estadísticas",
+      "totalTags": "Total etiquetas:",
+      "taggedPosts": "Posts etiquetados:",
+      "trending": "En tendencia:"
+    },
+    "recentTags": {
+      "title": "Etiquetas Recientes"
+    },
+    "categories": {
+      "title": "Categorías",
+      "posts": "posts"
+    }
   }
 }

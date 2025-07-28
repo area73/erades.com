@@ -1,13 +1,14 @@
 ---
 import Layout from "../../layouts/BlogPost.astro";
+import { t } from "../../i18n";
 
 const { lang: langParam } = Astro.params;
-const lang = langParam ?? "es";
+const lang = (langParam ?? "es") as "es" | "en";
 ---
 
 <Layout
-  title="Sobre mí"
-  description="Ingeniero con más de 20 años de experiencia, apasionado por el desarrollo front, la IA, las buenas prácticas y la optimización web."
+  title={t(lang, "about.title")}
+  description={t(lang, "about.description")}
   pubDate={new Date("August 08 2024")}
   tags={[]}
   categories={[]}
@@ -15,40 +16,22 @@ const lang = langParam ?? "es";
   lang={lang}
 >
   <p>
-    Soy ingeniero con más de 20 años de experiencia en el sector tecnológico. A
-    lo largo de mi carrera he trabajado en múltiples proyectos, siempre con un
-    enfoque en la excelencia técnica, la mejora continua y la aplicación de
-    buenas prácticas en el desarrollo de software.
+    {t(lang, "about.paragraphs.p1")}
   </p>
 
   <p>
-    Este blog personal nace como un espacio para experimentar, compartir pruebas
-    de concepto y profundizar en temas que me resultan especialmente
-    interesantes. Aquí documento mis aprendizajes, retos y soluciones, con el
-    objetivo de aportar valor a la comunidad y mantenerme en constante evolución
-    profesional.
+    {t(lang, "about.paragraphs.p2")}
   </p>
 
   <p>
-    Actualmente, mi principal interés está en el desarrollo front-end moderno,
-    la optimización del rendimiento web (WPO), la accesibilidad y la integración
-    de la inteligencia artificial en los procesos de ingeniería. Creo firmemente
-    en la importancia de un código limpio, mantenible y eficiente, así como en
-    la necesidad de estar al día con las mejores prácticas y tendencias del
-    sector.
+    {t(lang, "about.paragraphs.p3")}
   </p>
 
   <p>
-    Me apasiona explorar cómo la IA puede transformar la forma en la que
-    diseñamos y desarrollamos productos digitales, y busco aplicar este
-    conocimiento tanto en mis proyectos personales como profesionales. Este blog
-    es mi laboratorio, mi cuaderno de bitácora y mi forma de contribuir al
-    ecosistema tecnológico.
+    {t(lang, "about.paragraphs.p4")}
   </p>
 
   <p>
-    Si compartes estos intereses o simplemente quieres intercambiar ideas, no
-    dudes en ponerte en contacto conmigo. ¡Bienvenido a mi espacio de
-    experimentación y aprendizaje!
+    {t(lang, "about.paragraphs.p5")}
   </p>
 </Layout>

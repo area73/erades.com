@@ -70,7 +70,10 @@
     line-height: var(--line-height-lg);
   }
   h4 {
+    margin-top: var(--spacing-md);
+    line-height: var(--line-height-sm);
     font-size: var(--text-md);
+    font-weight: var(--font-weight-medium);
   }
   h5 {
     font-size: var(--text-sm);
@@ -86,6 +89,104 @@
     margin-bottom: var(--spacing-md);
   }
 
+  /* Estilos profesionales para listas */
+  ul,
+  ol {
+    margin: var(--spacing-md) 0;
+    padding-left: var(--spacing-md);
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  ul li {
+    position: relative;
+    /*margin-bottom: var(--spacing-sm);*/
+    padding-left: var(--spacing-md);
+    line-height: var(--line-height-sm);
+  }
+
+  ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+
+  ul li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Listas anidadas */
+  ul ul {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-md);
+  }
+
+  ul ul li::before {
+    width: 4px;
+    height: 4px;
+    background-color: var(--muted-foreground);
+  }
+
+  /* Listas ordenadas */
+  ol {
+    list-style-type: decimal;
+    counter-reset: list-counter;
+  }
+
+  ol li {
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-sm);
+    line-height: var(--line-height-sm);
+  }
+
+  ol li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Listas anidadas ordenadas */
+  ol ol {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-md);
+  }
+
+  /* Listas dentro de contenido */
+  .content ul,
+  .content ol {
+    margin: var(--spacing-lg) 0;
+  }
+
+  /* Listas compactas para casos especiales */
+  .compact-list ul,
+  .compact-list ol {
+    margin: var(--spacing-sm) 0;
+  }
+
+  .compact-list li {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  /* Listas sin marcadores para casos especiales */
+  .no-markers ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .no-markers ul li {
+    padding-left: 0;
+  }
+
+  .no-markers ul li::before {
+    display: none;
+  }
+
   :root {
     /* Colores base - paleta moderna y sofisticada */
     --background: hsl(0 0% 99%);
@@ -98,10 +199,10 @@
     --popover: hsl(0 0% 100%);
     --popover-foreground: hsl(215 25% 15%);
 
-    /* Azul elegante como primario */
-    --primary: hsl(214 84% 56%);
+    /* Rojo elegante como primario */
+    --primary: hsl(0 84% 56%);
     --primary-foreground: hsl(0 0% 100%);
-    --primary-hover: hsl(214 84% 50%);
+    --primary-hover: hsl(0 84% 50%);
 
     /* Gris sofisticado para secundario */
     --secondary: hsl(215 16% 95%);
@@ -111,8 +212,8 @@
     --muted: hsl(215 16% 96%);
     --muted-foreground: hsl(215 14% 45%);
 
-    --accent: hsl(214 100% 96%);
-    --accent-foreground: hsl(214 84% 56%);
+    --accent: hsl(0 100% 96%);
+    --accent-foreground: hsl(0 84% 56%);
 
     /* Estados y alertas */
     --destructive: hsl(0 84% 60%);
@@ -127,18 +228,14 @@
     /* Bordes y inputs con más definición */
     --border: hsl(215 16% 92%);
     --input: hsl(215 16% 94%);
-    --ring: hsl(214 84% 56%);
+    --ring: hsl(0 84% 56%);
 
     /* Header específico */
     --header-background: hsl(0 0% 100%/95%);
     --header-border: hsl(215 16% 90%);
 
     /* Gradientes elegantes */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(214 84% 56%),
-      hsl(214 84% 65%)
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(0 84% 56%), hsl(0 84% 65%));
     --gradient-surface: linear-gradient(
       180deg,
       hsl(0 0% 100%),
@@ -199,9 +296,9 @@ html.dark {
   --popover: hsl(215 28% 10%);
   --popover-foreground: hsl(215 20% 95%);
 
-  --primary: hsl(214 84% 60%);
+  --primary: hsl(0 84% 60%);
   --primary-foreground: hsl(215 28% 8%);
-  --primary-hover: hsl(214 84% 65%);
+  --primary-hover: hsl(0 84% 65%);
 
   --secondary: hsl(215 28% 14%);
   --secondary-foreground: hsl(215 20% 95%);
@@ -210,7 +307,7 @@ html.dark {
   --muted-foreground: hsl(144, 20%, 95%);
 
   --accent: hsl(215 28% 14%);
-  --accent-foreground: hsl(214 84% 60%);
+  --accent-foreground: hsl(0 84% 60%);
 
   --destructive: hsl(0 75% 65%);
   --destructive-foreground: hsl(215 28% 8%);
@@ -223,16 +320,12 @@ html.dark {
 
   --border: hsl(215 28% 16%);
   --input: hsl(215 28% 14%);
-  --ring: hsl(214 84% 60%);
+  --ring: hsl(0 84% 60%);
 
   --header-background: hsl(215 28% 10%/95%);
   --header-border: hsl(215 28% 18%);
 
-  --gradient-primary: linear-gradient(
-    135deg,
-    hsl(214 84% 60%),
-    hsl(214 84% 70%)
-  );
+  --gradient-primary: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 70%));
   --gradient-surface: linear-gradient(
     180deg,
     hsl(215 28% 10%),
@@ -269,7 +362,7 @@ añado esto para poder usar clases de tailwindCSS cuando se definen comom por ej
   --color-muted: hsl(215 16% 96%);
   --color-muted-foreground: var(--muted-foreground);
   --color-secondary: hsl(215 16% 95%);
-  --color-primary: hsl(12, 80%, 49%);
+  --color-primary: hsl(0, 84%, 56%);
   --color-primary-foreground: hsl(215 16% 95%);
   --color-secondary-foreground: hsl(215 20% 65%);
   --color-header-background: hsl(215 16% 98%);
