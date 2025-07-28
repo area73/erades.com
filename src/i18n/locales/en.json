@@ -17,5 +17,20 @@
     "x": "X profile"
   },
   "title": "My Blog",
-  "updated": "Last updated on"
+  "updated": "Last updated on",
+  "home": {
+    "hero": {
+      "title": "Welcome to {siteTitle}",
+      "description": "A space where I share ideas, knowledge and experiences about technology, development and modern design."
+    },
+    "cta": {
+      "title": "Ready to explore?",
+      "description": "Discover all articles and find content that inspires you.",
+      "button": "View All Posts"
+    }
+  },
+  "blogList": {
+    "title": "All Posts",
+    "description": "Explore the complete collection of articles about technology, development and design."
+  }
 }

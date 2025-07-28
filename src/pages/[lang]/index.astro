@@ -3,9 +3,10 @@ import Layout from "../../layouts/BlogPost.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import BlogCard from "../../components/BlogCard.astro";
+import { t, tWithInterpolation } from "../../i18n";
 
 const { lang: langParam } = Astro.params;
-const lang = langParam ?? "es";
+const lang = (langParam ?? "es") as "es" | "en";
 const posts = (await getCollection("blog"))
   .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -27,13 +28,16 @@ const featured = posts.slice(0, 3);
         <h1
           class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
         >
-          Bienvenido a {SITE_TITLE}
+          {
+            tWithInterpolation(lang, "home.hero.title", {
+              siteTitle: SITE_TITLE,
+            })
+          }
         </h1>
         <p
           class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
         >
-          Un espacio donde comparto ideas, conocimientos y experiencias sobre
-          tecnología, desarrollo y diseño moderno.
+          {t(lang, "home.hero.description")}
         </p>
       </div>
 
@@ -54,16 +58,16 @@ const featured = posts.slice(0, 3);
           <h2
             class="font-serif text-2xl font-semibold text-card-foreground mb-4"
           >
-            ¿Listo para explorar?
+            {t(lang, "home.cta.title")}
           </h2>
           <p class="text-muted-foreground mb-12">
-            Descubre todos los artículos y encuentra contenido que te inspire.
+            {t(lang, "home.cta.description")}
           </p>
           <a
-            href="/blog"
-            class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foregroundhover:bg-primary/10"
+            href={`/${lang}/blog/`}
+            class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary/10"
           >
-            Ver Todos los Posts
+            {t(lang, "home.cta.button")}
           </a>
         </div>
       </div>

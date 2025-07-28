@@ -17,5 +17,20 @@
     "x": "Perfil de X"
   },
   "title": "Mi Blog",
-  "updated": "Última actualización el"
+  "updated": "Última actualización el",
+  "home": {
+    "hero": {
+      "title": "Bienvenido a {siteTitle}",
+      "description": "Un espacio donde comparto ideas, conocimientos y experiencias sobre tecnología, desarrollo y diseño moderno."
+    },
+    "cta": {
+      "title": "¿Listo para explorar?",
+      "description": "Descubre todos los artículos y encuentra contenido que te inspire.",
+      "button": "Ver Todos los Posts"
+    }
+  },
+  "blogList": {
+    "title": "Todos los Posts",
+    "description": "Explora la colección completa de artículos sobre tecnología, desarrollo y diseño."
+  }
 }
