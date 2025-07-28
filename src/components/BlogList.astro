@@ -78,7 +78,7 @@ const {
     viewMode === "grid" ? (
       <ul
         aria-label="posts-list"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end"
+        class="decoration-none grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end"
       >
         {paginatedPosts.map((post: any) => (
           <li>
@@ -87,7 +87,10 @@ const {
         ))}
       </ul>
     ) : (
-      <ul aria-label="posts-list" class="space-y-6 list-none m-0 p-0">
+      <ul
+        aria-label="posts-list"
+        class="decoration-none space-y-6 list-none m-0 p-0"
+      >
         {paginatedPosts.map((post: any) => (
           <li>
             <BlogCard post={post} variant="list" lang={lang} />

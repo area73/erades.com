@@ -89,7 +89,6 @@
     margin-bottom: var(--spacing-md);
   }
 
-  /* Estilos profesionales para listas */
   ul,
   ol {
     margin: var(--spacing-md) 0;
@@ -185,6 +184,27 @@
 
   .no-markers ul li::before {
     display: none;
+  }
+
+  /* Listas sin decoración - reset completo de estilos */
+  ul.decoration-none {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 0;
+  }
+
+  ul.decoration-none li {
+    position: static;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  ul.decoration-none li::before {
+    display: none;
+  }
+
+  ul.decoration-none li:last-child {
+    margin-bottom: 0;
   }
 
   :root {

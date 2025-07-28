@@ -261,7 +261,7 @@ const recentTags = getRecentTags(postsWithStringDate, 10);
             {
               uniqueCategories.map((category) => (
                 <a
-                  href={`/search?q=${encodeURIComponent(category)}`}
+                  href={`/${lang}/search?q=${encodeURIComponent(category)}`}
                   class="block p-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
                   <span
