@@ -21,3 +21,21 @@ export function t(lang: keyof typeof translations, key: string): string {
 
   return typeof result === "string" ? result : key;
 }
+
+/**
+ * Retrieves a translation string with interpolation for the given language and key.
+ * Supports replacing placeholders like {variable} with provided values.
+ */
+export function tWithInterpolation(
+  lang: keyof typeof translations,
+  key: string,
+  variables: Record<string, string>
+): string {
+  let translation = t(lang, key);
+
+  for (const [variable, value] of Object.entries(variables)) {
+    translation = translation.replace(new RegExp(`{${variable}}`, "g"), value);
+  }
+
+  return translation;
+}

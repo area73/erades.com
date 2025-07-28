@@ -56,10 +56,6 @@ function filterPosts(posts: any[], category: string, sort: string): any[] {
 
 let filteredPosts = filterPosts(posts, selectedCategory, sortBy);
 
-console.log(
-  "[BLOG] filteredPosts:",
-  filteredPosts.map((p) => p.data?.title)
-);
 // Paginación
 const POSTS_PER_PAGE = 6;
 const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
@@ -82,7 +78,6 @@ const getPageHref = (page: number) => {
     (params.toString() ? `?${params.toString()}` : "")
   );
 };
-console.log("LANG PARAM index:", lang);
 ---
 
 <Layout
