@@ -6,7 +6,7 @@ import BlogList from "../../../components/BlogList.astro";
 import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
 
 const { lang: langParam } = Astro.params;
-const lang = langParam ?? "es";
+const lang = (langParam === "en" ? "en" : "es") as "es" | "en";
 const posts = (await getCollection("blog"))
   .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
