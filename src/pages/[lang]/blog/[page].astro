@@ -23,7 +23,7 @@ const { page } = Astro.params;
 const currentPage = Number(page) || 1;
 
 const { lang: langParam } = Astro.params;
-const lang = langParam ?? "es";
+const lang = (langParam === "en" ? "en" : "es") as "es" | "en";
 const posts = (await getCollection("blog"))
   .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
