@@ -1,0 +1,16 @@
+---
+interface Props {
+  condition: boolean;
+}
+
+const { condition } = Astro.props;
+
+// Get the Then and Else slots
+const thenSlot = Astro.slots.render("then");
+const elseSlot = Astro.slots.render("else");
+
+// Render the appropriate content based on the condition
+const content = condition ? thenSlot : elseSlot;
+---
+
+{content}

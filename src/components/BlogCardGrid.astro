@@ -1,5 +1,7 @@
 ---
 import FormattedDate from "./FormattedDate.astro";
+import Show from "./Show.astro";
+
 interface Props {
   post: any;
   lang: string;
@@ -22,36 +24,39 @@ const readTime = getReadTime(content);
   <div
     class="bg-card border rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden borderh-full flex flex-col"
   >
-    {
-      (post.heroImage || (post.data && post.data.heroImage)) && (
-        <div class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-t-xl overflow-hidden">
-          <img
-            src={post.heroImage || (post.data && post.data.heroImage)}
-            alt={post.title || (post.data && post.data.title) || ""}
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      )
-    }
+    <Show when={post.heroImage || (post.data && post.data.heroImage)}>
+      <div
+        class="aspect-video bg-gradient-to-br from-primary/10 to-accent rounded-t-xl overflow-hidden"
+      >
+        <img
+          src={post.heroImage || (post.data && post.data.heroImage)}
+          alt={post.title || (post.data && post.data.title) || ""}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+      </div>
+    </Show>
     <div class="p-6 flex flex-col flex-1">
-      {
-        Array.isArray(post.categories || (post.data && post.data.categories)) &&
-          (post.categories || (post.data && post.data.categories)).length >
-            0 && (
-            <div class="flex flex-wrap gap-2 mb-2">
-              {(post.categories || (post.data && post.data.categories)).map(
-                (category: string) => (
-                  <span
-                    class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
-                    title={`Ver posts en la categoría ${category}`}
-                  >
-                    {category}
-                  </span>
-                )
-              )}
-            </div>
-          )
-      }
+      <Show
+        when={Array.isArray(
+          post.categories || (post.data && post.data.categories)
+        ) &&
+          (post.categories || (post.data && post.data.categories)).length > 0}
+      >
+        <div class="flex flex-wrap gap-2 mb-2">
+          {
+            (post.categories || (post.data && post.data.categories)).map(
+              (category: string) => (
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
+                  title={`Ver posts en la categoría ${category}`}
+                >
+                  {category}
+                </span>
+              )
+            )
+          }
+        </div>
+      </Show>
       <h3
         aria-label="blog-card-title"
         aria-label="blog-card-title"
@@ -65,7 +70,9 @@ const readTime = getReadTime(content);
             ? new Date(post.pubDate || (post.data && post.data.pubDate))
             : new Date(0)}
         />
-        {readTime && <span class="ml-2">· {readTime} min de lectura</span>}
+        <Show when={readTime}>
+          <span class="ml-2">· {readTime} min de lectura</span>
+        </Show>
       </div>
       <p
         class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed flex-1"
@@ -87,20 +94,20 @@ const readTime = getReadTime(content);
           >
         </div>
       </div>
-      {
-        Array.isArray(post.tags || (post.data && post.data.tags)) &&
-          (post.tags || (post.data && post.data.tags)).length > 0 && (
-            <div class="flex flex-wrap gap-2 mt-4">
-              {(post.tags || (post.data && post.data.tags)).map(
-                (tag: string) => (
-                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-secondary-foreground border border-border">
-                    #{tag}
-                  </span>
-                )
-              )}
-            </div>
-          )
-      }
+      <Show
+        when={Array.isArray(post.tags || (post.data && post.data.tags)) &&
+          (post.tags || (post.data && post.data.tags)).length > 0}
+      >
+        <div class="flex flex-wrap gap-2 mt-4">
+          {
+            (post.tags || (post.data && post.data.tags)).map((tag: string) => (
+              <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-secondary-foreground border border-border">
+                #{tag}
+              </span>
+            ))
+          }
+        </div>
+      </Show>
     </div>
   </div>
 </a>
