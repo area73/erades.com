@@ -1,4 +1,9 @@
 ---
+import Show from "./Show.astro";
+import If from "./If.astro";
+import Then from "./Then.astro";
+import Else from "./Else.astro";
+
 interface Props {
   /** Página actual (1-indexed) */
   currentPage: number;
@@ -29,75 +34,83 @@ const {
 ---
 
 {
-  totalPages > 1 && (
-    <nav
-      aria-label={ariaLabel}
-      role="navigation"
-      class={`flex justify-center mt-12${customClass ? ` ${customClass}` : ""}`}
-    >
-      <div
-        class="flex gap-2"
-        role="group"
-        aria-label="Navegación de paginación"
+  (
+    <Show when={totalPages > 1}>
+      <nav
+        aria-label={ariaLabel}
+        role="navigation"
+        class={`flex justify-center mt-12${customClass ? ` ${customClass}` : ""}`}
       >
-        {currentPage === 1 ? (
-          <span
-            class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
-            aria-label={`${prevLabel} (página no disponible)`}
-            aria-disabled="true"
-          >
-            {prevLabel}
-          </span>
-        ) : (
-          <a
-            href={getPageHref(currentPage - 1)}
-            class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
-            aria-label={`${prevLabel}, ir a página ${currentPage - 1}`}
-          >
-            {prevLabel}
-          </a>
-        )}
-        {Array.from({ length: totalPages }).map((_, i) => {
-          const pageNumber = i + 1;
-          const isCurrentPage = pageNumber === currentPage;
-          return (
-            <a
-              href={getPageHref(pageNumber)}
-              class={`inline-flex items-center px-3 py-1 rounded border text-sm font-medium ${
-                isCurrentPage
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card text-foreground hover:bg-primary/10"
-              }`}
-              aria-label={`Ir a página ${pageNumber}`}
-              aria-current={isCurrentPage ? "page" : undefined}
-              aria-setsize={totalPages}
-              aria-posinset={pageNumber}
-            >
-              {pageNumber}
-            </a>
-          );
-        })}
-        {currentPage === totalPages ? (
-          <span
-            class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
-            aria-label={`${nextLabel} (página no disponible)`}
-            aria-disabled="true"
-          >
-            {nextLabel}
-          </span>
-        ) : (
-          <a
-            href={getPageHref(currentPage + 1)}
-            class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
-            aria-label={`${nextLabel}, ir a página ${currentPage + 1}`}
-          >
-            {nextLabel}
-          </a>
-        )}
-      </div>
-      <div class="sr-only" aria-live="polite">
-        Página {currentPage} de {totalPages}
-      </div>
-    </nav>
+        <div
+          class="flex gap-2"
+          role="group"
+          aria-label="Navegación de paginación"
+        >
+          <If condition={currentPage === 1}>
+            <Then>
+              <span
+                class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
+                aria-label={`${prevLabel} (página no disponible)`}
+                aria-disabled="true"
+              >
+                {prevLabel}
+              </span>
+            </Then>
+            <Else>
+              <a
+                href={getPageHref(currentPage - 1)}
+                class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+                aria-label={`${prevLabel}, ir a página ${currentPage - 1}`}
+              >
+                {prevLabel}
+              </a>
+            </Else>
+          </If>
+          {Array.from({ length: totalPages }).map((_, i) => {
+            const pageNumber = i + 1;
+            const isCurrentPage = pageNumber === currentPage;
+            return (
+              <a
+                href={getPageHref(pageNumber)}
+                class={`inline-flex items-center px-3 py-1 rounded border text-sm font-medium ${
+                  isCurrentPage
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground hover:bg-primary/10"
+                }`}
+                aria-label={`Ir a página ${pageNumber}`}
+                aria-current={isCurrentPage ? "page" : undefined}
+                aria-setsize={totalPages}
+                aria-posinset={pageNumber}
+              >
+                {pageNumber}
+              </a>
+            );
+          })}
+          <If condition={currentPage === totalPages}>
+            <Then>
+              <span
+                class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
+                aria-label={`${nextLabel} (página no disponible)`}
+                aria-disabled="true"
+              >
+                {nextLabel}
+              </span>
+            </Then>
+            <Else>
+              <a
+                href={getPageHref(currentPage + 1)}
+                class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+                aria-label={`${nextLabel}, ir a página ${currentPage + 1}`}
+              >
+                {nextLabel}
+              </a>
+            </Else>
+          </If>
+        </div>
+        <div class="sr-only" aria-live="polite">
+          Página {currentPage} de {totalPages}
+        </div>
+      </nav>
+    </Show>
   )
 }
