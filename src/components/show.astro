@@ -1,0 +1,8 @@
+---
+const { when, children } = Astro.props;
+
+// Special case: if when is an empty array, don't render children
+const shouldRender = when && !(Array.isArray(when) && when.length === 0);
+---
+
+{shouldRender && children}
