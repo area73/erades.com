@@ -32,5 +32,47 @@
   "blogList": {
     "title": "All Posts",
     "description": "Explore the complete collection of articles about technology, development and design."
+  },
+  "about": {
+    "title": "About me",
+    "description": "Engineer with over 20 years of experience, passionate about front-end development, AI, best practices and web optimization.",
+    "paragraphs": {
+      "p1": "I am an engineer with over 20 years of experience in the technology sector. Throughout my career I have worked on multiple projects, always with a focus on technical excellence, continuous improvement and the application of best practices in software development.",
+      "p2": "This personal blog was born as a space to experiment, share proof of concepts and delve into topics that I find particularly interesting. Here I document my learnings, challenges and solutions, with the goal of adding value to the community and maintaining constant professional evolution.",
+      "p3": "Currently, my main interest is in modern front-end development, web performance optimization (WPO), accessibility and the integration of artificial intelligence in engineering processes. I firmly believe in the importance of clean, maintainable and efficient code, as well as the need to stay up to date with the best practices and trends in the sector.",
+      "p4": "I am passionate about exploring how AI can transform the way we design and develop digital products, and I seek to apply this knowledge both in my personal and professional projects. This blog is my laboratory, my logbook and my way of contributing to the technological ecosystem.",
+      "p5": "If you share these interests or simply want to exchange ideas, don't hesitate to get in touch with me. Welcome to my space for experimentation and learning!"
+    }
+  },
+  "tags": {
+    "title": "Tags",
+    "description": "All tags used in blog posts. Click a tag to see related articles.",
+    "header": {
+      "description": "Explore all blog topics organized by tags. Find specific content that interests you."
+    },
+    "tagCloud": {
+      "title": "Tag Cloud",
+      "noResults": "No tags found with that term.",
+      "viewTag": "View posts with tag {tag}"
+    },
+    "topTags": {
+      "title": "Popular Tags"
+    },
+    "trending": {
+      "title": "Trending"
+    },
+    "stats": {
+      "title": "Statistics",
+      "totalTags": "Total tags:",
+      "taggedPosts": "Tagged posts:",
+      "trending": "Trending:"
+    },
+    "recentTags": {
+      "title": "Recent Tags"
+    },
+    "categories": {
+      "title": "Categories",
+      "posts": "posts"
+    }
   }
 }
