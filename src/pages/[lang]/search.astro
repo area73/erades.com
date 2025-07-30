@@ -9,6 +9,7 @@ import BlogCard from "../../components/BlogCard.astro";
 import NoResults from "../../components/NoResults.astro";
 import ResultsInfo from "../../components/ResultsInfo.astro";
 import Show from "../../components/Show.astro";
+import If from "../../components/If.astro";
 import { Search as SearchIcon } from "@lucide/astro";
 import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 import { getCollection } from "astro:content";
@@ -128,30 +129,55 @@ const posts = (await getCollection("blog")).filter(
               `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`}
           />
         </Show>
-        <ul
-          class={`grid ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-3 decoration-none" : "grid-cols-1"} gap-8 list-none m-0 p-0`}
-        >
-          {
-            paginatedResults.length === 0 && query ? (
-              <li class="col-span-full text-center py-12">
-                <NoResults
-                  query={query}
-                  onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
-                />
-              </li>
-            ) : (
-              paginatedResults.map((doc: any) => {
-                // Si doc.data existe, fusiona id y data en el objeto post
-                const post = doc.data ? { ...doc.data, id: doc.id } : doc;
-                return (
-                  <li>
-                    <BlogCard post={post} variant={viewMode} lang={lang} />
-                  </li>
-                );
-              })
-            )
-          }
-        </ul>
+        <If condition={viewMode === "grid"}>
+          <ul
+            slot="then"
+            class="grid grid-cols-1 md:grid-cols-3 decoration-none gap-8 list-none m-0 p-0"
+          >
+            {
+              paginatedResults.length === 0 && query ? (
+                <li class="col-span-full text-center py-12">
+                  <NoResults
+                    query={query}
+                    onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
+                  />
+                </li>
+              ) : (
+                paginatedResults.map((doc: any) => {
+                  // Si doc.data existe, fusiona id y data en el objeto post
+                  const post = doc.data ? { ...doc.data, id: doc.id } : doc;
+                  return (
+                    <li>
+                      <BlogCard post={post} variant={viewMode} lang={lang} />
+                    </li>
+                  );
+                })
+              )
+            }
+          </ul>
+          <ul slot="else" class="grid grid-cols-1 gap-8 list-none m-0 p-0">
+            {
+              paginatedResults.length === 0 && query ? (
+                <li class="col-span-full text-center py-12">
+                  <NoResults
+                    query={query}
+                    onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
+                  />
+                </li>
+              ) : (
+                paginatedResults.map((doc: any) => {
+                  // Si doc.data existe, fusiona id y data en el objeto post
+                  const post = doc.data ? { ...doc.data, id: doc.id } : doc;
+                  return (
+                    <li>
+                      <BlogCard post={post} variant={viewMode} lang={lang} />
+                    </li>
+                  );
+                })
+              )
+            }
+          </ul>
+        </If>
         <Show when={totalPages > 1}>
           <Paginator
             currentPage={currentPage}

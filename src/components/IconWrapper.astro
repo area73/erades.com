@@ -1,0 +1,9 @@
+---
+interface Props {
+  Icon?: any;
+  className?: string;
+}
+const { Icon, className } = Astro.props;
+---
+
+{Icon ? <Icon class={className} /> : null}

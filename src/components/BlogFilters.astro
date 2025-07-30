@@ -1,6 +1,8 @@
 ---
 import { SortDesc, ChevronDown, LayoutGrid, List } from "@lucide/astro";
 import ViewModeToggle from "./ViewModeToggle.astro";
+import Show from "./Show.astro";
+import If from "./If.astro";
 interface Props {
   categories: string[];
   selectedCategory: string;
@@ -87,18 +89,14 @@ function getCategoryHrefLocal(cat: string) {
     <ViewModeToggle viewMode={viewMode} />
   </div>
   {/* Mantener los parámetros de búsqueda y categoría en el formulario */}
-  {
-    Astro.url.searchParams.get("q") && (
-      <input type="hidden" name="q" value={Astro.url.searchParams.get("q")!} />
-    )
-  }
-  {
-    Astro.url.searchParams.get("category") && (
-      <input
-        type="hidden"
-        name="category"
-        value={Astro.url.searchParams.get("category")!}
-      />
-    )
-  }
+  <Show when={Astro.url.searchParams.get("q")}>
+    <input type="hidden" name="q" value={Astro.url.searchParams.get("q")!} />
+  </Show>
+  <Show when={Astro.url.searchParams.get("category")}>
+    <input
+      type="hidden"
+      name="category"
+      value={Astro.url.searchParams.get("category")!}
+    />
+  </Show>
 </form>

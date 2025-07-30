@@ -1,4 +1,5 @@
 ---
+import Show from "./Show.astro";
 // Get the query parameter from the URL
 const query = Astro.url.searchParams.get("q") || "";
 ---
@@ -8,9 +9,11 @@ const query = Astro.url.searchParams.get("q") || "";
     <h2 class="text-3xl font-bold text-foreground mb-2">
       <slot name="title" />
     </h2>
-    <p class="text-muted-foreground">
-      {query ? `Buscando "${query}"...` : ""}
-    </p>
+    <Show when={query}>
+      <p class="text-muted-foreground">
+        Buscando "{query}"...
+      </p>
+    </Show>
   </div>
 
   <div class="text-center py-12">

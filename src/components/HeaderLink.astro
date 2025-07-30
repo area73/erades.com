@@ -1,17 +1,23 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import { Home, FileText, Info, Tag, Hash } from "@lucide/astro";
+import If from "./If.astro";
+import Show from "./Show.astro";
+import Then from "./Then.astro";
+import Else from "./Else.astro";
+import IconWrapper from "./IconWrapper.astro";
+
+const { href, lang, ...rest } = Astro.props;
 
 const ICONS = {
-  "/": Home,
-  "/blog": FileText,
-  "/about": Info,
-  "/tags": Hash,
+  [`/${lang}`]: Home,
+  [`/${lang}/blog`]: FileText,
+  [`/${lang}/about`]: Info,
+  [`/${lang}/tags`]: Hash,
 } as const;
 
 type Props = HTMLAttributes<"a"> & { lang: string };
 
-const { href, lang, ...rest } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 const subpath = pathname.match(/[^\/]+/g);
 const hrefStr = typeof href === "string" ? href : String(href ?? "");
@@ -33,15 +39,12 @@ const Icon = ICONS[href as keyof typeof ICONS];
   aria-current={isActive ? "page" : undefined}
   {...rest}
 >
-  {
-    Icon && (
-      <Icon
-        class={
-          "h-4 w-4 mr-2 " +
-          (isActive ? "text-primary" : "text-muted-foreground")
-        }
-      />
-    )
-  }
+  <Show when={Icon}>
+    <IconWrapper
+      Icon={Icon}
+      className={"h-4 w-4 mr-2 " +
+        (isActive ? "text-primary" : "text-muted-foreground")}
+    />
+  </Show>
   <slot />
 </a>
