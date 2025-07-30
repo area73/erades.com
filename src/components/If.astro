@@ -2,15 +2,22 @@
 interface Props {
   condition: boolean;
 }
-
 const { condition } = Astro.props;
+const html = await Astro.slots.render("default");
 
-// Get the Then and Else slots
-const thenSlot = Astro.slots.render("then");
-const elseSlot = Astro.slots.render("else");
+let thenContent = "";
+let elseContent = "";
 
-// Render the appropriate content based on the condition
-const content = condition ? thenSlot : elseSlot;
+// Regex para encontrar el contenido dentro de los marcadores, permitiendo atributos adicionales
+const thenMatch = html.match(/<div data-then-marker.*?>(.*?)<\/div>/s);
+if (thenMatch && thenMatch[1]) {
+  thenContent = thenMatch[1];
+}
+
+const elseMatch = html.match(/<div data-else-marker.*?>(.*?)<\/div>/s);
+if (elseMatch && elseMatch[1]) {
+  elseContent = elseMatch[1];
+}
 ---
 
-{content}
+<Fragment set:html={condition ? thenContent : elseContent} />

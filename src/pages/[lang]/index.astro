@@ -4,6 +4,9 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import BlogCard from "../../components/BlogCard.astro";
 import { t, tWithInterpolation } from "../../i18n";
+import Else from "../../components/Else.astro";
+import If from "../../components/If.astro";
+import Then from "../../components/Then.astro";
 
 const { lang: langParam } = Astro.params;
 const lang = (langParam ?? "es") as "es" | "en";

@@ -1,4 +1,5 @@
 ---
+import tags from "@lucide/astro/icons/tags";
 import FormattedDate from "./FormattedDate.astro";
 import Show from "./Show.astro";
 
@@ -18,6 +19,13 @@ const getReadTime = (content: string): number => {
 // Permitir content en post o post.data
 const content = post.content || (post.data && post.data.content) || "";
 const readTime = getReadTime(content);
+// Ensure categories and tags are always arrays
+const categories = Array.isArray(post.categories || (post.data && post.data.categories))
+  ? (post.categories || (post.data && post.data.categories))
+  : [];
+const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
+  ? (post.tags || (post.data && post.data.tags))
+  : [];
 ---
 
 <a href={href} class="block group h-full" aria-label="grid-card">
@@ -37,14 +45,11 @@ const readTime = getReadTime(content);
     </Show>
     <div class="p-6 flex flex-col flex-1">
       <Show
-        when={Array.isArray(
-          post.categories || (post.data && post.data.categories)
-        ) &&
-          (post.categories || (post.data && post.data.categories)).length > 0}
+        when={categories.length > 0}
       >
         <div class="flex flex-wrap gap-2 mb-2">
           {
-            (post.categories || (post.data && post.data.categories)).map(
+            categories.map(
               (category: string) => (
                 <span
                   class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
@@ -69,6 +74,7 @@ const readTime = getReadTime(content);
           date={post.pubDate || (post.data && post.data.pubDate)
             ? new Date(post.pubDate || (post.data && post.data.pubDate))
             : new Date(0)}
+          lang={lang}
         />
         <Show when={readTime}>
           <span class="ml-2">· {readTime} min de lectura</span>
@@ -95,12 +101,11 @@ const readTime = getReadTime(content);
         </div>
       </div>
       <Show
-        when={Array.isArray(post.tags || (post.data && post.data.tags)) &&
-          (post.tags || (post.data && post.data.tags)).length > 0}
+        when={postTags.length > 0}
       >
         <div class="flex flex-wrap gap-2 mt-4">
           {
-            (post.tags || (post.data && post.data.tags)).map((tag: string) => (
+            postTags.map((tag: string) => (
               <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-secondary-foreground border border-border">
                 #{tag}
               </span>

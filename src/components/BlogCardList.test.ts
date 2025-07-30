@@ -1,164 +1,339 @@
-import { describe, it, expect } from "vitest";
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText, getByAltText } from "@testing-library/dom";
+import BlogCardList from "./BlogCardList.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
-// Mock function to simulate BlogCardList component logic
-const createBlogCardListProps = (post: any, lang: string = "es") => {
-  const langPrefix = `${lang}/`;
-  const postId =
-    post && typeof post.id === "string"
-      ? post.id
-      : (post.data && post.data.id) || "";
-  const href = `/${lang}/blog/${
-    postId.startsWith(langPrefix) ? postId.slice(langPrefix.length) : postId
-  }/`;
-
-  // Utility to support flattened and nested posts
-  const get = (key: string) => post[key] ?? (post.data && post.data[key]);
-
-  return {
-    post,
-    lang,
-    href,
-    hasHeroImage: !!get("heroImage"),
-    hasCategories:
-      Array.isArray(get("categories")) && get("categories").length > 0,
-    hasTags: Array.isArray(get("tags")) && get("tags").length > 0,
-    primaryCategory:
-      get("categories") && get("categories").length > 0
-        ? get("categories")[0]
-        : "Sin categoría",
-    title: get("title") || "",
-    excerpt: get("excerpt") || get("description") || "",
-    author: get("author") || "",
-    pubDate: get("pubDate") ? new Date(get("pubDate")) : new Date(0),
-  };
-};
-
-// Mock post data
-const mockPost = {
-  id: "es/test-post",
-  title: "Test Post Title",
-  excerpt: "This is a test post excerpt",
-  description: "Alternative description",
-  pubDate: new Date("2023-01-01"),
-  author: "Test Author",
-  categories: ["Technology", "Programming"],
-  tags: ["javascript", "typescript"],
-  heroImage: "/test-image.jpg",
-};
-
-describe("BlogCardList", () => {
-  it("should generate correct href for post with lang prefix", () => {
-    const props = createBlogCardListProps(mockPost, "es");
-
-    expect(props.href).toBe("/es/blog/test-post/");
-  });
-
-  it("should generate correct href for post without lang prefix", () => {
-    const postWithoutPrefix = { ...mockPost, id: "test-post" };
-    const props = createBlogCardListProps(postWithoutPrefix, "es");
-
-    expect(props.href).toBe("/es/blog/test-post/");
-  });
-
-  it("should detect hero image presence", () => {
-    const props = createBlogCardListProps(mockPost, "es");
-
-    expect(props.hasHeroImage).toBe(true);
-  });
-
-  it("should detect absence of hero image", () => {
-    const postWithoutImage = { ...mockPost, heroImage: undefined };
-    const props = createBlogCardListProps(postWithoutImage, "es");
-
-    expect(props.hasHeroImage).toBe(false);
-  });
-
-  it("should detect categories presence", () => {
-    const props = createBlogCardListProps(mockPost, "es");
-
-    expect(props.hasCategories).toBe(true);
-  });
-
-  it("should detect absence of categories", () => {
-    const postWithoutCategories = { ...mockPost, categories: [] };
-    const props = createBlogCardListProps(postWithoutCategories, "es");
-
-    expect(props.hasCategories).toBe(false);
-  });
-
-  it("should return primary category correctly", () => {
-    const props = createBlogCardListProps(mockPost, "es");
-
-    expect(props.primaryCategory).toBe("Technology");
-  });
-
-  it("should return default category when no categories exist", () => {
-    const postWithoutCategories = { ...mockPost, categories: [] };
-    const props = createBlogCardListProps(postWithoutCategories, "es");
-
-    expect(props.primaryCategory).toBe("Sin categoría");
-  });
-
-  it("should detect tags presence", () => {
-    const props = createBlogCardListProps(mockPost, "es");
-
-    expect(props.hasTags).toBe(true);
-  });
-
-  it("should handle nested post data structure", () => {
-    const nestedPost = {
-      data: {
+describe("BlogCardList.astro", () => {
+  describe("renderizado básico", () => {
+    test("debería renderizar una tarjeta de lista con título y contenido", async () => {
+      // Arrange
+      const mockPost = {
         id: "test-post",
-        title: "Nested Post Title",
-        heroImage: "/nested-image.jpg",
-        categories: ["Nested Category"],
-        tags: ["nested-tag"],
-        author: "Nested Author",
+        title: "Test Post Title",
+        excerpt: "This is a test excerpt",
         pubDate: new Date("2023-01-01"),
-      },
-    };
-    const props = createBlogCardListProps(nestedPost, "es");
+        author: "Test Author",
+      };
 
-    expect(props.href).toBe("/es/blog/test-post/");
-    expect(props.hasHeroImage).toBe(true);
-    expect(props.hasCategories).toBe(true);
-    expect(props.hasTags).toBe(true);
-    expect(props.primaryCategory).toBe("Nested Category");
-    expect(props.title).toBe("Nested Post Title");
-    expect(props.author).toBe("Nested Author");
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Test Post Title");
+      expect(result.innerHTML).toContain("This is a test excerpt");
+      expect(result.innerHTML).toContain("Test Author");
+    });
+
+    test("debería generar el enlace correcto para el post", async () => {
+      // Arrange
+      const mockPost = {
+        id: "es/test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.getAttribute("href")).toBe("/es/blog/test-post/");
+    });
+
+    test("debería mostrar la categoría cuando está disponible", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+        categories: ["Technology", "Programming"],
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Technology");
+    });
+
+    test("debería mostrar 'Sin categoría' cuando no hay categorías", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Sin categoría");
+    });
   });
 
-  it("should handle missing title gracefully", () => {
-    const postWithoutTitle = { ...mockPost, title: undefined };
-    const props = createBlogCardListProps(postWithoutTitle, "es");
+  describe("manejo de imágenes", () => {
+    test("debería mostrar la imagen hero cuando está disponible", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+        heroImage: "/test-image.jpg",
+      };
 
-    expect(props.title).toBe("");
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const img = result.querySelector("img");
+      expect(img?.getAttribute("src")).toBe("/test-image.jpg");
+      expect(img?.getAttribute("alt")).toBe("Test Post");
+    });
+
+    test("debería manejar posts sin imagen hero", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const img = result.querySelector("img");
+      expect(img).toBeNull();
+    });
   });
 
-  it("should use excerpt over description when both exist", () => {
-    const props = createBlogCardListProps(mockPost, "es");
+  describe("tags", () => {
+    test("debería mostrar tags cuando están disponibles", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+        tags: ["javascript", "react"],
+      };
 
-    expect(props.excerpt).toBe("This is a test post excerpt");
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("#javascript");
+      expect(result.innerHTML).toContain("#react");
+    });
+
+    test("debería manejar posts sin tags", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).not.toContain("#");
+    });
   });
 
-  it("should fallback to description when excerpt is missing", () => {
-    const postWithoutExcerpt = { ...mockPost, excerpt: undefined };
-    const props = createBlogCardListProps(postWithoutExcerpt, "es");
+  describe("estructura de datos anidada", () => {
+    test("debería manejar posts con estructura de datos anidada", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        data: {
+          title: "Nested Title",
+          excerpt: "Nested excerpt",
+          pubDate: new Date("2023-01-01"),
+          author: "Nested Author",
+          heroImage: "/nested-image.jpg",
+          categories: ["Nested Category"],
+          tags: ["nested-tag"],
+        },
+      };
 
-    expect(props.excerpt).toBe("Alternative description");
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Nested Title");
+      expect(result.innerHTML).toContain("Nested excerpt");
+      expect(result.innerHTML).toContain("Nested Author");
+      expect(result.innerHTML).toContain("Nested Category");
+      expect(result.innerHTML).toContain("#nested-tag");
+    });
   });
 
-  it("should handle missing author gracefully", () => {
-    const postWithoutAuthor = { ...mockPost, author: undefined };
-    const props = createBlogCardListProps(postWithoutAuthor, "es");
+  describe("layout y estructura", () => {
+    test("debería tener la estructura de grid correcta", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
 
-    expect(props.author).toBe("");
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const grid = result.querySelector(".grid");
+      expect(grid?.classList.contains("md:grid-cols-4")).toBe(true);
+    });
+
+    test("debería tener las clases CSS correctas", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.classList.contains("block")).toBe(true);
+      expect(link?.classList.contains("group")).toBe(true);
+    });
   });
 
-  it("should handle invalid pubDate gracefully", () => {
-    const postWithInvalidDate = { ...mockPost, pubDate: "invalid-date" };
-    const props = createBlogCardListProps(postWithInvalidDate, "es");
+  describe("casos extremos", () => {
+    test("debería manejar post con contenido vacío", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "",
+        excerpt: "",
+        author: "",
+      };
 
-    expect(props.pubDate).toEqual(new Date("invalid-date"));
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("debería manejar post con ID inválido", async () => {
+      // Arrange
+      const mockPost = {
+        id: null,
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.getAttribute("href")).toBe("/es/blog//");
+    });
+
+    test("debería manejar post undefined", async () => {
+      // Act & Assert
+      await expect(
+        renderAstroComponent(BlogCardList, {
+          props: { post: undefined, lang: "es" },
+        })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe("accesibilidad", () => {
+    test("debería incluir aria-label en el enlace", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.getAttribute("aria-label")).toBe("list-card");
+    });
+
+    test("debería incluir aria-label en el título", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      const title = result.querySelector("h3");
+      expect(title?.getAttribute("aria-label")).toBe("blog-card-title");
+    });
+  });
+
+  describe("fecha de publicación", () => {
+    test("debería mostrar la fecha de publicación correctamente", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+        pubDate: new Date("2023-01-15"),
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("15 de enero de 2023");
+    });
+
+    test("debería manejar fecha de publicación inválida", async () => {
+      // Arrange
+      const mockPost = {
+        id: "test-post",
+        title: "Test Post",
+        pubDate: "invalid-date",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogCardList, {
+        props: { post: mockPost, lang: "es" },
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 });

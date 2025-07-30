@@ -36,10 +36,10 @@ const { title, description, pubDate, updatedDate, tags, categories, lang } =
               <hr />
               <div class="flex items-center justify-between my-2">
                 <div>
-                  <FormattedDate date={pubDate!} />
+                  <FormattedDate date={pubDate!} lang={lang} />
                   <Show when={updatedDate}>
                     <div class="italic text-xs">
-                      Last updated on <FormattedDate date={updatedDate!} />
+                      Last updated on <FormattedDate date={updatedDate!} lang={lang} />
                     </div>
                   </Show>
                 </div>

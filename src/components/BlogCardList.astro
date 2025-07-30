@@ -50,6 +50,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
             <span>
               <FormattedDate
                 date={get("pubDate") ? new Date(get("pubDate")) : new Date(0)}
+                lang={lang}
               />
             </span>
           </div>

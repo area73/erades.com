@@ -1,71 +1,167 @@
-import { describe, it, expect } from "vitest";
-
-// Mock function to simulate BlogCard component logic
-const createBlogCardProps = (
-  post: any,
-  variant: "grid" | "list" = "grid",
-  lang: string = "es"
-) => {
-  return {
-    post,
-    variant,
-    lang,
-    shouldRenderGrid: variant === "grid",
-    shouldRenderList: variant === "list",
-  };
-};
-
-// Mock post data
-const mockPost = {
-  id: "es/test-post",
-  title: "Test Post Title",
-  excerpt: "This is a test post excerpt",
-  pubDate: new Date("2023-01-01"),
-  author: "Test Author",
-  categories: ["Technology", "Programming"],
-  tags: ["javascript", "typescript"],
-  heroImage: "/test-image.jpg",
-  content:
-    "This is the full content of the test post with many words to test the read time calculation.",
-};
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText, getByRole } from "@testing-library/dom";
+import BlogCard from "./BlogCard.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
 describe("BlogCard", () => {
-  it("should render grid variant when variant is 'grid'", () => {
-    const props = createBlogCardProps(mockPost, "grid", "es");
+  const mockPost = {
+    id: "test-post",
+    title: "Test Post Title",
+    description: "Test post description",
+    excerpt: "Test post excerpt",
+    pubDate: new Date("2023-01-01"),
+    author: "Test Author",
+    categories: ["Test Category"],
+    tags: ["test", "blog"],
+    heroImage: "/test-image.jpg",
+  };
 
-    expect(props.shouldRenderGrid).toBe(true);
-    expect(props.shouldRenderList).toBe(false);
-    expect(props.variant).toBe("grid");
+  test("renders grid variant by default", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        lang: "en",
+      },
+    });
+
+    // Verificar que se renderiza como grid (debería tener la clase específica de grid)
+    const link = result.querySelector('a[aria-label="grid-card"]');
+    expect(link).not.toBeNull();
   });
 
-  it("should render list variant when variant is 'list'", () => {
-    const props = createBlogCardProps(mockPost, "list", "es");
+  test("renders grid variant explicitly", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
 
-    expect(props.shouldRenderGrid).toBe(false);
-    expect(props.shouldRenderList).toBe(true);
-    expect(props.variant).toBe("list");
+    const link = result.querySelector('a[aria-label="grid-card"]');
+    expect(link).not.toBeNull();
   });
 
-  it("should default to grid variant when no variant specified", () => {
-    const props = createBlogCardProps(mockPost, undefined as any, "es");
+  test("renders list variant", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "list",
+        lang: "en",
+      },
+    });
 
-    expect(props.shouldRenderGrid).toBe(true);
-    expect(props.shouldRenderList).toBe(false);
+    const link = result.querySelector('a[aria-label="list-card"]');
+    expect(link).not.toBeNull();
   });
 
-  it("should handle different languages", () => {
-    const propsEn = createBlogCardProps(mockPost, "grid", "en");
-    const propsEs = createBlogCardProps(mockPost, "grid", "es");
+  test("renders post title in grid variant", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
 
-    expect(propsEn.lang).toBe("en");
-    expect(propsEs.lang).toBe("es");
+    const title = getByText(result, "Test Post Title");
+    expect(title).not.toBeNull();
   });
 
-  it("should pass post data correctly", () => {
-    const props = createBlogCardProps(mockPost, "grid", "es");
+  test("renders post title in list variant", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "list",
+        lang: "en",
+      },
+    });
 
-    expect(props.post).toBe(mockPost);
-    expect(props.post.title).toBe("Test Post Title");
-    expect(props.post.categories).toEqual(["Technology", "Programming"]);
+    const title = getByText(result, "Test Post Title");
+    expect(title).not.toBeNull();
+  });
+
+  test("renders categories in grid variant", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
+
+    const category = getByText(result, "Test Category");
+    expect(category).not.toBeNull();
+  });
+
+  test("renders author in both variants", async () => {
+    // Test grid variant
+    const gridResult = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
+
+    const gridAuthor = getByText(gridResult, "Test Author");
+    expect(gridAuthor).not.toBeNull();
+
+    // Test list variant
+    const listResult = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "list",
+        lang: "en",
+      },
+    });
+
+    const listAuthor = getByText(listResult, "Test Author");
+    expect(listAuthor).not.toBeNull();
+  });
+
+  test("renders hero image when available", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
+
+    const image = result.querySelector('img[src="/test-image.jpg"]');
+    expect(image).not.toBeNull();
+    expect(image?.getAttribute("alt")).toBe("Test Post Title");
+  });
+
+  test("handles post without hero image", async () => {
+    const postWithoutImage = { ...mockPost, heroImage: undefined };
+
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: postWithoutImage,
+        variant: "grid",
+        lang: "en",
+      },
+    });
+
+    // El componente debería renderizar sin errores
+    const title = getByText(result, "Test Post Title");
+    expect(title).not.toBeNull();
+  });
+
+  test("generates correct href for post", async () => {
+    const result = await renderAstroComponent(BlogCard, {
+      props: {
+        post: mockPost,
+        variant: "grid",
+        lang: "en",
+      },
+    });
+
+    const link = result.querySelector("a");
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute("href")).toBe("/en/blog/test-post/");
   });
 });
