@@ -35,9 +35,6 @@ function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
 const rawSortBy = url.searchParams.get("sortBy") || "date-desc";
 const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
 
-console.log("[BLOG] rawSortBy:", rawSortBy, "sortBy:", sortBy);
-console.log("[BLOG] selectedCategory:", selectedCategory);
-
 const rawViewMode = url.searchParams.get("viewMode");
 let viewMode: "grid" | "list" = rawViewMode === "list" ? "list" : "grid";
 
