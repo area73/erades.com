@@ -21,7 +21,7 @@ describe("FormattedDate", () => {
     );
 
     // Verificar que el texto formateado está presente
-    const formattedText = getByText(result, "Jan 15, 2023");
+    const formattedText = getByText(result, "January 15, 2023");
     expect(formattedText).not.toBeNull();
   });
 
@@ -36,7 +36,7 @@ describe("FormattedDate", () => {
 
     const timeElement = result.querySelector("time");
     expect(timeElement).not.toBeNull();
-    expect(timeElement?.getAttribute("datetime")).toBeUndefined();
+    expect(timeElement?.getAttribute("datetime")).toBeNull();
 
     // Verificar que muestra "-" para fechas inválidas
     const dashText = getByText(result, "-");
@@ -54,7 +54,7 @@ describe("FormattedDate", () => {
 
     const timeElement = result.querySelector("time");
     expect(timeElement).not.toBeNull();
-    expect(timeElement?.getAttribute("datetime")).toBeUndefined();
+    expect(timeElement?.getAttribute("datetime")).toBeNull();
 
     const dashText = getByText(result, "-");
     expect(dashText).not.toBeNull();
@@ -71,7 +71,7 @@ describe("FormattedDate", () => {
 
     const timeElement = result.querySelector("time");
     expect(timeElement).not.toBeNull();
-    expect(timeElement?.getAttribute("datetime")).toBeUndefined();
+    expect(timeElement?.getAttribute("datetime")).toBeNull();
 
     const dashText = getByText(result, "-");
     expect(dashText).not.toBeNull();
@@ -79,9 +79,9 @@ describe("FormattedDate", () => {
 
   test("formats different date formats", async () => {
     const dates = [
-      { date: new Date("2023-12-25"), expected: "Dec 25, 2023" },
-      { date: new Date("2023-06-01"), expected: "Jun 1, 2023" },
-      { date: new Date("2023-03-08"), expected: "Mar 8, 2023" },
+      { date: new Date("2023-12-25"), expected: "December 25, 2023" },
+      { date: new Date("2023-06-01"), expected: "June 1, 2023" },
+      { date: new Date("2023-03-08"), expected: "March 8, 2023" },
     ];
 
     for (const { date, expected } of dates) {

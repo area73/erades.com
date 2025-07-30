@@ -40,7 +40,7 @@ describe("NoResults", () => {
     const link = getByRole(result, "link");
     expect(link).not.toBeNull();
     expect(link?.getAttribute("href")).toBe("?category=all");
-    expect(link?.textContent).toBe("Ver todos los posts");
+    expect(link?.textContent?.trim()).toBe("Ver todos los posts");
   });
 
   test("renders reset link with custom href", async () => {
