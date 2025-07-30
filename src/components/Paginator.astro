@@ -47,24 +47,22 @@ const {
           aria-label="Navegación de paginación"
         >
           <If condition={currentPage === 1}>
-            <Then>
-              <span
-                class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
-                aria-label={`${prevLabel} (página no disponible)`}
-                aria-disabled="true"
-              >
-                {prevLabel}
-              </span>
-            </Then>
-            <Else>
-              <a
-                href={getPageHref(currentPage - 1)}
-                class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
-                aria-label={`${prevLabel}, ir a página ${currentPage - 1}`}
-              >
-                {prevLabel}
-              </a>
-            </Else>
+            <span
+              slot="then"
+              class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
+              aria-label={`${prevLabel} (página no disponible)`}
+              aria-disabled="true"
+            >
+              {prevLabel}
+            </span>
+            <a
+              slot="else"
+              href={getPageHref(currentPage - 1)}
+              class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+              aria-label={`${prevLabel}, ir a página ${currentPage - 1}`}
+            >
+              {prevLabel}
+            </a>
           </If>
           {Array.from({ length: totalPages }).map((_, i) => {
             const pageNumber = i + 1;
@@ -86,25 +84,23 @@ const {
               </a>
             );
           })}
-          <If condition={currentPage === totalPages}>
-            <Then>
-              <span
-                class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
-                aria-label={`${nextLabel} (página no disponible)`}
-                aria-disabled="true"
-              >
-                {nextLabel}
-              </span>
-            </Then>
-            <Else>
-              <a
-                href={getPageHref(currentPage + 1)}
-                class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
-                aria-label={`${nextLabel}, ir a página ${currentPage + 1}`}
-              >
-                {nextLabel}
-              </a>
-            </Else>
+          <If condition={currentPage >= totalPages}>
+            <span
+              slot="then"
+              class="inline-flex items-center px-3 py-1 rounded border bg-secondary text-secondary-foreground text-sm font-medium opacity-50 cursor-not-allowed"
+              aria-label={`${nextLabel} (página no disponible)`}
+              aria-disabled="true"
+            >
+              {nextLabel}
+            </span>
+            <a
+              slot="else"
+              href={getPageHref(currentPage + 1)}
+              class="inline-flex items-center px-3 py-1 rounded border bg-card text-foreground text-sm font-medium hover:bg-primary/10"
+              aria-label={`${nextLabel}, ir a página ${currentPage + 1}`}
+            >
+              {nextLabel}
+            </a>
           </If>
         </div>
         <div class="sr-only" aria-live="polite">
