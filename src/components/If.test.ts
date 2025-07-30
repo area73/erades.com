@@ -10,13 +10,13 @@ describe("If.astro", () => {
       // Arrange
       const thenContent = "<p>This is the then content</p>";
       const elseContent = "<p>This is the else content</p>";
-      const slotContent = `<div data-then-marker class="test">${thenContent}</div><div data-else-marker class="test">${elseContent}</div>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: thenContent,
+          else: elseContent,
         },
       });
 
@@ -25,34 +25,32 @@ describe("If.astro", () => {
       expect(result.innerHTML).not.toContain("This is the else content");
     });
 
-    test("debería manejar contenido then con atributos adicionales", async () => {
+    test("debería manejar contenido then con HTML complejo", async () => {
       // Arrange
-      const thenContent = "<span>Then with attributes</span>";
-      const slotContent = `<div data-then-marker class="test" id="then-div">${thenContent}</div>`;
+      const thenContent = `<span class="test">Then with attributes</span>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: thenContent,
         },
       });
 
       // Assert
       expect(result.innerHTML).toContain("Then with attributes");
-      expect(result.innerHTML).not.toContain("data-then-marker");
+      expect(result.innerHTML).toContain('class="test"');
     });
 
     test("debería manejar HTML anidado en el contenido then", async () => {
       // Arrange
       const thenContent = `<div class="nested"><p>Nested content</p><span>More content</span></div>`;
-      const slotContent = `<div data-then-marker>${thenContent}</div>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: thenContent,
         },
       });
 
@@ -67,13 +65,13 @@ describe("If.astro", () => {
       // Arrange
       const thenContent = "<p>This is the then content</p>";
       const elseContent = "<p>This is the else content</p>";
-      const slotContent = `<div data-then-marker>${thenContent}</div><div data-else-marker>${elseContent}</div>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: false },
         slots: {
-          default: slotContent,
+          then: thenContent,
+          else: elseContent,
         },
       });
 
@@ -82,36 +80,34 @@ describe("If.astro", () => {
       expect(result.innerHTML).not.toContain("This is the then content");
     });
 
-    test("debería manejar contenido else con atributos adicionales", async () => {
+    test("debería manejar contenido else con HTML complejo", async () => {
       // Arrange
-      const elseContent = "<span>Else with attributes</span>";
-      const slotContent = `<div data-else-marker class="test" id="else-div">${elseContent}</div>`;
+      const elseContent = `<span class="test">Else with attributes</span>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: false },
         slots: {
-          default: slotContent,
+          else: elseContent,
         },
       });
 
       // Assert
       expect(result.innerHTML).toContain("Else with attributes");
-      expect(result.innerHTML).not.toContain("data-else-marker");
+      expect(result.innerHTML).toContain('class="test"');
     });
   });
 
   describe("casos extremos", () => {
-    test("debería manejar marcador then faltante", async () => {
+    test("debería manejar slot then faltante", async () => {
       // Arrange
       const elseContent = "<p>Else content only</p>";
-      const slotContent = `<div data-else-marker>${elseContent}</div>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          else: elseContent,
         },
       });
 
@@ -119,16 +115,15 @@ describe("If.astro", () => {
       expect(result.innerHTML).toBe("");
     });
 
-    test("debería manejar marcador else faltante", async () => {
+    test("debería manejar slot else faltante", async () => {
       // Arrange
       const thenContent = "<p>Then content only</p>";
-      const slotContent = `<div data-then-marker>${thenContent}</div>`;
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: false },
         slots: {
-          default: slotContent,
+          then: thenContent,
         },
       });
 
@@ -136,15 +131,13 @@ describe("If.astro", () => {
       expect(result.innerHTML).toBe("");
     });
 
-    test("debería manejar contenido vacío en los marcadores", async () => {
-      // Arrange
-      const slotContent = `<div data-then-marker></div><div data-else-marker></div>`;
-
+    test("debería manejar contenido vacío en los slots", async () => {
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: "",
+          else: "",
         },
       });
 
@@ -152,33 +145,33 @@ describe("If.astro", () => {
       expect(result.innerHTML).toBe("");
     });
 
-    test("debería manejar HTML malformado", async () => {
+    test("debería renderizar correctamente cuando solo existe slot then", async () => {
       // Arrange
-      const slotContent = `<div data-then-marker><p>Unclosed paragraph<div data-else-marker>Else content</div>`;
+      const thenContent = "<p>Only then content</p>";
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: thenContent,
         },
       });
 
       // Assert
-      expect(result.innerHTML).toContain("Unclosed paragraph");
+      expect(result.innerHTML).toContain("Only then content");
     });
   });
 
   describe("validación de props", () => {
     test("debería manejar condición booleana verdadera", async () => {
       // Arrange
-      const slotContent = `<div data-then-marker><p>Content</p></div>`;
+      const thenContent = "<p>Content</p>";
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: true },
         slots: {
-          default: slotContent,
+          then: thenContent,
         },
       });
 
@@ -188,18 +181,48 @@ describe("If.astro", () => {
 
     test("debería manejar condición booleana falsa", async () => {
       // Arrange
-      const slotContent = `<div data-else-marker><p>Content</p></div>`;
+      const elseContent = "<p>Content</p>";
 
       // Act
       const result = await renderAstroComponent(If, {
         props: { condition: false },
         slots: {
-          default: slotContent,
+          else: elseContent,
         },
       });
 
       // Assert
       expect(result.innerHTML).toContain("Content");
+    });
+
+    test("debería funcionar con ambos slots presentes", async () => {
+      // Arrange
+      const thenContent = "<p>Then content</p>";
+      const elseContent = "<p>Else content</p>";
+
+      // Act - Condición verdadera
+      const resultTrue = await renderAstroComponent(If, {
+        props: { condition: true },
+        slots: {
+          then: thenContent,
+          else: elseContent,
+        },
+      });
+
+      // Act - Condición falsa
+      const resultFalse = await renderAstroComponent(If, {
+        props: { condition: false },
+        slots: {
+          then: thenContent,
+          else: elseContent,
+        },
+      });
+
+      // Assert
+      expect(resultTrue.innerHTML).toContain("Then content");
+      expect(resultTrue.innerHTML).not.toContain("Else content");
+      expect(resultFalse.innerHTML).toContain("Else content");
+      expect(resultFalse.innerHTML).not.toContain("Then content");
     });
   });
 });

@@ -3,21 +3,11 @@ interface Props {
   condition: boolean;
 }
 const { condition } = Astro.props;
-const html = await Astro.slots.render("default");
 
-let thenContent = "";
-let elseContent = "";
-
-// Regex para encontrar el contenido dentro de los marcadores, permitiendo atributos adicionales
-const thenMatch = html.match(/<div data-then-marker.*?>(.*?)<\/div>/s);
-if (thenMatch && thenMatch[1]) {
-  thenContent = thenMatch[1];
-}
-
-const elseMatch = html.match(/<div data-else-marker.*?>(.*?)<\/div>/s);
-if (elseMatch && elseMatch[1]) {
-  elseContent = elseMatch[1];
-}
+// Use named slots instead of string processing
+const hasThenSlot = Astro.slots.has("then");
+const hasElseSlot = Astro.slots.has("else");
 ---
 
-<Fragment set:html={condition ? thenContent : elseContent} />
+{condition && hasThenSlot && <slot name="then" />}
+{!condition && hasElseSlot && <slot name="else" />}

@@ -240,8 +240,9 @@ describe("Paginator", () => {
 
     // Should still render but with disabled next button
     const nextButton = getByText(result, "Siguiente");
-    expect(nextButton?.tagName).toBe("A");
-    expect(nextButton?.getAttribute("href")).toBe("/blog/6/");
+    expect(nextButton?.tagName).toBe("SPAN");
+    expect(nextButton?.getAttribute("aria-disabled")).toBe("true");
+    expect(nextButton?.getAttribute("href")).toBeNull();
   });
 
   test("has correct navigation group structure", async () => {
