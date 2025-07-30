@@ -1,80 +1,147 @@
-import { describe, it, expect } from "vitest";
-
-// Mock function to simulate NoResults component logic
-const createNoResultsProps = (query?: string, onResetHref?: string) => {
-  return {
-    query: query || "",
-    onResetHref: onResetHref || "?category=all",
-    hasQuery: !!(query && query.trim()),
-    queryText: query ? `Buscando "${query}"...` : "",
-  };
-};
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText, getByRole } from "@testing-library/dom";
+import NoResults from "./NoResults.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
 describe("NoResults", () => {
-  it("should handle empty query", () => {
-    const props = createNoResultsProps();
+  test("renders no results message", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
 
-    expect(props.query).toBe("");
-    expect(props.onResetHref).toBe("?category=all");
-    expect(props.hasQuery).toBe(false);
-    expect(props.queryText).toBe("");
+    const title = getByText(result, "No se encontraron resultados");
+    expect(title).not.toBeNull();
   });
 
-  it("should handle query with text", () => {
-    const props = createNoResultsProps("javascript");
+  test("renders suggestion text", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
 
-    expect(props.query).toBe("javascript");
-    expect(props.hasQuery).toBe(true);
-    expect(props.queryText).toBe('Buscando "javascript"...');
+    const suggestion = getByText(
+      result,
+      "Intenta con otros términos de búsqueda o cambia los filtros."
+    );
+    expect(suggestion).not.toBeNull();
   });
 
-  it("should handle query with whitespace", () => {
-    const props = createNoResultsProps("  react  ");
+  test("renders reset link with default href", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
 
-    expect(props.query).toBe("  react  ");
-    expect(props.hasQuery).toBe(true);
-    expect(props.queryText).toBe('Buscando "  react  "...');
+    const link = getByRole(result, "link");
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute("href")).toBe("?category=all");
+    expect(link?.textContent).toBe("Ver todos los posts");
   });
 
-  it("should handle custom reset href", () => {
-    const props = createNoResultsProps("test", "/blog");
+  test("renders reset link with custom href", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+        onResetHref: "/custom-reset",
+      },
+    });
 
-    expect(props.query).toBe("test");
-    expect(props.onResetHref).toBe("/blog");
-    expect(props.hasQuery).toBe(true);
+    const link = getByRole(result, "link");
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute("href")).toBe("/custom-reset");
   });
 
-  it("should handle empty string query", () => {
-    const props = createNoResultsProps("");
+  test("renders search icon", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
 
-    expect(props.query).toBe("");
-    expect(props.hasQuery).toBe(false);
-    expect(props.queryText).toBe("");
+    const icon = result.querySelector("svg");
+    expect(icon).not.toBeNull();
   });
 
-  it("should handle undefined query", () => {
-    const props = createNoResultsProps(undefined);
+  test("renders with empty query", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "",
+      },
+    });
 
-    expect(props.query).toBe("");
-    expect(props.hasQuery).toBe(false);
-    expect(props.queryText).toBe("");
+    const title = getByText(result, "No se encontraron resultados");
+    expect(title).not.toBeNull();
   });
 
-  it("should handle special characters in query", () => {
-    const props = createNoResultsProps("react & typescript");
+  test("renders with undefined query", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {},
+    });
 
-    expect(props.query).toBe("react & typescript");
-    expect(props.hasQuery).toBe(true);
-    expect(props.queryText).toBe('Buscando "react & typescript"...');
+    const title = getByText(result, "No se encontraron resultados");
+    expect(title).not.toBeNull();
   });
 
-  it("should handle long query text", () => {
-    const longQuery =
-      "a very long search query that might be used to test the component";
-    const props = createNoResultsProps(longQuery);
+  test("renders title with correct classes", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
 
-    expect(props.query).toBe(longQuery);
-    expect(props.hasQuery).toBe(true);
-    expect(props.queryText).toBe(`Buscando "${longQuery}"...`);
+    const title = getByText(result, "No se encontraron resultados");
+    const classes = title?.getAttribute("class");
+    expect(classes).toContain("font-serif");
+    expect(classes).toContain("text-xl");
+    expect(classes).toContain("font-semibold");
+  });
+
+  test("renders link with correct classes", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
+
+    const link = getByRole(result, "link");
+    const classes = link?.getAttribute("class");
+    expect(classes).toContain("px-4");
+    expect(classes).toContain("py-2");
+    expect(classes).toContain("rounded-md");
+  });
+
+  test("renders icon with correct classes", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
+
+    const icon = result.querySelector("svg");
+    const classes = icon?.getAttribute("class");
+    expect(classes).toContain("mx-auto");
+    expect(classes).toContain("mb-4");
+    expect(classes).toContain("text-muted-foreground");
+  });
+
+  test("renders suggestion with correct classes", async () => {
+    const result = await renderAstroComponent(NoResults, {
+      props: {
+        query: "test search",
+      },
+    });
+
+    const suggestion = getByText(
+      result,
+      "Intenta con otros términos de búsqueda o cambia los filtros."
+    );
+    const classes = suggestion?.getAttribute("class");
+    expect(classes).toContain("text-muted-foreground");
+    expect(classes).toContain("mb-6");
   });
 });

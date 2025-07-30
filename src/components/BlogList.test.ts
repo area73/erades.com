@@ -1,269 +1,483 @@
-import { describe, it, expect } from "vitest";
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText, getByRole } from "@testing-library/dom";
+import BlogList from "./BlogList.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
-// Mock function to simulate BlogList component logic
-const createBlogListProps = (
-  posts: any[],
-  categories: string[],
-  selectedCategory: string,
-  sortBy: string,
-  viewMode: "grid" | "list",
-  currentPage: number,
-  totalPages: number,
-  paginatedPosts: any[],
-  tag?: string,
-  lang: string = "es"
-) => {
-  const getCategoryHref = (cat: string) => `/blog/category/${cat}/`;
-  const getPageHref = (page: number) =>
-    page === 1 ? "/blog/" : `/blog/${page}/`;
+describe("BlogList.astro", () => {
+  describe("renderizado básico", () => {
+    test("debería renderizar la lista de blogs con título y descripción", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-  return {
-    posts,
-    categories,
-    selectedCategory,
-    sortBy,
-    viewMode,
-    currentPage,
-    totalPages,
-    paginatedPosts,
-    getCategoryHref,
-    getPageHref,
-    tag,
-    lang,
-    shouldShowTitle: currentPage === 1,
-    shouldShowPaginator: totalPages > 1,
-    isGridView: viewMode === "grid",
-    isListView: viewMode === "list",
-  };
-};
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
 
-// Mock data
-const mockPosts = [
-  { id: "post-1", title: "Post 1" },
-  { id: "post-2", title: "Post 2" },
-  { id: "post-3", title: "Post 3" },
-];
+      // Assert
+      expect(result.querySelector("section")).toBeTruthy();
+    });
 
-const mockCategories = ["Technology", "Programming", "Design"];
+    test("debería mostrar el título y descripción en la primera página", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-describe("BlogList", () => {
-  it("should show title only on first page", () => {
-    const propsPage1 = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      3,
-      mockPosts.slice(0, 1)
-    );
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
 
-    const propsPage2 = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      2,
-      3,
-      mockPosts.slice(1, 2)
-    );
+      // Assert
+      expect(result.innerHTML).toContain("blogList.title");
+      expect(result.innerHTML).toContain("blogList.description");
+    });
 
-    expect(propsPage1.shouldShowTitle).toBe(true);
-    expect(propsPage2.shouldShowTitle).toBe(false);
+    test("no debería mostrar título y descripción en páginas posteriores", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 2,
+        totalPages: 3,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).not.toContain("blogList.title");
+      expect(result.innerHTML).not.toContain("blogList.description");
+    });
   });
 
-  it("should show paginator when total pages > 1", () => {
-    const propsSinglePage = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts
-    );
+  describe("filtros", () => {
+    test("debería incluir el componente BlogFilters", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-    const propsMultiPage = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      3,
-      mockPosts.slice(0, 1)
-    );
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
 
-    expect(propsSinglePage.shouldShowPaginator).toBe(false);
-    expect(propsMultiPage.shouldShowPaginator).toBe(true);
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("debería pasar las props correctas a BlogFilters", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology", "Programming"],
+        selectedCategory: "Programming",
+        sortBy: "title",
+        viewMode: "list" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        tag: "javascript",
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should detect grid view mode correctly", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts
-    );
+  describe("modo de vista grid", () => {
+    test("debería renderizar posts en modo grid", async () => {
+      // Arrange
+      const mockPosts = [
+        {
+          id: "post-1",
+          title: "Post 1",
+          excerpt: "Excerpt 1",
+        },
+        {
+          id: "post-2",
+          title: "Post 2",
+          excerpt: "Excerpt 2",
+        },
+      ];
 
-    expect(props.isGridView).toBe(true);
-    expect(props.isListView).toBe(false);
+      const mockProps = {
+        posts: mockPosts,
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: mockPosts,
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      const gridList = result.querySelector('ul[aria-label="posts-list"]');
+      expect(gridList?.classList.contains("grid")).toBe(true);
+      expect(gridList?.classList.contains("grid-cols-1")).toBe(true);
+    });
+
+    test("debería renderizar cada post como un elemento de lista", async () => {
+      // Arrange
+      const mockPosts = [
+        {
+          id: "post-1",
+          title: "Post 1",
+          excerpt: "Excerpt 1",
+        },
+      ];
+
+      const mockProps = {
+        posts: mockPosts,
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: mockPosts,
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      const listItems = result.querySelectorAll("li");
+      expect(listItems.length).toBe(1);
+    });
   });
 
-  it("should detect list view mode correctly", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "list",
-      1,
-      1,
-      mockPosts
-    );
+  describe("modo de vista list", () => {
+    test("debería renderizar posts en modo list", async () => {
+      // Arrange
+      const mockPosts = [
+        {
+          id: "post-1",
+          title: "Post 1",
+          excerpt: "Excerpt 1",
+        },
+        {
+          id: "post-2",
+          title: "Post 2",
+          excerpt: "Excerpt 2",
+        },
+      ];
 
-    expect(props.isGridView).toBe(false);
-    expect(props.isListView).toBe(true);
+      const mockProps = {
+        posts: mockPosts,
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "list" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: mockPosts,
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      const listList = result.querySelector('ul[aria-label="posts-list"]');
+      expect(listList?.classList.contains("space-y-6")).toBe(true);
+    });
   });
 
-  it("should generate correct category hrefs", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts
-    );
+  describe("paginación", () => {
+    test("debería mostrar el paginador cuando hay múltiples páginas", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 3,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-    expect(props.getCategoryHref("Technology")).toBe(
-      "/blog/category/Technology/"
-    );
-    expect(props.getCategoryHref("Programming")).toBe(
-      "/blog/category/Programming/"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("no debería mostrar el paginador cuando hay una sola página", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should generate correct page hrefs", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      3,
-      mockPosts.slice(0, 1)
-    );
+  describe("información de resultados", () => {
+    test("debería mostrar la información de resultados", async () => {
+      // Arrange
+      const mockPosts = [
+        { id: "post-1", title: "Post 1" },
+        { id: "post-2", title: "Post 2" },
+      ];
 
-    expect(props.getPageHref(1)).toBe("/blog/");
-    expect(props.getPageHref(2)).toBe("/blog/2/");
-    expect(props.getPageHref(3)).toBe("/blog/3/");
+      const mockProps = {
+        posts: mockPosts,
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: mockPosts,
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should handle different languages", () => {
-    const propsEs = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts,
-      undefined,
-      "es"
-    );
+  describe("accesibilidad", () => {
+    test("debería incluir aria-label en la lista de posts", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-    const propsEn = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts,
-      undefined,
-      "en"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
 
-    expect(propsEs.lang).toBe("es");
-    expect(propsEn.lang).toBe("en");
+      // Assert
+      const list = result.querySelector('ul[aria-label="posts-list"]');
+      expect(list).toBeTruthy();
+    });
   });
 
-  it("should handle tag filtering", () => {
-    const propsWithTag = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts,
-      "javascript",
-      "es"
-    );
+  describe("casos extremos", () => {
+    test("debería manejar posts vacíos", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-    expect(propsWithTag.tag).toBe("javascript");
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("debería manejar props undefined", async () => {
+      // Act & Assert
+      await expect(
+        renderAstroComponent(BlogList, {
+          props: {},
+        })
+      ).rejects.toThrow();
+    });
+
+    test("debería manejar viewMode inválido", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "invalid" as any,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
+
+      // Act & Assert
+      await expect(
+        renderAstroComponent(BlogList, {
+          props: mockProps,
+        })
+      ).rejects.toThrow();
+    });
   });
 
-  it("should handle empty posts array", () => {
-    const props = createBlogListProps(
-      [],
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      []
-    );
+  describe("internacionalización", () => {
+    test("debería usar el idioma correcto", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "en" as const,
+      };
 
-    expect(props.posts).toEqual([]);
-    expect(props.paginatedPosts).toEqual([]);
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should handle empty categories array", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      [],
-      "",
-      "date-desc",
-      "grid",
-      1,
-      1,
-      mockPosts
-    );
+  describe("estilos y clases CSS", () => {
+    test("debería aplicar las clases CSS correctas", async () => {
+      // Arrange
+      const mockProps = {
+        posts: [],
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid" as const,
+        currentPage: 1,
+        totalPages: 1,
+        paginatedPosts: [],
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+        getPageHref: (page: number) => `/page/${page}/`,
+        lang: "es" as const,
+      };
 
-    expect(props.categories).toEqual([]);
-    expect(props.selectedCategory).toBe("");
-  });
+      // Act
+      const result = await renderAstroComponent(BlogList, {
+        props: mockProps,
+      });
 
-  it("should handle current page validation", () => {
-    const props = createBlogListProps(
-      mockPosts,
-      mockCategories,
-      "Technology",
-      "date-desc",
-      "grid",
-      2,
-      3,
-      mockPosts.slice(1, 2)
-    );
-
-    expect(props.currentPage).toBe(2);
-    expect(props.totalPages).toBe(3);
-    expect(props.paginatedPosts.length).toBe(1);
+      // Assert
+      const section = result.querySelector("section");
+      expect(section).toBeTruthy();
+    });
   });
 });

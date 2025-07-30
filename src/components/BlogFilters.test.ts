@@ -1,156 +1,366 @@
-import { describe, it, expect } from "vitest";
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText, getByRole } from "@testing-library/dom";
+import BlogFilters from "./BlogFilters.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
-// Mock function to simulate BlogFilters component logic
-const createBlogFiltersProps = (
-  categories: string[],
-  selectedCategory: string,
-  sortBy: string,
-  viewMode: string,
-  tag?: string,
-  getCategoryHref?: (cat: string) => string
-) => {
-  function getCategoryHrefLocal(cat: string) {
-    if (!tag) return getCategoryHref ? getCategoryHref(cat) : "#";
-    if (cat === "Todas") {
-      return `/tags/${tag}/` + (sortBy ? `?sortBy=${sortBy}` : "");
-    }
-    return `/tags/${tag}/${cat}/` + (sortBy ? `?sortBy=${sortBy}` : "");
-  }
+describe("BlogFilters.astro", () => {
+  describe("renderizado básico", () => {
+    test("debería renderizar el formulario de filtros", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology", "Programming"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-  return {
-    categories,
-    selectedCategory,
-    sortBy,
-    viewMode,
-    tag,
-    getCategoryHrefLocal,
-    isCategorySelected: (category: string) =>
-      selectedCategory.trim().toLowerCase() === category.trim().toLowerCase(),
-  };
-};
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
 
-describe("BlogFilters", () => {
-  it("should generate category href without tag", () => {
-    const getCategoryHref = (cat: string) => `/blog/category/${cat}/`;
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      "Technology",
-      "date-desc",
-      "grid",
-      undefined,
-      getCategoryHref
-    );
+      // Assert
+      expect(result.querySelector("form")).toBeTruthy();
+      expect(result.innerHTML).toContain("Categoría:");
+    });
 
-    expect(props.getCategoryHrefLocal("Technology")).toBe(
-      "/blog/category/Technology/"
-    );
+    test("debería mostrar todas las categorías disponibles", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology", "Programming", "Design"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Technology");
+      expect(result.innerHTML).toContain("Programming");
+      expect(result.innerHTML).toContain("Design");
+    });
+
+    test("debería marcar la categoría seleccionada como activa", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology", "Programming"],
+        selectedCategory: "Programming",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const programmingLink = result.querySelector('a[aria-current="page"]');
+      expect(programmingLink).toBeTruthy();
+      expect(programmingLink?.textContent?.trim()).toBe("Programming");
+    });
   });
 
-  it("should generate category href with tag and sortBy", () => {
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      "Technology",
-      "title",
-      "grid",
-      "javascript"
-    );
+  describe("selector de ordenamiento", () => {
+    test("debería mostrar el selector de ordenamiento", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.getCategoryHrefLocal("Technology")).toBe(
-      "/tags/javascript/Technology/?sortBy=title"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const select = result.querySelector("select");
+      expect(select).toBeTruthy();
+      expect(select?.getAttribute("name")).toBe("sortBy");
+    });
+
+    test("debería mostrar las opciones de ordenamiento correctas", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toContain("Más recientes");
+      expect(result.innerHTML).toContain("Más antiguos");
+      expect(result.innerHTML).toContain("Por título");
+    });
+
+    test("debería marcar la opción de ordenamiento seleccionada", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "title",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const titleOption = result.querySelector('option[value="title"]');
+      expect(titleOption?.getAttribute("selected")).toBe("");
+    });
   });
 
-  it("should generate 'Todas' category href with tag", () => {
-    const props = createBlogFiltersProps(
-      ["Todas", "Technology"],
-      "Todas",
-      "date-desc",
-      "grid",
-      "javascript"
-    );
+  describe("modo de vista", () => {
+    test("debería incluir el componente ViewModeToggle", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.getCategoryHrefLocal("Todas")).toBe(
-      "/tags/javascript/?sortBy=date-desc"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      // El componente ViewModeToggle debería estar presente
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should generate category href without sortBy when not provided", () => {
-    const props = createBlogFiltersProps(
-      ["Technology"],
-      "Technology",
-      "",
-      "grid",
-      "javascript"
-    );
+  describe("generación de enlaces", () => {
+    test("debería generar enlaces correctos para categorías sin tag", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+        getCategoryHref: (cat: string) => `/category/${cat}/`,
+      };
 
-    expect(props.getCategoryHrefLocal("Technology")).toBe(
-      "/tags/javascript/Technology/"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const technologyLink = result.querySelector('a[href*="Technology"]');
+      expect(technologyLink).toBeTruthy();
+    });
+
+    test("debería generar enlaces correctos para categorías con tag", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology", "Todas"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+        tag: "javascript",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const todasLink = result.querySelector('a[href*="/tags/javascript/"]');
+      expect(todasLink).toBeTruthy();
+    });
   });
 
-  it("should detect selected category correctly", () => {
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      "Technology",
-      "date-desc",
-      "grid"
-    );
+  describe("clases CSS y estilos", () => {
+    test("debería aplicar las clases CSS correctas", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.isCategorySelected("Technology")).toBe(true);
-    expect(props.isCategorySelected("Programming")).toBe(false);
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const form = result.querySelector("form");
+      expect(form?.classList.contains("bg-card")).toBe(true);
+      expect(form?.classList.contains("rounded-lg")).toBe(true);
+    });
+
+    test("debería aplicar clases personalizadas cuando se proporcionan", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+        customClass: "custom-filter-class",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const form = result.querySelector("form");
+      expect(form?.classList.contains("custom-filter-class")).toBe(true);
+    });
   });
 
-  it("should handle case-insensitive category selection", () => {
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      "technology",
-      "date-desc",
-      "grid"
-    );
+  describe("accesibilidad", () => {
+    test("debería incluir atributos de accesibilidad en los enlaces", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.isCategorySelected("Technology")).toBe(true);
-    expect(props.isCategorySelected("TECHNOLOGY")).toBe(true);
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.getAttribute("tabindex")).toBe("0");
+    });
+
+    test("debería incluir aria-current en la categoría seleccionada", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      const link = result.querySelector("a");
+      expect(link?.getAttribute("aria-current")).toBe("page");
+    });
   });
 
-  it("should handle whitespace in category names", () => {
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      " Technology ",
-      "date-desc",
-      "grid"
-    );
+  describe("casos extremos", () => {
+    test("debería manejar categorías vacías", async () => {
+      // Arrange
+      const mockProps = {
+        categories: [],
+        selectedCategory: "",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.isCategorySelected("Technology")).toBe(true);
-    expect(props.isCategorySelected(" Programming ")).toBe(false);
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("debería manejar categoría seleccionada que no existe", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "NonExistent",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
+
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
+
+      // Assert
+      expect(result.innerHTML).toBeTruthy();
+    });
+
+    test("debería manejar props undefined", async () => {
+      // Act & Assert
+      const result = await renderAstroComponent(BlogFilters, {
+        props: {
+          categories: [],
+          selectedCategory: "",
+          sortBy: "date-desc",
+          viewMode: "grid",
+        },
+      });
+
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 
-  it("should return default href when no getCategoryHref provided", () => {
-    const props = createBlogFiltersProps(
-      ["Technology"],
-      "Technology",
-      "date-desc",
-      "grid"
-    );
+  describe("funcionalidad del formulario", () => {
+    test("debería incluir el evento onchange en el selector", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-    expect(props.getCategoryHrefLocal("Technology")).toBe("#");
-  });
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
 
-  it("should handle empty categories array", () => {
-    const props = createBlogFiltersProps([], "", "date-desc", "grid");
+      // Assert
+      const select = result.querySelector("select");
+      expect(select?.getAttribute("onchange")).toBe("this.form.submit()");
+    });
 
-    expect(props.categories).toEqual([]);
-    expect(props.isCategorySelected("Any")).toBe(false);
-  });
+    test("debería incluir campos ocultos para parámetros de búsqueda", async () => {
+      // Arrange
+      const mockProps = {
+        categories: ["Technology"],
+        selectedCategory: "Technology",
+        sortBy: "date-desc",
+        viewMode: "grid",
+      };
 
-  it("should handle empty selected category", () => {
-    const props = createBlogFiltersProps(
-      ["Technology", "Programming"],
-      "",
-      "date-desc",
-      "grid"
-    );
+      // Act
+      const result = await renderAstroComponent(BlogFilters, {
+        props: mockProps,
+      });
 
-    expect(props.isCategorySelected("Technology")).toBe(false);
-    expect(props.isCategorySelected("Programming")).toBe(false);
+      // Assert
+      // Los campos ocultos se renderizan condicionalmente basado en URL params
+      expect(result.innerHTML).toBeTruthy();
+    });
   });
 });

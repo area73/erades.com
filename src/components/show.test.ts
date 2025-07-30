@@ -1,142 +1,193 @@
-import { describe, it, expect } from "vitest";
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByText } from "@testing-library/dom";
+import Show from "./Show.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
-// Mock function to simulate the Show component's conditional rendering logic
-const renderShowComponent = (when: unknown, children: string): string => {
-  // Special case: if when is an empty array, don't render children
-  const shouldRender = when && !(Array.isArray(when) && when.length === 0);
-  return shouldRender ? children : "";
-};
-
-describe("Componente Show", () => {
-  it("debería renderizar los hijos cuando la prop when es true", () => {
-    const result = renderShowComponent(true, "<div>Contenido de prueba</div>");
-    expect(result).toBe("<div>Contenido de prueba</div>");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es false", () => {
-    const result = renderShowComponent(false, "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es undefined", () => {
-    const result = renderShowComponent(undefined, "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es null", () => {
-    const result = renderShowComponent(null, "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("debería renderizar los hijos cuando la prop when es una cadena verdadera", () => {
-    const result = renderShowComponent("hola", "<div>Contenido de prueba</div>");
-    expect(result).toBe("<div>Contenido de prueba</div>");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es una cadena vacía", () => {
-    const result = renderShowComponent("", "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("debería renderizar los hijos cuando la prop when es un número distinto de cero", () => {
-    const result = renderShowComponent(42, "<div>Contenido de prueba</div>");
-    expect(result).toBe("<div>Contenido de prueba</div>");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es cero", () => {
-    const result = renderShowComponent(0, "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("debería renderizar los hijos cuando la prop when es un objeto", () => {
-    const result = renderShowComponent(
-      { clave: "valor" },
-      "<div>Contenido de prueba</div>"
-    );
-    expect(result).toBe("<div>Contenido de prueba</div>");
-  });
-
-  it("debería renderizar los hijos cuando la prop when es un array", () => {
-    const result = renderShowComponent([1, 2, 3], "<div>Contenido de prueba</div>");
-    expect(result).toBe("<div>Contenido de prueba</div>");
-  });
-
-  it("no debería renderizar los hijos cuando la prop when es un array vacío", () => {
-    const result = renderShowComponent([], "<div>Contenido de prueba</div>");
-    expect(result).toBe("");
-  });
-
-  it("debería renderizar contenido anidado complejo cuando la prop when es true", () => {
-    const complexContent = `
-      <div class="contenedor">
-        <h1>Título</h1>
-        <p>Párrafo con texto <strong>negrita</strong></p>
-        <ul>
-          <li>Elemento 1</li>
-          <li>Elemento 2</li>
-        </ul>
-      </div>
-    `;
-
-    const result = renderShowComponent(true, complexContent);
-    expect(result).toBe(complexContent);
-  });
-
-  it("debería manejar múltiples hijos cuando la prop when es true", () => {
-    const multipleChildren = `
-      <div>Primer hijo</div>
-      <span>Segundo hijo</span>
-      <p>Tercer hijo</p>
-    `;
-
-    const result = renderShowComponent(true, multipleChildren);
-    expect(result).toBe(multipleChildren);
-  });
-
-  it("no debería renderizar ningún hijo cuando la prop when es false", () => {
-    const multipleChildren = `
-      <div>Primer hijo</div>
-      <span>Segundo hijo</span>
-      <p>Tercer hijo</p>
-    `;
-
-    const result = renderShowComponent(false, multipleChildren);
-    expect(result).toBe("");
-  });
-
-  it("debería manejar valores falsos correctamente", () => {
-    const falsyValues = [false, 0, "", null, undefined, NaN];
-
-    falsyValues.forEach((value) => {
-      const result = renderShowComponent(value, "<div>Contenido de prueba</div>");
-      expect(result).toBe("");
-    });
-  });
-
-  it("debería manejar valores verdaderos correctamente", () => {
-    const truthyValues = [true, 1, "hola", {}, 42, -1];
-
-    truthyValues.forEach((value) => {
-      const result = renderShowComponent(value, "<div>Contenido de prueba</div>");
-      expect(result).toBe("<div>Contenido de prueba</div>");
-    });
-  });
-
-  it("debería manejar arrays correctamente", () => {
-    // Arrays no vacíos deberían renderizar
-    const nonEmptyArrays = [[1], [1, 2], ["a", "b"], [{ key: "value" }]];
-
-    nonEmptyArrays.forEach((array) => {
-      const result = renderShowComponent(array, "<div>Contenido de prueba</div>");
-      expect(result).toBe("<div>Contenido de prueba</div>");
+describe("Show", () => {
+  test("renders children when condition is true", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: true,
+      },
+      slots: {
+        default: "Test Content",
+      },
     });
 
-    // Arrays vacíos no deberían renderizar
-    const emptyArrays = [[], new Array(), Array()];
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
+  });
 
-    emptyArrays.forEach((array) => {
-      const result = renderShowComponent(array, "<div>Contenido de prueba</div>");
-      expect(result).toBe("");
+  test("does not render children when condition is false", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: false,
+      },
+      slots: {
+        default: "Test Content",
+      },
     });
+
+    // When condition is false, no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("does not render children when condition is null", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: null,
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // When condition is null, no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("does not render children when condition is undefined", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: undefined,
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // When condition is undefined, no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("renders children when condition is a non-empty string", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: "hello",
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
+  });
+
+  test("renders children when condition is a non-empty array", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: [1, 2, 3],
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
+  });
+
+  test("does not render children when condition is an empty array", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: [],
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // When condition is an empty array, no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("renders children when condition is a non-zero number", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: 42,
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
+  });
+
+  test("does not render children when condition is zero", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: 0,
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // When condition is zero, no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("renders complex HTML content when condition is true", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: true,
+      },
+      slots: {
+        default: "<div><h1>Title</h1><p>Paragraph</p></div>",
+      },
+    });
+
+    const title = getByText(result, "Title");
+    const paragraph = getByText(result, "Paragraph");
+    expect(title).not.toBeNull();
+    expect(paragraph).not.toBeNull();
+  });
+
+  test("handles edge case with empty string condition", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: "",
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // Empty string should be falsy, so no content should be rendered
+    expect(result.textContent).not.toContain("Test Content");
+  });
+
+  test("handles edge case with object condition", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: { key: "value" },
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // Objects should be truthy, so content should be rendered
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
+  });
+
+  test("handles edge case with function condition", async () => {
+    const result = await renderAstroComponent(Show, {
+      props: {
+        when: () => true,
+      },
+      slots: {
+        default: "Test Content",
+      },
+    });
+
+    // Functions should be truthy, so content should be rendered
+    const content = getByText(result, "Test Content");
+    expect(content).not.toBeNull();
   });
 });

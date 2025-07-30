@@ -1,117 +1,154 @@
-import { describe, it, expect } from "vitest";
-
-// Mock function to simulate SearchInput component logic
-const createSearchInputProps = (query: string = "", lang: string = "es") => {
-  const placeholder = lang === "es" ? "Buscar posts..." : "Search posts...";
-  const ariaLabel = lang === "es" ? "Buscar en el blog" : "Search blog";
-  const title = lang === "es" ? "Buscar posts del blog" : "Search blog posts";
-
-  return {
-    query,
-    lang,
-    placeholder,
-    ariaLabel,
-    title,
-    hasQuery: !!(query && query.trim()),
-    inputValue: query,
-  };
-};
+// @vitest-environment happy-dom
+import { describe, test, expect } from "vitest";
+import { getByRole, getByLabelText } from "@testing-library/dom";
+import SearchInput from "./SearchInput.astro";
+import { renderAstroComponent } from "../test/helpers.ts";
 
 describe("SearchInput", () => {
-  it("should generate correct placeholder for Spanish", () => {
-    const props = createSearchInputProps("", "es");
+  test("renders search input with default query", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.lang).toBe("es");
-    expect(props.placeholder).toBe("Buscar posts...");
-    expect(props.ariaLabel).toBe("Buscar en el blog");
-    expect(props.title).toBe("Buscar posts del blog");
+    const input = getByRole(result, "textbox");
+    expect(input).not.toBeNull();
+    expect(input?.getAttribute("value")).toBe("");
   });
 
-  it("should generate correct placeholder for English", () => {
-    const props = createSearchInputProps("", "en");
+  test("renders search input with provided query", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        query: "test search",
+        lang: "en",
+      },
+    });
 
-    expect(props.lang).toBe("en");
-    expect(props.placeholder).toBe("Search posts...");
-    expect(props.ariaLabel).toBe("Search blog");
-    expect(props.title).toBe("Search blog posts");
+    const input = getByRole(result, "textbox");
+    expect(input).not.toBeNull();
+    expect(input?.getAttribute("value")).toBe("test search");
   });
 
-  it("should handle empty query", () => {
-    const props = createSearchInputProps("", "es");
+  test("renders form with correct action and method", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe("");
-    expect(props.hasQuery).toBe(false);
-    expect(props.inputValue).toBe("");
+    const form = result.querySelector("form");
+    expect(form).not.toBeNull();
+    expect(form?.getAttribute("action")).toBe("/search");
+    expect(form?.getAttribute("method")).toBe("get");
   });
 
-  it("should handle query with text", () => {
-    const props = createSearchInputProps("javascript", "es");
+  test("renders input with correct name attribute", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe("javascript");
-    expect(props.hasQuery).toBe(true);
-    expect(props.inputValue).toBe("javascript");
+    const input = getByRole(result, "textbox");
+    expect(input?.getAttribute("name")).toBe("q");
   });
 
-  it("should handle query with whitespace", () => {
-    const props = createSearchInputProps("  react  ", "es");
+  test("renders input with correct type and autocomplete", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe("  react  ");
-    expect(props.hasQuery).toBe(true);
-    expect(props.inputValue).toBe("  react  ");
+    const input = getByRole(result, "textbox");
+    expect(input?.getAttribute("type")).toBe("text");
+    expect(input?.getAttribute("autocomplete")).toBe("off");
   });
 
-  it("should handle different languages consistently", () => {
-    const propsEs = createSearchInputProps("test", "es");
-    const propsEn = createSearchInputProps("test", "en");
+  test("renders search icon", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(propsEs.lang).toBe("es");
-    expect(propsEn.lang).toBe("en");
-    expect(propsEs.placeholder).not.toBe(propsEn.placeholder);
-    expect(propsEs.ariaLabel).not.toBe(propsEn.ariaLabel);
-    expect(propsEs.title).not.toBe(propsEn.title);
+    const searchIcon = result.querySelector("svg");
+    expect(searchIcon).not.toBeNull();
   });
 
-  it("should handle special characters in query", () => {
-    const props = createSearchInputProps("react & typescript", "es");
+  test("renders with Spanish language", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "es",
+      },
+    });
 
-    expect(props.query).toBe("react & typescript");
-    expect(props.hasQuery).toBe(true);
-    expect(props.inputValue).toBe("react & typescript");
+    const input = getByRole(result, "textbox");
+    expect(input).not.toBeNull();
+    expect(input?.getAttribute("aria-label")).toBeDefined();
   });
 
-  it("should handle long query text", () => {
-    const longQuery =
-      "a very long search query that might be used to test the component";
-    const props = createSearchInputProps(longQuery, "es");
+  test("renders with English language", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe(longQuery);
-    expect(props.hasQuery).toBe(true);
-    expect(props.inputValue).toBe(longQuery);
+    const input = getByRole(result, "textbox");
+    expect(input).not.toBeNull();
+    expect(input?.getAttribute("aria-label")).toBeDefined();
   });
 
-  it("should handle undefined query", () => {
-    const props = createSearchInputProps(undefined as any, "es");
+  test("renders input with correct classes", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe("");
-    expect(props.hasQuery).toBe(false);
-    expect(props.inputValue).toBe("");
+    const input = getByRole(result, "textbox");
+    const classes = input?.getAttribute("class");
+    expect(classes).toContain("rounded-md");
+    expect(classes).toContain("border");
+    expect(classes).toContain("bg-secondary");
   });
 
-  it("should handle null query", () => {
-    const props = createSearchInputProps(null as any, "es");
+  test("renders container with correct classes", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
 
-    expect(props.query).toBe(null);
-    expect(props.hasQuery).toBe(false);
-    expect(props.inputValue).toBe(null);
+    const container = result.querySelector("div");
+    const classes = container?.getAttribute("class");
+    expect(classes).toContain("relative");
+    expect(classes).toContain("flex");
+    expect(classes).toContain("items-center");
   });
 
-  it("should maintain consistent accessibility attributes", () => {
-    const propsEs = createSearchInputProps("test", "es");
-    const propsEn = createSearchInputProps("test", "en");
+  test("handles empty query string", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        query: "",
+        lang: "en",
+      },
+    });
 
-    expect(propsEs.ariaLabel).toBeTruthy();
-    expect(propsEn.ariaLabel).toBeTruthy();
-    expect(propsEs.title).toBeTruthy();
-    expect(propsEn.title).toBeTruthy();
+    const input = getByRole(result, "textbox");
+    expect(input?.getAttribute("value")).toBe("");
+  });
+
+  test("handles undefined query", async () => {
+    const result = await renderAstroComponent(SearchInput, {
+      props: {
+        lang: "en",
+      },
+    });
+
+    const input = getByRole(result, "textbox");
+    expect(input?.getAttribute("value")).toBe("");
   });
 });

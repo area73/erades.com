@@ -42,11 +42,11 @@ const { title, description, pubDate, updatedDate, tags } = frontmatter;
               <hr />
               <div class="flex items-center justify-between my-2">
                 <div>
-                  <FormattedDate date={pubDate!} />
+                  <FormattedDate date={pubDate!} lang={lang} />
                   <Show when={updatedDate}>
                     <div class="italic text-xs">
                       <slot name="updatedLabel" />{" "}
-                      <FormattedDate date={updatedDate!} />
+                      <FormattedDate date={updatedDate!} lang={lang} />
                     </div>
                   </Show>
                 </div>

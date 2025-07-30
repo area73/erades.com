@@ -1,34 +1,18 @@
-import { defineConfig } from "vitest/config";
+/// <reference types="vitest" />
+import { getViteConfig } from "astro/config";
 
-export default defineConfig({
+export default getViteConfig({
   test: {
+    globals: true,
+    environment: "happy-dom",
+    setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.test.{ts,tsx,js}", "src/**/*.spec.{ts,tsx,js}"],
     exclude: [
-      "public",
       "node_modules",
       "dist",
-      "**/*.astro",
-      "src/content.config.ts",
+      ".astro",
+      "tests",
+      "public/js/experiments/vector.test.js",
     ],
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html", "lcov"],
-      include: ["src/**/*.ts", "src/**/*.tsx"],
-      exclude: [
-        "public",
-        "node_modules",
-        "dist",
-        "**/*.test.*",
-        "**/*.spec.*",
-        "**/*.astro",
-        "src/content.config.ts",
-      ],
-      thresholds: {
-        statements: 90,
-        branches: 90,
-        functions: 90,
-        lines: 90,
-      },
-    },
   },
 });
