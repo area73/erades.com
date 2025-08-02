@@ -20,11 +20,13 @@ const getReadTime = (content: string): number => {
 const content = post.content || (post.data && post.data.content) || "";
 const readTime = getReadTime(content);
 // Ensure categories and tags are always arrays
-const categories = Array.isArray(post.categories || (post.data && post.data.categories))
-  ? (post.categories || (post.data && post.data.categories))
+const categories = Array.isArray(
+  post.categories || (post.data && post.data.categories)
+)
+  ? post.categories || (post.data && post.data.categories)
   : [];
 const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
-  ? (post.tags || (post.data && post.data.tags))
+  ? post.tags || (post.data && post.data.tags)
   : [];
 ---
 
@@ -44,21 +46,17 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
       </div>
     </Show>
     <div class="p-6 flex flex-col flex-1">
-      <Show
-        when={categories.length > 0}
-      >
+      <Show when={categories.length > 0}>
         <div class="flex flex-wrap gap-2 mb-2">
           {
-            categories.map(
-              (category: string) => (
-                <span
-                  class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
-                  title={`Ver posts en la categoría ${category}`}
-                >
-                  {category}
-                </span>
-              )
-            )
+            categories.map((category: string) => (
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded bg-secondary text-xs text-secondary-foreground font-medium whitespace-nowrap"
+                title={`Ver posts en la categoría ${category}`}
+              >
+                {category}
+              </span>
+            ))
           }
         </div>
       </Show>
@@ -81,7 +79,7 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
         </Show>
       </div>
       <p
-        class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed flex-1"
+        class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed"
       >
         {
           post.excerpt ||
@@ -91,8 +89,9 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
             ""
         }
       </p>
+
       <div
-        class="flex items-center justify-between text-xs text-muted-foreground mt-auto"
+        class="flex items-center justify-between text-xs text-muted-foreground"
       >
         <div class="flex items-center gap-1">
           <span class="font-medium"
@@ -100,9 +99,7 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
           >
         </div>
       </div>
-      <Show
-        when={postTags.length > 0}
-      >
+      <Show when={postTags.length > 0}>
         <div class="flex flex-wrap gap-2 mt-4">
           {
             postTags.map((tag: string) => (
