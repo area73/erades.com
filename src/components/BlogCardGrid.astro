@@ -32,7 +32,7 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
 
 <a href={href} class="block group h-full" aria-label="grid-card">
   <div
-    class="bg-card border rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden borderh-full flex flex-col"
+    class="h-full bg-card border rounded-xl shadow-soft hover:shadow-medium transition-shadow duration-300 overflow-hidden borderh-full flex flex-col"
   >
     <Show when={post.heroImage || (post.data && post.data.heroImage)}>
       <div
@@ -47,7 +47,7 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
     </Show>
     <div class="p-6 flex flex-col flex-1">
       <Show when={categories.length > 0}>
-        <div class="flex flex-wrap gap-2 mb-2">
+        <div class="inline-flex flex-wrap gap-2 mb-2">
           {
             categories.map((category: string) => (
               <span
@@ -78,9 +78,7 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
           <span class="ml-2">· {readTime} min de lectura</span>
         </Show>
       </div>
-      <p
-        class="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed"
-      >
+      <p class="text-muted-foreground mb-4 text-sm leading-relaxed flex-1">
         {
           post.excerpt ||
             (post.data && post.data.excerpt) ||
@@ -90,17 +88,8 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
         }
       </p>
 
-      <div
-        class="flex items-center justify-between text-xs text-muted-foreground"
-      >
-        <div class="flex items-center gap-1">
-          <span class="font-medium"
-            >{post.author || (post.data && post.data.author) || ""}</span
-          >
-        </div>
-      </div>
       <Show when={postTags.length > 0}>
-        <div class="flex flex-wrap gap-2 mt-4">
+        <div class="inline-flex flex-wrap gap-2 mt-4">
           {
             postTags.map((tag: string) => (
               <span class="inline-flex items-center px-2 py-0.5 rounded bg-muted text-xs text-secondary-foreground border border-border">
