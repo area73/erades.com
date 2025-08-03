@@ -2,6 +2,7 @@
 import FormattedDate from "./FormattedDate.astro";
 import Show from "./Show.astro";
 import If from "./If.astro";
+import { Image } from "astro:assets";
 interface Props {
   post: any;
   lang: string;
@@ -24,11 +25,14 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
           class="h-full w-full bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden flex"
         >
           <Show when={get("heroImage")}>
-            <img
+            <Image
               src={get("heroImage")}
               alt={get("title") ?? ""}
               class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
               style="display: block;"
+              width={300}
+              height={200}
+              loading="lazy"
             />
           </Show>
         </div>
