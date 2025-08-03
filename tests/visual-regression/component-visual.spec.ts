@@ -18,6 +18,10 @@ test.describe("Component Visual Regression", () => {
   test("BlogCard Component - Various States", async ({ page }) => {
     await page.goto("/es/blog");
 
+    // Hacer scroll up para mostrar la barra superior
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(1000);
+
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
