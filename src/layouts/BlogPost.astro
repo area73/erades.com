@@ -4,6 +4,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Show from "../components/Show.astro";
+import { Image } from "astro:assets";
 import "../styles/global.css";
 
 type Props = Omit<CollectionEntry<"blog">["data"], "pubDate"> & {
@@ -39,7 +40,10 @@ const { title, description, pubDate, updatedDate, tags, categories, lang } =
                   <FormattedDate date={pubDate!} lang={lang} />
                   <Show when={updatedDate}>
                     <div class="italic text-xs">
-                      Last updated on <FormattedDate date={updatedDate!} lang={lang} />
+                      Last updated on <FormattedDate
+                        date={updatedDate!}
+                        lang={lang}
+                      />
                     </div>
                   </Show>
                 </div>

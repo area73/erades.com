@@ -33,6 +33,7 @@ if (typeof window !== "undefined") {
         class="flex items-center gap-2 font-bold text-lg whitespace-nowrap"
       >
         <Image
+          loading="eager"
           src={logoImage}
           alt={t(lang as "en" | "es", "logo.alt")}
           class="h-12 w-12 object-contain"
@@ -136,6 +137,7 @@ if (typeof window !== "undefined") {
               aria-expanded="false"
             >
               <Image
+                loading="eager"
                 src={avatarImage}
                 alt={t(lang as "en" | "es", "avatar.alt")}
                 class="h-8 w-8 rounded-full object-cover"
