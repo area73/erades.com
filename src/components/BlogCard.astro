@@ -5,14 +5,15 @@ interface Props {
   post: any;
   variant?: "grid" | "list";
   lang: string;
+  index: number;
 }
-const { post, variant = "grid", lang } = Astro.props;
+const { post, variant = "grid", lang, index } = Astro.props;
 ---
 
 {
   variant === "grid" ? (
-    <BlogCardGrid post={post} lang={lang} />
+    <BlogCardGrid post={post} lang={lang} index={index} />
   ) : (
-    <BlogCardList post={post} lang={lang} />
+    <BlogCardList post={post} lang={lang} index={index} />
   )
 }

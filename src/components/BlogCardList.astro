@@ -3,11 +3,13 @@ import FormattedDate from "./FormattedDate.astro";
 import Show from "./Show.astro";
 import If from "./If.astro";
 import { Image } from "astro:assets";
+import { EAGER_LOAD_IMAGES_COUNT } from "../consts";
 interface Props {
   post: any;
   lang: string;
+  index: number;
 }
-const { post, lang } = Astro.props;
+const { post, lang, index } = Astro.props;
 const langPrefix = `${lang}/`;
 const postId = post && typeof post.id === "string" ? post.id : "";
 const href = `/${lang}/blog/${postId.startsWith(langPrefix) ? postId.slice(langPrefix.length) : postId}/`;
@@ -32,7 +34,8 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
               style="display: block;"
               width={300}
               height={200}
-              loading="lazy"
+              loading={index < EAGER_LOAD_IMAGES_COUNT ? "eager" : "lazy"}
+              fetchpriority={index < EAGER_LOAD_IMAGES_COUNT ? "high" : "auto"}
             />
           </Show>
         </div>

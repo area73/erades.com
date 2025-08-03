@@ -5,3 +5,5 @@ lucide
 networkidle
 openai
 redirección
+shiki
+swup

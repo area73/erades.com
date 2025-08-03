@@ -102,9 +102,9 @@ const {
             <NoResults query={query} onResetHref={noResultsResetHref} />
           </li>
         ) : (
-          paginatedPosts.map((post: any) => (
+          paginatedPosts.map((post: any, index: number) => (
             <li>
-              <BlogCard post={post} variant="grid" lang={lang} />
+              <BlogCard post={post} variant="grid" lang={lang} index={index} />
             </li>
           ))
         )
@@ -121,9 +121,9 @@ const {
             <NoResults query={query} onResetHref={noResultsResetHref} />
           </li>
         ) : (
-          paginatedPosts.map((post: any) => (
+          paginatedPosts.map((post: any, index: number) => (
             <li>
-              <BlogCard post={post} variant="list" lang={lang} />
+              <BlogCard post={post} variant="list" lang={lang} index={index} />
             </li>
           ))
         )

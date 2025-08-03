@@ -15,6 +15,7 @@ const { viewMode } = Astro.props as Props;
         `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "grid" }).toString()}`}
       class="h-8 w-8 p-0 rounded-full flex items-center justify-center bg-primary text-primary-foreground"
       title="Vista grid"
+      aria-label="Cambiar a vista de cuadrícula (activa)"
     >
       <LayoutGrid class="h-4 w-4 mx-auto" />
     </a>
@@ -24,6 +25,7 @@ const { viewMode } = Astro.props as Props;
         `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "grid" }).toString()}`}
       class="h-8 w-8 p-0 rounded-full flex items-center justify-center bg-transparent text-muted-foreground"
       title="Vista grid"
+      aria-label="Cambiar a vista de cuadrícula"
     >
       <LayoutGrid class="h-4 w-4 mx-auto" />
     </a>
@@ -35,6 +37,7 @@ const { viewMode } = Astro.props as Props;
         `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "list" }).toString()}`}
       class="h-8 w-8 p-0 rounded-full flex items-center justify-center bg-primary text-primary-foreground"
       title="Vista lista"
+      aria-label="Cambiar a vista de lista (activa)"
     >
       <List class="h-4 w-4 mx-auto" />
     </a>
@@ -44,6 +47,7 @@ const { viewMode } = Astro.props as Props;
         `?${new URLSearchParams({ ...Object.fromEntries(Astro.url.searchParams.entries()), viewMode: "list" }).toString()}`}
       class="h-8 w-8 p-0 rounded-full flex items-center justify-center bg-transparent text-muted-foreground"
       title="Vista lista"
+      aria-label="Cambiar a vista de lista"
     >
       <List class="h-4 w-4 mx-auto" />
     </a>
