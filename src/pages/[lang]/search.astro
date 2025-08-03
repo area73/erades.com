@@ -1,16 +1,7 @@
 ---
 import Layout from "../../layouts/BlogPost.astro";
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Paginator from "../../components/Paginator.astro";
-import BlogFilters from "../../components/BlogFilters.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
-import BlogCard from "../../components/BlogCard.astro";
-import NoResults from "../../components/NoResults.astro";
-import ResultsInfo from "../../components/ResultsInfo.astro";
-import Show from "../../components/Show.astro";
-import If from "../../components/If.astro";
-import { Search as SearchIcon } from "@lucide/astro";
+import BlogList from "../../components/BlogList.astro";
 import { sortPosts, SORT_BY_OPTIONS } from "../../utils/sort-utils";
 import { getCollection } from "astro:content";
 import { t } from "../../i18n";
@@ -90,6 +81,25 @@ if (!categories.includes("Todas")) categories.unshift("Todas");
 const posts = (await getCollection("blog")).filter(
   (p) => !p.data.draft && p.id.startsWith(`${lang}/`)
 );
+
+// Funciones para generar hrefs específicos de search
+const getCategoryHref = (cat: string) => {
+  const params = new URLSearchParams();
+  params.set("q", query);
+  if (cat !== "Todas") params.set("category", cat);
+  params.set("viewMode", viewMode);
+  return `/${lang}/search?${params.toString()}`;
+};
+
+const getPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  params.set("q", query);
+  if (categoryParam !== "Todas") params.set("category", categoryParam);
+  params.set("sortBy", sortBy);
+  params.set("page", page.toString());
+  params.set("viewMode", viewMode);
+  return `/${lang}/search?${params.toString()}`;
+};
 ---
 
 <Layout
@@ -100,93 +110,27 @@ const posts = (await getCollection("blog")).filter(
   draft={false}
   lang={lang}
 >
-  <section>
-    <div class="max-w-[1200px] mx-auto pt-8 transition-main">
-      <h2 class="font-serif font-bold text-foreground mb-6 text-center">
-        {t(lang as "es" | "en", "search.title")}
-      </h2>
-      <BlogFilters
-        categories={categories}
-        selectedCategory={categoryParam}
-        sortBy={sortBy}
-        viewMode={viewMode}
-        getCategoryHref={(cat: string) =>
-          `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(cat)}&viewMode=${viewMode}`}
-      />
-      <div class="mb-8 mx-auto px-4 text-right">
-        <ResultsInfo
-          shown={paginatedResults.length}
-          total={filteredResults.length}
-          query={query}
-        />
-      </div>
-      <div class="mx-auto px-4">
-        <Show when={totalPages > 1}>
-          <Paginator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            getPageHref={(page) =>
-              `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`}
-          />
-        </Show>
-        <If condition={viewMode === "grid"}>
-          <ul
-            slot="then"
-            class="grid grid-cols-1 md:grid-cols-3 decoration-none gap-8 list-none m-0 p-0"
-          >
-            {
-              paginatedResults.length === 0 && query ? (
-                <li class="col-span-full text-center py-12">
-                  <NoResults
-                    query={query}
-                    onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
-                  />
-                </li>
-              ) : (
-                paginatedResults.map((doc: any) => {
-                  // Si doc.data existe, fusiona id y data en el objeto post
-                  const post = doc.data ? { ...doc.data, id: doc.id } : doc;
-                  return (
-                    <li>
-                      <BlogCard post={post} variant={viewMode} lang={lang} />
-                    </li>
-                  );
-                })
-              )
-            }
-          </ul>
-          <ul slot="else" class="grid grid-cols-1 gap-8 list-none m-0 p-0">
-            {
-              paginatedResults.length === 0 && query ? (
-                <li class="col-span-full text-center py-12">
-                  <NoResults
-                    query={query}
-                    onResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
-                  />
-                </li>
-              ) : (
-                paginatedResults.map((doc: any) => {
-                  // Si doc.data existe, fusiona id y data en el objeto post
-                  const post = doc.data ? { ...doc.data, id: doc.id } : doc;
-                  return (
-                    <li>
-                      <BlogCard post={post} variant={viewMode} lang={lang} />
-                    </li>
-                  );
-                })
-              )
-            }
-          </ul>
-        </If>
-        <Show when={totalPages > 1}>
-          <Paginator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            getPageHref={(page) =>
-              `/${lang}/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(categoryParam)}&sortBy=${encodeURIComponent(sortBy)}&page=${page}&viewMode=${viewMode}`}
-          />
-        </Show>
-      </div>
-    </div>
-  </section>
+  <div class="max-w-[1200px] mx-auto pt-8 transition-main">
+    <BlogList
+      posts={filteredResults}
+      categories={categories}
+      selectedCategory={categoryParam}
+      sortBy={sortBy}
+      viewMode={viewMode}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      paginatedPosts={paginatedResults.map((doc: any) => {
+        // Si doc.data existe, fusiona id y data en el objeto post
+        return doc.data ? { ...doc.data, id: doc.id } : doc;
+      })}
+      getCategoryHref={getCategoryHref}
+      getPageHref={getPageHref}
+      lang={lang as "es" | "en"}
+      title={t(lang as "es" | "en", "search.title")}
+      description=""
+      showTitle={currentPage === 1}
+      query={query}
+      noResultsResetHref={`/${lang}/search?category=Todas&viewMode=${viewMode}`}
+    />
+  </div>
 </Layout>

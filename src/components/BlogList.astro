@@ -3,6 +3,7 @@ import BlogFilters from "./BlogFilters.astro";
 import BlogCard from "./BlogCard.astro";
 import Paginator from "./Paginator.astro";
 import ResultsInfo from "./ResultsInfo.astro";
+import NoResults from "./NoResults.astro";
 import If from "./If.astro";
 import Show from "./Show.astro";
 import { t } from "../i18n";
@@ -20,6 +21,12 @@ interface Props {
   getPageHref: (page: number) => string;
   tag?: string;
   lang: "es" | "en";
+  // Nuevas props para personalización
+  title?: string;
+  description?: string;
+  showTitle?: boolean;
+  query?: string;
+  noResultsResetHref?: string;
 }
 const {
   posts,
@@ -34,19 +41,24 @@ const {
   getPageHref,
   tag,
   lang,
+  title,
+  description,
+  showTitle = true,
+  query,
+  noResultsResetHref,
 } = Astro.props as Props;
 ---
 
 <section>
-  <Show when={currentPage === 1}>
+  <Show when={currentPage === 1 && showTitle}>
     <div class="mb-16 text-center">
       <h2
         class="font-serif text-4xl md:text-4xl font-bold text-foreground mb-6"
       >
-        {t(lang, "blogList.title")}
+        {title || t(lang, "blogList.title")}
       </h2>
       <p class="text-xl text-muted-foreground">
-        {t(lang, "blogList.description")}
+        {description || t(lang, "blogList.description")}
       </p>
     </div>
   </Show>
@@ -72,7 +84,11 @@ const {
         getPageHref={getPageHref}
       />
     </Show>
-    <ResultsInfo shown={paginatedPosts.length} total={posts.length} />
+    <ResultsInfo
+      shown={paginatedPosts.length}
+      total={posts.length}
+      query={query}
+    />
   </div>
   <If condition={viewMode === "grid"}>
     <ul
@@ -81,11 +97,17 @@ const {
       class="decoration-none grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 list-none m-0 px-4 justify-end"
     >
       {
-        paginatedPosts.map((post: any) => (
-          <li>
-            <BlogCard post={post} variant="grid" lang={lang} />
+        paginatedPosts.length === 0 && query ? (
+          <li class="col-span-full text-center py-12">
+            <NoResults query={query} onResetHref={noResultsResetHref} />
           </li>
-        ))
+        ) : (
+          paginatedPosts.map((post: any) => (
+            <li>
+              <BlogCard post={post} variant="grid" lang={lang} />
+            </li>
+          ))
+        )
       }
     </ul>
     <ul
@@ -94,11 +116,17 @@ const {
       class="decoration-none space-y-6 list-none m-0 p-0"
     >
       {
-        paginatedPosts.map((post: any) => (
-          <li>
-            <BlogCard post={post} variant="list" lang={lang} />
+        paginatedPosts.length === 0 && query ? (
+          <li class="col-span-full text-center py-12">
+            <NoResults query={query} onResetHref={noResultsResetHref} />
           </li>
-        ))
+        ) : (
+          paginatedPosts.map((post: any) => (
+            <li>
+              <BlogCard post={post} variant="list" lang={lang} />
+            </li>
+          ))
+        )
       }
     </ul>
   </If>
