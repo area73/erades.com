@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
-  site: "https://example.com",
+  site: "https://erades.com",
   output: "server",
   adapter: node({
     mode: "standalone",
@@ -22,7 +22,21 @@ export default defineConfig({
       themes: ["dracula"],
     }),
     mdx(),
-    sitemap(),
+    sitemap({
+      i18n: {
+        defaultLocale: "es",
+        locales: {
+          es: "es-ES",
+          en: "en-US",
+        },
+      },
+      filter: (page) => {
+        // Excluir páginas de prueba y desarrollo
+        return !page.includes("/test/") && !page.includes("/_dev/");
+      },
+      changefreq: "weekly",
+      priority: 0.7,
+    }),
   ],
   vite: {
     plugins: [
