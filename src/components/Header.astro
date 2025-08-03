@@ -5,6 +5,9 @@ import { ChevronDown } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import SocialProfileMenu from "./SocialProfileMenu.astro";
 import { t } from "../i18n";
+import { Image } from "astro:assets";
+import logoImage from "../assets/area73-small.png";
+import avatarImage from "../assets/avatar.png";
 
 interface Props {
   lang: string;
@@ -29,10 +32,12 @@ if (typeof window !== "undefined") {
         href="/"
         class="flex items-center gap-2 font-bold text-lg whitespace-nowrap"
       >
-        <img
-          src="/area73-small.png"
+        <Image
+          src={logoImage}
           alt={t(lang as "en" | "es", "logo.alt")}
           class="h-12 w-12 object-contain"
+          width={48}
+          height={48}
         />
       </a>
     </div>
@@ -130,10 +135,12 @@ if (typeof window !== "undefined") {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <img
-                src="/avatar.png"
+              <Image
+                src={avatarImage}
                 alt={t(lang as "en" | "es", "avatar.alt")}
                 class="h-8 w-8 rounded-full object-cover"
+                width={32}
+                height={32}
               />
               <ChevronDown class="ml-2 h-4 w-4 text-muted-foreground" />
             </button>
