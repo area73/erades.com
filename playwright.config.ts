@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import os from "os";
 
 export default defineConfig({
   testDir: "./tests",
@@ -7,7 +8,6 @@ export default defineConfig({
     timeout: 5000,
     // Configuración para regresión visual
     toHaveScreenshot: {
-      mode: "strict",
       threshold: 0.2, // 20% tolerance para diferencias menores
       maxDiffPixels: 1000, // Máximo de píxeles diferentes permitidos
     },
@@ -18,7 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
   reporter: "html",
   use: {
     baseURL: "http://localhost:4321",
