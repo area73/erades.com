@@ -26,8 +26,6 @@ const categories = [
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get("category") || "Todas";
 
-console.log("[BLOG] url:", url.href);
-
 function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
   return SORT_BY_OPTIONS.includes(value as any);
 }
