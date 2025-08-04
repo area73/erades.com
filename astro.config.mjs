@@ -20,13 +20,11 @@ export default defineConfig({
   },
   integrations: [
     swup({
-      theme: ["fade", { direction: "to-right" }],
-      animationClass: "transition-",
       containers: ["main"],
       cache: true,
       preload: true,
       accessibility: true,
-      ignore: null,
+      native: true,
       forms: false,
       morph: false,
       parallel: false,
