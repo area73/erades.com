@@ -46,7 +46,9 @@ const Icon = ICONS[href as keyof typeof ICONS];
         (isActive ? "text-primary" : "text-muted-foreground")}
     />
   </Show>
-  <span class="md:hidden lg:inline">
+  <span
+    class="md:hidden lg:inline whitespace-nowrap overflow-hidden text-ellipsis"
+  >
     <slot />
   </span>
 </a>
