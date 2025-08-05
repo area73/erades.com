@@ -42,9 +42,11 @@ const Icon = ICONS[href as keyof typeof ICONS];
   <Show when={Icon}>
     <IconWrapper
       Icon={Icon}
-      className={"h-4 w-4 mr-2 " +
+      className={"h-4 w-4 mr-2 md:h-6 md:w-6 xl:h-4 xl:w-4 xl:mr-2 md:mr-0 " +
         (isActive ? "text-primary" : "text-muted-foreground")}
     />
   </Show>
-  <slot />
+  <span class="md:hidden lg:inline">
+    <slot />
+  </span>
 </a>
