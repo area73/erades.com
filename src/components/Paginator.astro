@@ -77,6 +77,8 @@ const {
                 }`}
                 aria-label={`Ir a página ${pageNumber}`}
                 aria-current={isCurrentPage ? "page" : undefined}
+                aria-setsize={totalPages.toString()}
+                aria-posinset={pageNumber.toString()}
               >
                 {pageNumber}
               </a>

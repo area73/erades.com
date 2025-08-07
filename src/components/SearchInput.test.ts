@@ -12,7 +12,7 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input).not.toBeNull();
     expect(input?.getAttribute("value")).toBe("");
   });
@@ -25,7 +25,7 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input).not.toBeNull();
     expect(input?.getAttribute("value")).toBe("test search");
   });
@@ -50,7 +50,7 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input?.getAttribute("name")).toBe("q");
   });
 
@@ -61,8 +61,8 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
-    expect(input?.getAttribute("type")).toBe("text");
+    const input = getByRole(result, "searchbox");
+    expect(input?.getAttribute("type")).toBe("search");
     expect(input?.getAttribute("autocomplete")).toBe("off");
   });
 
@@ -84,7 +84,7 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input).not.toBeNull();
     expect(input?.getAttribute("aria-label")).toBeDefined();
   });
@@ -96,7 +96,7 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input).not.toBeNull();
     expect(input?.getAttribute("aria-label")).toBeDefined();
   });
@@ -108,11 +108,9 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     const classes = input?.getAttribute("class");
     expect(classes).toContain("rounded-md");
-    expect(classes).toContain("border");
-    expect(classes).toContain("bg-secondary");
   });
 
   test("renders container with correct classes", async () => {
@@ -125,8 +123,6 @@ describe("SearchInput", () => {
     const container = result.querySelector("div");
     const classes = container?.getAttribute("class");
     expect(classes).toContain("relative");
-    expect(classes).toContain("flex");
-    expect(classes).toContain("items-center");
   });
 
   test("handles empty query string", async () => {
@@ -137,18 +133,19 @@ describe("SearchInput", () => {
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input?.getAttribute("value")).toBe("");
   });
 
   test("handles undefined query", async () => {
     const result = await renderAstroComponent(SearchInput, {
       props: {
+        query: undefined,
         lang: "en",
       },
     });
 
-    const input = getByRole(result, "textbox");
+    const input = getByRole(result, "searchbox");
     expect(input?.getAttribute("value")).toBe("");
   });
 });

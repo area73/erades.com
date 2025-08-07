@@ -83,6 +83,11 @@ const postTags = Array.isArray(post.tags || (post.data && post.data.tags))
         <Show when={readTime}>
           <span class="ml-2">· {readTime} min de lectura</span>
         </Show>
+        <Show when={post.author || (post.data && post.data.author)}>
+          <span class="ml-2"
+            >· {post.author || (post.data && post.data.author)}</span
+          >
+        </Show>
       </div>
       <p class="text-muted-foreground mb-4 text-sm leading-relaxed flex-1">
         {
