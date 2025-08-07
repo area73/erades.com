@@ -57,9 +57,10 @@ test.describe("Enhanced Visual Regression Tests", () => {
     await screenshotPage(page, "search-empty-enhanced.png");
 
     // Estado con búsqueda
-    await page.waitForSelector('input[type="search"]', { state: "visible" });
-    await page.fill('input[type="search"]', "functional programming");
-    await page.press('input[type="search"]', "Enter");
+    const searchInput = page.locator('input[type="search"]:visible').first();
+    await searchInput.waitFor({ state: "visible" });
+    await searchInput.fill("functional programming");
+    await searchInput.press("Enter");
     await page.waitForTimeout(1500);
 
     await screenshotPage(page, "search-results-enhanced.png");
@@ -70,9 +71,10 @@ test.describe("Enhanced Visual Regression Tests", () => {
     await waitForPageReady(page);
 
     // Estado sin resultados - test separado para más estabilidad
-    await page.waitForSelector('input[type="search"]', { state: "visible" });
-    await page.fill('input[type="search"]', "resultadosquenoexistendeberia");
-    await page.press('input[type="search"]', "Enter");
+    const searchInput = page.locator('input[type="search"]:visible').first();
+    await searchInput.waitFor({ state: "visible" });
+    await searchInput.fill("resultadosquenoexistendeberia");
+    await searchInput.press("Enter");
     await page.waitForTimeout(1500);
 
     await screenshotPage(page, "search-no-results-enhanced.png");

@@ -55,7 +55,7 @@ test.describe("Component Visual Regression", () => {
   test("SearchInput Component", async ({ page }) => {
     await page.goto("/es/search");
 
-    const searchInput = page.locator('input[type="search"]');
+    const searchInput = page.locator('input[type="search"]:visible').first();
     await expect(searchInput).toHaveScreenshot("search-input-empty.png");
 
     // Estado con texto
@@ -216,8 +216,9 @@ test.describe("Component Error States", () => {
     });
 
     await page.goto("/es/search");
-    await page.fill('input[type="search"]', "test query");
-    await page.press('input[type="search"]', "Enter");
+    const searchInput = page.locator('input[type="search"]:visible').first();
+    await searchInput.fill("test query");
+    await searchInput.press("Enter");
 
     await page.waitForTimeout(2000);
 

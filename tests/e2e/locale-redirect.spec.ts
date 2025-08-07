@@ -10,7 +10,7 @@ test.describe("Redirección de idioma en la raíz", () => {
     expect(match).not.toBeNull();
     const lang = match ? match[1] : "";
     // Busca el botón activo con aria-current="page" y compara el texto
-    const activeBtn = page.locator('button[aria-current="page"]');
+    const activeBtn = page.locator('button[aria-current="page"]').first();
     await expect(activeBtn).toBeVisible();
     const btnText = (await activeBtn.textContent())?.trim().toUpperCase();
     expect(btnText).toBe(lang.toUpperCase());
@@ -29,7 +29,7 @@ test.describe("Redirección de idioma en la raíz", () => {
     // Busca el botón del idioma alternativo (que NO tiene aria-current="page")
     const altBtn = page.locator(
       `button[id="lang-${altLang}"]:not([aria-current="page"])`
-    );
+    ).first();
     await expect(altBtn).toBeVisible();
     await altBtn.click();
     // Comprueba que la URL cambia al idioma alternativo

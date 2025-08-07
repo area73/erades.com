@@ -5,8 +5,15 @@ test.describe("Buscador", () => {
     // Ir a la home en español
     await page.goto("/es");
 
-    // Esperar a que el input de búsqueda esté visible
-    const searchInput = page.getByPlaceholder("Buscar en el blog...");
+    // Establecer viewport de desktop para que el input de búsqueda esté visible
+    await page.setViewportSize({ width: 1024, height: 768 });
+
+    // Esperar a que la página cargue completamente
+    await page.waitForLoadState("networkidle");
+
+    // Esperar a que el input de búsqueda esté visible (usar el visible, no el primero)
+    const searchInputs = page.getByPlaceholder("Buscar en el blog...");
+    const searchInput = searchInputs.filter({ hasText: "" }).nth(1); // Usar el segundo input que está visible
     await expect(searchInput).toBeVisible();
 
     // Escribir 'func' y presionar Enter
@@ -100,6 +107,12 @@ test.describe("Buscador", () => {
     // Ir a la página de búsqueda con una query que devuelva varios posts
     await page.goto("/es/search?q=func");
 
+    // Establecer viewport de desktop para que los controles estén visibles
+    await page.setViewportSize({ width: 1024, height: 768 });
+
+    // Esperar a que la página cargue completamente
+    await page.waitForLoadState("networkidle");
+
     // Esperar a que los blogposts en grid estén visibles
     const gridPosts = page.locator('[aria-label="grid-card"]');
     const gridCount = await gridPosts.count();
@@ -111,9 +124,10 @@ test.describe("Buscador", () => {
 
     // Cambiar a la vista de lista (list)
     // El componente ViewModeToggle usa enlaces con title
-    const listViewButton = page.getByRole("link", {
-      name: "Vista lista",
-    });
+    const listViewButton = page.locator('a[title="Vista lista"]').first();
+
+    // Esperar a que el botón esté visible y hacer clic
+    await expect(listViewButton).toBeVisible({ timeout: 10000 });
     await listViewButton.click();
 
     // Esperar a que los grid-cards desaparezcan y aparezcan los list-cards

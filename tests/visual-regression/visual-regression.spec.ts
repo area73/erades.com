@@ -73,7 +73,8 @@ test.describe("Visual Regression Tests", () => {
   test("Search Page - Español", async ({ page }) => {
     await page.goto("/es/search");
 
-    await page.waitForSelector('input[type="search"]', { state: "visible" });
+    const searchInput = page.locator('input[type="search"]:visible').first();
+    await searchInput.waitFor({ state: "visible" });
     await page.waitForLoadState("networkidle");
 
     await expect(page).toHaveScreenshot("search-page-es.png", {
@@ -97,7 +98,8 @@ test.describe("Visual Regression Tests", () => {
   test("Tags Page - Español", async ({ page }) => {
     await page.goto("/es/tags");
 
-    await page.waitForSelector("h2", { state: "visible" });
+    const titleElement = page.locator("h2:visible").first();
+    await titleElement.waitFor({ state: "visible" });
     await page.waitForLoadState("networkidle");
 
     await expect(page).toHaveScreenshot("tags-page-es.png", {

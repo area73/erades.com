@@ -16,7 +16,9 @@ test.describe("Blog", () => {
     expect(page.url()).toMatch(/\/es\/blog/);
 
     // Comprobar que el título principal del blog es visible y no vacío
-    const mainTitle = page.locator("h2");
+    const mainTitle = page
+      .locator("h2")
+      .filter({ hasText: /¿Listo para explorar|Ready to explore/ });
     await expect(mainTitle).toBeVisible();
     const mainTitleText = await mainTitle.textContent();
     expect(mainTitleText).toBeTruthy();
@@ -93,9 +95,7 @@ test.describe("Blog", () => {
 
     // Cambiar a la vista de lista (list)
     // El componente ViewModeToggle usa enlaces con title
-    const listViewButton = page.getByRole("link", {
-      name: "Vista lista",
-    });
+    const listViewButton = page.locator('a[title="Vista lista"]').first();
     await listViewButton.click();
 
     // Esperar a que los grid-cards desaparezcan y aparezcan los list-cards
@@ -152,12 +152,21 @@ test.describe("Blog", () => {
     };
     const titlesPage1 = await getTitles();
 
+    // Verificar que el paginador está visible (usar el primero)
+    const paginator = page
+      .locator('nav[aria-label="Navegación de páginas"]')
+      .first();
+    await expect(paginator).toBeVisible();
+
     // Hacer clic en el enlace de la página 2
     const page2Link = page.getByRole("link", { name: "Ir a página 2" }).first();
     await page2Link.click();
 
     // Esperar a que la URL cambie a la página 2
     await page.waitForURL(/\/es\/blog\/2/);
+
+    // Esperar un poco más para asegurar que el contenido se carga
+    await page.waitForTimeout(1000);
 
     // Obtener los títulos de los posts de la segunda página
     const titlesPage2 = await getTitles();
@@ -167,7 +176,9 @@ test.describe("Blog", () => {
 
     // Comprobar que estamos en la página 2 (el enlace de página 2 debería estar activo)
     const activePage2 = page
-      .locator('nav[aria-label="Navegación de páginas"] [aria-current="page"]')
+      .locator('nav[aria-label="Navegación de páginas"]')
+      .first()
+      .locator('[aria-current="page"]')
       .first();
     await expect(activePage2).toHaveText("2");
   });
