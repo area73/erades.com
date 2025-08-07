@@ -34,17 +34,17 @@ function getCategoryHrefLocal(cat: string) {
 <form
   id="filters"
   method="get"
-  class={`bg-white dark:bg-gray-700 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border${customClass ? ` ${customClass}` : ""}`}
+  class="bg-white dark:bg-gray-700 grid md:grid-cols-[auto_max-content] gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border"
 >
-  <div class="flex flex-wrap items-center gap-4">
+  <div class="grid grid-cols-1 gap-4">
     <div class="flex items-center gap-2">
       <span class="text-sm text-muted-foreground">Categoría:</span>
-      <div class="flex gap-2">
+      <div class="grid grid-flow-col gap-2">
         {
           categories.map((category) => (
             <a
               href={getCategoryHrefLocal(category)}
-              class={`capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foregroundhover:bg-primary/10"}`}
+              class={`w-fit whitespace-nowrap capitalize px-3 py-1 rounded-md border text-sm transition-colors ${selectedCategory.trim().toLowerCase() === category.trim().toLowerCase() ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foregroundhover:bg-primary/10"}`}
               aria-current={
                 selectedCategory.trim().toLowerCase() ===
                 category.trim().toLowerCase()
@@ -60,8 +60,10 @@ function getCategoryHrefLocal(cat: string) {
       </div>
     </div>
   </div>
-  <div class="flex items-center gap-4">
-    <div class="flex items-center gap-2">
+  <div
+    class="grid grid-cols-[max-content_max-content] justify-items-end justify-end gap-4"
+  >
+    <div class="flex items-center gap-2 justify-end">
       <span class="text-sm text-muted-foreground flex items-center">
         <SortDesc class="h-4 w-4 text-muted-foreground" />
       </span>

@@ -7,7 +7,7 @@ interface Props {
 const { viewMode } = Astro.props as Props;
 ---
 
-<div class="flex items-center gap-1 bg-secondary rounded-lg p-1">
+<div class="flex items-center gap-1 bg-secondary rounded-lg p-1 w-fit">
   <If condition={viewMode === "grid"}>
     <a
       slot="then"
