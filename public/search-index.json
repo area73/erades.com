@@ -22,7 +22,7 @@
   },
   {
     "title": "particle system",
-    "pubDate": "2019-01-11",
+    "pubDate": "2019-01-11T00:00:00.000Z",
     "description": "Exploring particle system animation techniques using Canvas and JavaScript for creating dynamic visual effects",
     "tags": [
       "particle system"
@@ -30,7 +30,7 @@
     "categories": [
       "experiment"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-11.jpg",
     "content": "\n<script type=\"module\" src=\"/js/experiments/system01.js\"></script>\n\n<canvas></canvas>\n",
     "path": "/blog/en/experiments/particle-system-01",
@@ -348,7 +348,7 @@
   },
   {
     "title": "sistema de partículas",
-    "pubDate": "2019-01-11",
+    "pubDate": "2019-01-11T00:00:00.000Z",
     "description": "Explorando técnicas de animación de sistemas de partículas utilizando Canvas y JavaScript para crear efectos visuales dinámicos",
     "tags": [
       "particle system"
@@ -356,7 +356,7 @@
     "categories": [
       "experiment"
     ],
-    "draft": true,
+    "draft": false,
     "heroImage": "/blog-placeholder-11.jpg",
     "content": "\n<script type=\"module\" src=\"/js/experiments/system01.js\"></script>\n\n<canvas></canvas>\n",
     "path": "/blog/es/experiments/particle-system-01",

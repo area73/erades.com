@@ -6,17 +6,26 @@ import BlogList from "../../../components/BlogList.astro";
 import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
 export const prerender = true;
 export async function getStaticPaths() {
-  const posts = (await getCollection("blog")).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
   const POSTS_PER_PAGE = 6;
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const langs = ["es", "en"];
-  return langs.flatMap((lang) =>
-    Array.from({ length: totalPages }).map((_, i) => ({
-      params: { lang, page: String(i + 1) },
-    }))
-  );
+
+  const paths = [];
+
+  for (const lang of langs) {
+    const posts = (await getCollection("blog"))
+      .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+    for (let i = 0; i < totalPages; i++) {
+      paths.push({
+        params: { lang, page: String(i + 1) },
+      });
+    }
+  }
+
+  return paths;
 }
 
 const { page } = Astro.params;
@@ -87,7 +96,7 @@ const getCategoryHref = (cat: string) => {
   const params = new URLSearchParams();
   if (cat.toLowerCase() !== "todas") params.set("category", cat.toLowerCase());
   if (sortBy) params.set("sortBy", sortBy);
-  return `/blog/` + (params.toString() ? `?${params.toString()}` : "");
+  return `/${lang}/blog/` + (params.toString() ? `?${params.toString()}` : "");
 };
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
