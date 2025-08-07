@@ -1,7 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import HeaderSearchBox from "./HeaderSearchBox.astro";
-import { ChevronDown, Menu, X } from "@lucide/astro";
+import { ChevronDown, Menu, Linkedin, X } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import SocialProfileMenu from "./SocialProfileMenu.astro";
 import { t } from "../i18n";
@@ -25,7 +25,7 @@ if (typeof window !== "undefined") {
   class="w-full sticky top-0 z-40 bg-header-background border-b border-header-border shadow-[0_2px_8px_rgba(0,0,0,0.04)] backdrop-blur supports-[backdrop-filter]:bg-header-background/80"
 >
   <div
-    class="max-w-[1440px] mx-auto w-full flex items-center justify-between px-6 py-4"
+    class="max-w-[1440px] mx-auto w-full grid grid-cols-[max-content_max-content_auto_min-content] items-center px-6 py-4"
   >
     <div class="flex items-center gap-6 min-w-0">
       <a
@@ -44,7 +44,7 @@ if (typeof window !== "undefined") {
     </div>
 
     <!-- Mobile Search Box -->
-    <div class="flex-1 mx-4 md:hidden">
+    <div class="flex-1 ml-4 md:hidden">
       <HeaderSearchBox lang={lang} />
     </div>
 
@@ -82,13 +82,13 @@ if (typeof window !== "undefined") {
       </HeaderLink>
     </nav>
 
-    <div class="flex items-center gap-0 min-w-0">
+    <div class="grid grid-cols-[auto_max-content] items-center gap-0 min-w-0">
       <div class="hidden md:block">
         <div class="w-full">
           <HeaderSearchBox lang={lang} />
         </div>
       </div>
-      <div class="flex items-center gap-0">
+      <div class="flex items-center gap-0 max-[555px]:hidden">
         <ThemeToggle />
         <div class="flex items-center gap-1 ml-2">
           <button
@@ -157,8 +157,8 @@ if (typeof window !== "undefined") {
             <SocialProfileMenu
               name="Rodrigo Erades"
               email="rerades@siete3.com"
-              linkedinUrl="https://linkedin.com/"
-              xUrl="https://x.com/"
+              linkedinUrl="https://www.linkedin.com/in/siete3/"
+              xUrl="https://x.com/area_73"
               lang={lang}
             />
             <script is:inline>
@@ -259,58 +259,106 @@ if (typeof window !== "undefined") {
         >
           {t(lang as "en" | "es", "menu.tags")}
         </HeaderLink>
+        <div class="min-[555px]:hidden grid grid-cols-[auto_auto] gap-2">
+          <a
+            href="https://www.linkedin.com/in/siete3/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
+            aria-label={t(lang as "en" | "es", "social.linkedin")}
+            title={t(lang as "en" | "es", "social.linkedin")}
+          >
+            <Linkedin class="h-4 w-4 text-muted-foreground" />
+            LinkedIn
+          </a>
+          <a
+            href="https://x.com/area_73"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors font-medium"
+            aria-label={t(lang as "en" | "es", "social.x")}
+            title={t(lang as "en" | "es", "social.x")}
+          >
+            <X class="h-4 w-4 text-muted-foreground" />
+            X
+          </a>
+        </div>
+        <div class="min-[555px]:hidden grid grid-cols-[auto_auto] gap-2">
+          <button
+            id="lang-es"
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "es"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "es" ? "page" : undefined}
+          >
+            ES
+          </button>
+          <button
+            id="lang-en"
+            class={"px-2 py-1 rounded text-xs font-bold transition " +
+              (lang === "en"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")}
+            aria-current={lang === "en" ? "page" : undefined}
+          >
+            EN
+          </button>
+        </div>
       </nav>
     </div>
-  </div>
 
-  <script is:inline>
-    if (typeof window !== "undefined") {
-      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-      const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
-      const mobileMenuClose = document.getElementById("mobile-menu-close");
-
-      let mobileMenuOpen = false;
-
-      const toggleMobileMenu = (show) => {
-        mobileMenuOpen = typeof show === "boolean" ? show : !mobileMenuOpen;
-        mobileMenuOverlay.classList.toggle("hidden", !mobileMenuOpen);
-        mobileMenuBtn.setAttribute(
-          "aria-expanded",
-          mobileMenuOpen ? "true" : "false"
+    <script is:inline>
+      if (typeof window !== "undefined") {
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenuOverlay = document.getElementById(
+          "mobile-menu-overlay"
         );
+        const mobileMenuClose = document.getElementById("mobile-menu-close");
 
-        // Prevent body scroll when menu is open
-        document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
-      };
+        let mobileMenuOpen = false;
 
-      mobileMenuBtn.addEventListener("click", () => {
-        toggleMobileMenu();
-      });
+        const toggleMobileMenu = (show) => {
+          mobileMenuOpen = typeof show === "boolean" ? show : !mobileMenuOpen;
+          mobileMenuOverlay.classList.toggle("hidden", !mobileMenuOpen);
+          mobileMenuBtn.setAttribute(
+            "aria-expanded",
+            mobileMenuOpen ? "true" : "false"
+          );
 
-      mobileMenuClose.addEventListener("click", () => {
-        toggleMobileMenu(false);
-      });
+          // Prevent body scroll when menu is open
+          document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+        };
 
-      // Close menu when clicking outside
-      mobileMenuOverlay.addEventListener("click", (e) => {
-        if (e.target === mobileMenuOverlay) {
+        mobileMenuBtn.addEventListener("click", () => {
+          toggleMobileMenu();
+        });
+
+        mobileMenuClose.addEventListener("click", () => {
           toggleMobileMenu(false);
-        }
-      });
+        });
 
-      // Close menu on escape key
-      document.addEventListener("keydown", (e) => {
-        if (mobileMenuOpen && e.key === "Escape") {
-          toggleMobileMenu(false);
-        }
-      });
+        // Close menu when clicking outside
+        mobileMenuOverlay.addEventListener("click", (e) => {
+          if (e.target === mobileMenuOverlay) {
+            toggleMobileMenu(false);
+          }
+        });
 
-      // Close menu on window resize to desktop
-      window.addEventListener("resize", () => {
-        if (window.innerWidth >= 768 && mobileMenuOpen) {
-          toggleMobileMenu(false);
-        }
-      });
-    }
-  </script>
+        // Close menu on escape key
+        document.addEventListener("keydown", (e) => {
+          if (mobileMenuOpen && e.key === "Escape") {
+            toggleMobileMenu(false);
+          }
+        });
+
+        // Close menu on window resize to desktop
+        window.addEventListener("resize", () => {
+          if (window.innerWidth >= 768 && mobileMenuOpen) {
+            toggleMobileMenu(false);
+          }
+        });
+      }
+    </script>
+  </div>
 </header>
