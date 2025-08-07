@@ -95,6 +95,50 @@ src/
 - Hot module replacement
 - Comprehensive error handling
 
+## 🚀 CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline with GitHub Actions:
+
+### Automated Workflows
+
+- **CI**: Runs on every push and PR with linting, unit tests, E2E tests, visual tests, and build
+- **Security**: Weekly security scans and dependency reviews
+- **Visual Snapshots**: Manual workflow to update visual regression snapshots
+- **Dependabot**: Automated dependency updates with smart filtering
+
+### Quality Gates
+
+- ✅ Linting with ESLint (zero warnings)
+- ✅ Unit tests with Vitest (coverage reporting)
+- ✅ E2E tests with Playwright
+- ✅ Visual regression tests
+- ✅ Security scans with npm audit and Snyk
+- ✅ Build verification
+- ✅ Automatic deployment to production (master branch only)
+
+### Local Development
+
+All CI checks can be run locally:
+
+```bash
+# Linting
+pnpm lint
+
+# Unit tests
+pnpm test
+
+# E2E tests
+pnpm test:e2e
+
+# Visual tests
+pnpm test:visual
+
+# Build
+pnpm build
+```
+
+For more details, see [`.github/README.md`](.github/README.md).
+
 ## 🌐 Content Categories
 
 The blog covers various topics including:
