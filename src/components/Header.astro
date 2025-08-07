@@ -318,14 +318,15 @@ if (typeof window !== "undefined") {
 
         let mobileMenuOpen = false;
 
-        const toggleMobileMenu = (show) => {
+        // Make function globally available
+        window.toggleMobileMenu = (show) => {
           mobileMenuOpen = typeof show === "boolean" ? show : !mobileMenuOpen;
           mobileMenuOverlay.classList.toggle("hidden", !mobileMenuOpen);
           mobileMenuBtn.setAttribute(
             "aria-expanded",
             mobileMenuOpen ? "true" : "false"
           );
-
+          console.log("pozi amparo");
           // Prevent body scroll when menu is open
           document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
         };
@@ -336,6 +337,16 @@ if (typeof window !== "undefined") {
 
         mobileMenuClose.addEventListener("click", () => {
           toggleMobileMenu(false);
+        });
+
+        // Add event listeners to all mobile menu links and buttons
+        const mobileMenuLinks = mobileMenuOverlay.querySelectorAll("a, button");
+        mobileMenuLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            if (mobileMenuOpen) {
+              toggleMobileMenu(false);
+            }
+          });
         });
 
         // Close menu when clicking outside

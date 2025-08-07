@@ -34,7 +34,7 @@ function getCategoryHrefLocal(cat: string) {
 <form
   id="filters"
   method="get"
-  class="bg-white dark:bg-gray-700 grid md:grid-cols-[auto_max-content] gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border"
+  class={`bg-white dark:bg-gray-700 grid md:grid-cols-[auto_max-content] gap-4 items-start md:items-center justify-between mb-8 p-4 bg-card rounded-lg border ${customClass || ""}`}
 >
   <div class="grid grid-cols-1 gap-4">
     <div class="flex items-center gap-2">

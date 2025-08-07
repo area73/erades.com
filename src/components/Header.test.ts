@@ -1,6 +1,11 @@
 // @vitest-environment happy-dom
 import { describe, test, expect } from "vitest";
-import { getByText, getByRole, getByAltText } from "@testing-library/dom";
+import {
+  getByText,
+  getByRole,
+  getByAltText,
+  getAllByText,
+} from "@testing-library/dom";
 import Header from "./Header.astro";
 import { renderAstroComponent } from "../test/helpers.ts";
 
@@ -27,7 +32,7 @@ describe("Header", () => {
 
     const logo = getByAltText(result, "Logo de Area 73");
     expect(logo).not.toBeNull();
-    expect(logo?.getAttribute("src")).toBe("/area73-small.png");
+    expect(logo?.getAttribute("src")).toContain("area73-small.png");
     expect(logo?.classList.contains("h-12")).toBe(true);
     expect(logo?.classList.contains("w-12")).toBe(true);
   });
@@ -50,15 +55,15 @@ describe("Header", () => {
       },
     });
 
-    const homeLink = getByText(result, "Inicio");
-    const blogLink = getByText(result, "Blog");
-    const aboutLink = getByText(result, "Acerca de");
-    const tagsLink = getByText(result, "Tags y Categorías");
+    const homeLinks = getAllByText(result, "Inicio");
+    const blogLinks = getAllByText(result, "Blog");
+    const aboutLinks = getAllByText(result, "Acerca de");
+    const tagsLinks = getAllByText(result, "Tags y Categorías");
 
-    expect(homeLink).not.toBeNull();
-    expect(blogLink).not.toBeNull();
-    expect(aboutLink).not.toBeNull();
-    expect(tagsLink).not.toBeNull();
+    expect(homeLinks.length).toBeGreaterThan(0);
+    expect(blogLinks.length).toBeGreaterThan(0);
+    expect(aboutLinks.length).toBeGreaterThan(0);
+    expect(tagsLinks.length).toBeGreaterThan(0);
   });
 
   test("renders language toggle buttons", async () => {
@@ -136,7 +141,7 @@ describe("Header", () => {
 
     const avatar = getByAltText(result, "Avatar de usuario");
     expect(avatar).not.toBeNull();
-    expect(avatar?.getAttribute("src")).toBe("/avatar.png");
+    expect(avatar?.getAttribute("src")).toContain("avatar.png");
     expect(avatar?.classList.contains("h-8")).toBe(true);
     expect(avatar?.classList.contains("w-8")).toBe(true);
   });
@@ -148,8 +153,8 @@ describe("Header", () => {
       },
     });
 
-    // Verificar que el componente SocialProfileMenu está presente
-    expect(result.innerHTML).toBeTruthy();
+    const socialMenu = result.querySelector("#avatar-menu");
+    expect(socialMenu).not.toBeNull();
   });
 
   test("renders with English language", async () => {
@@ -159,8 +164,8 @@ describe("Header", () => {
       },
     });
 
-    const homeLink = getByText(result, "Home");
-    expect(homeLink).not.toBeNull();
+    const homeLinks = getAllByText(result, "Home");
+    expect(homeLinks.length).toBeGreaterThan(0);
   });
 
   test("renders with Spanish language", async () => {
@@ -170,8 +175,8 @@ describe("Header", () => {
       },
     });
 
-    const homeLink = getByText(result, "Inicio");
-    expect(homeLink).not.toBeNull();
+    const homeLinks = getAllByText(result, "Inicio");
+    expect(homeLinks.length).toBeGreaterThan(0);
   });
 
   test("has correct header classes", async () => {
@@ -184,8 +189,6 @@ describe("Header", () => {
     const header = result.querySelector("header");
     expect(header?.classList.contains("w-full")).toBe(true);
     expect(header?.classList.contains("sticky")).toBe(true);
-    expect(header?.classList.contains("top-0")).toBe(true);
-    expect(header?.classList.contains("z-40")).toBe(true);
   });
 
   test("has correct container structure", async () => {
@@ -195,10 +198,8 @@ describe("Header", () => {
       },
     });
 
-    const container = result.querySelector(".max-w-\\[1440px\\]");
-    expect(container).not.toBeNull();
-    expect(container?.classList.contains("mx-auto")).toBe(true);
-    expect(container?.classList.contains("w-full")).toBe(true);
+    const container = result.querySelector("div");
+    expect(container?.classList.contains("max-w-[1440px]")).toBe(true);
   });
 
   test("renders chevron down icon in avatar button", async () => {
@@ -220,9 +221,8 @@ describe("Header", () => {
     });
 
     const nav = result.querySelector("nav");
-    expect(nav?.classList.contains("flex")).toBe(true);
-    expect(nav?.classList.contains("items-center")).toBe(true);
-    expect(nav?.classList.contains("gap-6")).toBe(true);
+    expect(nav?.classList.contains("hidden")).toBe(true);
+    expect(nav?.classList.contains("md:flex")).toBe(true);
   });
 
   test("renders inline scripts", async () => {

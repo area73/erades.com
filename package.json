@@ -3,7 +3,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "tailwind:watch": "tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
     "dev": "astro dev",
     "build": "pnpm run build:flexsearch && astro build",
     "build:flexsearch": "tsx scripts/generate-flexsearch-index.ts",

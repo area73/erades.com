@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, test, expect } from "vitest";
-import { getByText, getByRole } from "@testing-library/dom";
+import { getByText, getByRole, getAllByText } from "@testing-library/dom";
 import BlogCard from "./BlogCard.astro";
 import { renderAstroComponent } from "../test/helpers.ts";
 
@@ -105,8 +105,10 @@ describe("BlogCard", () => {
       },
     });
 
-    const gridAuthor = getByText(gridResult, "Test Author");
-    expect(gridAuthor).not.toBeNull();
+    const gridAuthors = getAllByText(gridResult, (content, element) => {
+      return element?.textContent?.includes("Test Author") || false;
+    });
+    expect(gridAuthors.length).toBeGreaterThan(0);
 
     // Test list variant
     const listResult = await renderAstroComponent(BlogCard, {
@@ -117,8 +119,10 @@ describe("BlogCard", () => {
       },
     });
 
-    const listAuthor = getByText(listResult, "Test Author");
-    expect(listAuthor).not.toBeNull();
+    const listAuthors = getAllByText(listResult, (content, element) => {
+      return element?.textContent?.includes("Test Author") || false;
+    });
+    expect(listAuthors.length).toBeGreaterThan(0);
   });
 
   test("renders hero image when available", async () => {
