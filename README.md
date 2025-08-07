@@ -1,68 +1,151 @@
-# Astro Starter Kit: Blog
+# Area 73 - Multilingual Blog
 
-```sh
-pnpm create astro@latest -- --template blog
+A modern, multilingual blog built with Astro, TypeScript, and Tailwind CSS v4. This project features advanced search capabilities, comprehensive testing, and excellent performance optimization.
+
+## 🌟 Features
+
+- **Multilingual Support**: Full i18n with Spanish (es) and English (en) locales
+- **Advanced Search**: FlexSearch-powered search with real-time results
+- **Performance Optimized**: 100/100 Lighthouse performance scores
+- **SEO Friendly**: Canonical URLs, OpenGraph data, and sitemap support
+- **Content Collections**: Type-safe content management with Astro's content collections
+- **Comprehensive Testing**: Unit tests, E2E tests, and visual regression testing
+- **Modern Tech Stack**: Astro 5, TypeScript, Tailwind CSS v4, Vitest, Playwright
+- **Server-Side Rendering**: Fast, SEO-friendly SSR with Node adapter
+- **Code Highlighting**: Syntax highlighting with Expressive Code
+- **Smooth Navigation**: Swup.js for seamless page transitions
+
+## 🚀 Tech Stack
+
+- **Framework**: Astro 5.7.10
+- **Styling**: Tailwind CSS v4.1.5
+- **Language**: TypeScript 5.8.3
+- **Testing**: Vitest 3.1.3, Playwright 1.54.1
+- **Search**: FlexSearch 0.8.205
+- **Deployment**: Node.js adapter (standalone mode)
+
+## 📁 Project Structure
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+├── components/          # Reusable Astro components
+├── content/
+│   └── blog/
+│       ├── en/         # English blog posts
+│       └── es/         # Spanish blog posts
+├── i18n/               # Internationalization
+├── layouts/            # Page layouts
+├── pages/              # Route pages
+│   └── [lang]/         # Language-specific routes
+├── styles/             # Global styles
+├── test/               # Test utilities
+├── types/              # TypeScript type definitions
+└── utils/              # Utility functions
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command                | Action                                                      |
+| ---------------------- | ----------------------------------------------------------- |
+| `pnpm dev`             | Start development server at `localhost:4321`                |
+| `pnpm build`           | Build for production (includes FlexSearch index generation) |
+| `pnpm preview`         | Preview production build locally                            |
+| `pnpm test`            | Run unit tests                                              |
+| `pnpm test:watch`      | Run unit tests in watch mode                                |
+| `pnpm test:e2e`        | Run end-to-end tests                                        |
+| `pnpm test:visual`     | Run visual regression tests                                 |
+| `pnpm lint`            | Lint code with ESLint                                       |
+| `pnpm lint:fix`        | Fix linting issues automatically                            |
+| `pnpm translate:es-en` | Translate Spanish posts to English                          |
+| `pnpm translate:en-es` | Translate English posts to Spanish                          |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## 🎯 Key Features
 
-## 👀 Want to learn more?
+### Multilingual Blog
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Content organized by language (`en/`, `es/`)
+- Automatic language detection and routing
+- SEO-optimized with proper hreflang tags
 
-## Credit
+### Advanced Search
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+- Real-time search with FlexSearch
+- Search across both languages
+- Automatic search index generation during build
+
+### Comprehensive Testing
+
+- **Unit Tests**: Vitest with happy-dom for component testing
+- **E2E Tests**: Playwright for full user journey testing
+- **Visual Regression**: Automated visual testing with snapshots
+- **Coverage**: Code coverage reporting with V8
+
+### Performance & SEO
+
+- Server-side rendering for optimal performance
+- Optimized images with Sharp
+- Sitemap generation with i18n support
+- RSS feed support
+- Core Web Vitals optimization
+
+### Development Experience
+
+- TypeScript for type safety
+- ESLint for code quality
+- Hot module replacement
+- Comprehensive error handling
+
+## 🌐 Content Categories
+
+The blog covers various topics including:
+
+- **Functional Programming**: Monads, functors, combinators, transducers
+- **JavaScript Patterns**: Method chaining, lexical scope, IIFE patterns
+- **Experiments**: Interactive demos and experiments
+- **AI Insights**: AI-related takeaways and observations
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file for translation features:
+
+```
+OPENAI_API_KEY=your_openai_api_key
+```
+
+### Build Process
+
+The build process includes:
+
+1. FlexSearch index generation for search functionality
+2. Astro build with SSR output
+3. Static asset optimization
+
+## 📊 Testing Strategy
+
+- **Unit Tests**: Component and utility function testing
+- **E2E Tests**: Full user journey testing across languages
+- **Visual Regression**: Automated visual testing for UI consistency
+- **Performance**: Lighthouse CI integration for performance monitoring
+
+## 🚀 Deployment
+
+The project is configured for Node.js deployment with:
+
+- Standalone mode for optimal performance
+- Server-side rendering for SEO
+- Automatic sitemap generation
+- RSS feed generation
+
+## 📝 Contributing
+
+1. Follow TypeScript strict mode
+2. Write tests for new features
+3. Maintain visual regression snapshots
+4. Follow the established component patterns
+5. Use proper i18n for all user-facing text
+
+## 📄 License
+
+This project is based on the Astro Blog starter template and enhanced with multilingual support and advanced features.
