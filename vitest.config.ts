@@ -1,7 +1,14 @@
 /// <reference types="vitest" />
 import { getViteConfig } from "astro/config";
+import { fileURLToPath } from "node:url";
 
 export default getViteConfig({
+  resolve: {
+    alias: {
+      "@components": fileURLToPath(new URL("./src/components", import.meta.url)),
+      "~": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   test: {
     globals: true,
     environment: "happy-dom",
