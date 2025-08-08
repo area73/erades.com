@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { fileURLToPath } from "node:url";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import astroExpressiveCode from "astro-expressive-code";
@@ -59,6 +60,11 @@ export default defineConfig({
     }),
   ],
   vite: {
+    resolve: {
+      alias: {
+        "@components": fileURLToPath(new URL("./src/components", import.meta.url)),
+      },
+    },
     plugins: [
       tailwindcss(),
       {
