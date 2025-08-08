@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, test, expect } from "vitest";
 import { getByText } from "@testing-library/dom";
-import Show from "@components/Show.astro";
+import Show from "./Show.astro";
 import { renderAstroComponent } from "../test/helpers.ts";
 
 describe("Show", () => {
