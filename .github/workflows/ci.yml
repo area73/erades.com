@@ -8,6 +8,7 @@ on:
 
 env:
   NODE_VERSION: "22"
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   lint:
@@ -49,9 +50,6 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    env:
-      # expose once at job scope; don't sprinkle secrets in steps
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -89,7 +87,7 @@ jobs:
         uses: codecov/codecov-action@v5
         if: ${{ always() && env.CODECOV_TOKEN != '' }}
         with:
-          token: ${{ env.CODECOV_TOKEN }} # pass via input, not step env
+          token: ${{ env.CODECOV_TOKEN }}
           files: ./coverage/**/lcov.info
           flags: unittests
           name: codecov-coverage
