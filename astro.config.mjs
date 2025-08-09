@@ -8,6 +8,34 @@ import tailwindcss from "@tailwindcss/vite";
 import node from "@astrojs/node";
 import swup, { Theme } from "@swup/astro";
 // https://astro.build/config
+// Predefine Vite config with JSDoc typing to avoid excess property checks
+/** @type {import('vite').UserConfig} */
+const viteConfig = {
+  resolve: {
+    alias: {
+      "@components": fileURLToPath(
+        new URL("./src/components", import.meta.url)
+      ),
+      "~": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  plugins: [
+    tailwindcss(),
+    {
+      name: "exclude-public-test-files",
+      /** @param {any} _ @param {any} bundle */
+      generateBundle(_, bundle) {
+        for (const file in bundle) {
+          if (file.startsWith("public/") && file.endsWith(".test.js")) {
+            delete bundle[file];
+          }
+        }
+      },
+      apply: "build",
+    },
+  ],
+};
+
 export default defineConfig({
   site: "https://erades.com",
   output: "server",
@@ -59,28 +87,5 @@ export default defineConfig({
       priority: 0.7,
     }),
   ],
-  vite: {
-    resolve: {
-      alias: {
-        "@components": fileURLToPath(
-          new URL("./src/components", import.meta.url)
-        ),
-        "~": fileURLToPath(new URL("./src", import.meta.url)),
-      },
-    },
-    plugins: [
-      tailwindcss(),
-      {
-        name: "exclude-public-test-files",
-        generateBundle(_, bundle) {
-          for (const file in bundle) {
-            if (file.startsWith("public/") && file.endsWith(".test.js")) {
-              delete bundle[file];
-            }
-          }
-        },
-        apply: "build",
-      },
-    ],
-  },
+  vite: viteConfig,
 });

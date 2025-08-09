@@ -55,7 +55,6 @@ export const disableAnimations = async (page: Page): Promise<void> => {
 export const fullPageScreenshotOptions = {
   fullPage: true,
   animations: "disabled" as const,
-  clip: undefined,
 };
 
 /**
@@ -163,11 +162,17 @@ export const screenshotComponent = async (
   }
 ): Promise<void> => {
   const { expect } = await import("@playwright/test");
+  if (options?.clip) {
+    const image = await locator.page().screenshot({
+      clip: options.clip,
+    });
+    await expect(image).toMatchSnapshot(name);
+    return;
+  }
 
   await expect(locator).toHaveScreenshot(name, {
     ...componentScreenshotOptions,
     mask: options?.mask,
-    clip: options?.clip,
   });
 };
 
@@ -183,11 +188,18 @@ export const screenshotPage = async (
   }
 ): Promise<void> => {
   const { expect } = await import("@playwright/test");
+  if (options?.clip) {
+    const image = await page.screenshot({
+      fullPage: false,
+      clip: options.clip,
+    });
+    await expect(image).toMatchSnapshot(name);
+    return;
+  }
 
   await expect(page).toHaveScreenshot(name, {
     ...fullPageScreenshotOptions,
     mask: options?.mask,
-    clip: options?.clip,
   });
 };
 
