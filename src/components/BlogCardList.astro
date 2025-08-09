@@ -1,6 +1,6 @@
 ---
 import FormattedDate from "./FormattedDate.astro";
-import Show from "./Show.astro";
+import ShowWhen from "./ShowWhen.astro";
 import If from "./If.astro";
 import { Image } from "astro:assets";
 import { EAGER_LOAD_IMAGES_COUNT } from "../consts";
@@ -26,7 +26,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
         <div
           class="h-full w-full bg-gradient-to-br from-primary/10 to-accent rounded-lg overflow-hidden flex"
         >
-          <Show when={get("heroImage")}>
+          <ShowWhen when={get("heroImage")}>
             <Image
               src={get("heroImage")}
               alt={get("title") ?? ""}
@@ -37,7 +37,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
               loading={index < EAGER_LOAD_IMAGES_COUNT ? "eager" : "lazy"}
               fetchpriority={index < EAGER_LOAD_IMAGES_COUNT ? "high" : "auto"}
             />
-          </Show>
+          </ShowWhen>
         </div>
       </div>
       <div class="md:col-span-3 flex flex-col h-full">
@@ -76,7 +76,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
             <span class="font-medium">{get("author") || ""}</span>
           </div>
         </div>
-        <Show when={Array.isArray(get("tags")) && get("tags").length > 0}>
+        <ShowWhen when={Array.isArray(get("tags")) && get("tags").length > 0}>
           <div class="flex flex-wrap justify-end gap-2 pb-2 pr-2">
             {
               (get("tags") || []).map((tag: string) => (
@@ -86,7 +86,7 @@ const get = (key: string) => post[key] ?? (post.data && post.data[key]);
               ))
             }
           </div>
-        </Show>
+        </ShowWhen>
       </div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { describe, test, expect } from "vitest";
 import { getByText } from "@testing-library/dom";
-import Show from "./Show.astro";
+import ShowWhen from "./ShowWhen.astro";
 import { renderAstroComponent } from "../test/helpers.ts";
 
 describe("Show", () => {
   test("renders children when condition is true", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: true,
       },
@@ -20,7 +20,7 @@ describe("Show", () => {
   });
 
   test("does not render children when condition is false", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: false,
       },
@@ -34,7 +34,7 @@ describe("Show", () => {
   });
 
   test("does not render children when condition is null", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: null,
       },
@@ -48,7 +48,7 @@ describe("Show", () => {
   });
 
   test("does not render children when condition is undefined", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: undefined,
       },
@@ -62,7 +62,7 @@ describe("Show", () => {
   });
 
   test("renders children when condition is a non-empty string", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: "hello",
       },
@@ -76,7 +76,7 @@ describe("Show", () => {
   });
 
   test("renders children when condition is a non-empty array", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: [1, 2, 3],
       },
@@ -90,7 +90,7 @@ describe("Show", () => {
   });
 
   test("does not render children when condition is an empty array", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: [],
       },
@@ -104,7 +104,7 @@ describe("Show", () => {
   });
 
   test("renders children when condition is a non-zero number", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: 42,
       },
