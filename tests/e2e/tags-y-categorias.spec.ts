@@ -254,7 +254,9 @@ test.describe("Tags y Categorías", () => {
     // Si hay posts, verificar que el título contiene "Todos los Posts"
     if (postCount > 0) {
       // Verificar que el título de la página contiene el tag
-      const pageTitle = page.locator("h1, h2").first();
+      const pageTitle = page
+        .locator("h1, h2")
+        .filter({ hasText: /Tags|Posts|Todos/ });
       await expect(pageTitle).toBeVisible();
       const titleText = await pageTitle.textContent();
       expect(titleText).toContain("Todos los Posts");
