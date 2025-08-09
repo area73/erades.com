@@ -116,7 +116,7 @@ jobs:
             --shm-size=2g \
             -e PORT=4321 \
             mcr.microsoft.com/playwright:v1.54.1-jammy \
-            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm build && (pnpm preview &) && npx wait-on http://localhost:4321 && pnpm test:e2e"
+            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm test:e2e"
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -149,7 +149,7 @@ jobs:
             --shm-size=2g \
             -e PORT=4321 \
             mcr.microsoft.com/playwright:v1.54.1-jammy \
-            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm build && (pnpm preview &) && npx wait-on http://localhost:4321 && pnpm test:visual"
+            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm test:visual"
 
       - name: Upload visual test results
         uses: actions/upload-artifact@v4
