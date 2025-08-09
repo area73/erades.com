@@ -101,4 +101,7 @@ function getCategoryHrefLocal(cat: string) {
       value={Astro.url.searchParams.get("category")!}
     />
   </ShowWhen>
+  <ShowWhen when={viewMode === "list"}>
+    <input type="hidden" name="viewMode" value="list" />
+  </ShowWhen>
 </form>
