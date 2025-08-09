@@ -1,5 +1,5 @@
 ---
-import Show from "./Show.astro";
+import ShowWhen from "./ShowWhen.astro";
 interface Props {
   shown: number;
   total: number;
@@ -12,7 +12,7 @@ const { shown, total, query } = Astro.props;
   Mostrando <span class="text-primary">{shown}</span> de <span
     class="text-primary">{total}</span
   > resultados
-  <Show when={query}>
+<ShowWhen when={query}>
     <span> para <span class="text-primary">{query}</span></span>
-  </Show>
+</ShowWhen>
 </p>

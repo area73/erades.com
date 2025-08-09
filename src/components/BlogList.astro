@@ -5,7 +5,7 @@ import Paginator from "./Paginator.astro";
 import ResultsInfo from "./ResultsInfo.astro";
 import NoResults from "./NoResults.astro";
 import If from "./If.astro";
-import Show from "./Show.astro";
+import ShowWhen from "./ShowWhen.astro";
 import { t } from "../i18n";
 
 interface Props {
@@ -50,7 +50,7 @@ const {
 ---
 
 <section>
-  <Show when={currentPage === 1 && showTitle}>
+  <ShowWhen when={currentPage === 1 && showTitle}>
     <div class="mb-16 text-center">
       <h2
         class="font-serif text-4xl md:text-4xl font-bold text-foreground mb-6"
@@ -61,7 +61,7 @@ const {
         {description || t(lang, "blogList.description")}
       </p>
     </div>
-  </Show>
+  </ShowWhen>
 
   <!-- Filtros -->
   <div class="mx-auto sticky top-30 z-10">
@@ -76,14 +76,14 @@ const {
   </div>
   <!-- Resultados -->
   <div class="mb-2 px-4 text-right">
-    <Show when={totalPages > 1}>
+    <ShowWhen when={totalPages > 1}>
       <Paginator
         customClass="relative top-[1.5rem]"
         currentPage={currentPage}
         totalPages={totalPages}
         getPageHref={getPageHref}
       />
-    </Show>
+    </ShowWhen>
     <ResultsInfo
       shown={paginatedPosts.length}
       total={posts.length}
@@ -131,12 +131,12 @@ const {
     </ul>
   </If>
   <!-- Paginador -->
-  <Show when={totalPages > 1}>
+  <ShowWhen when={totalPages > 1}>
     <Paginator
       customClass="mt-6"
       currentPage={currentPage}
       totalPages={totalPages}
       getPageHref={getPageHref}
     />
-  </Show>
+  </ShowWhen>
 </section>

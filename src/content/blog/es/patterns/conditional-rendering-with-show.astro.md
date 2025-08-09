@@ -55,7 +55,7 @@ const { when, children } = Astro.props;
 
 ```astro
 ---
-import Show from "~/components/Show.astro";
+import ShowWhen from "~/components/ShowWhen.astro";
 ---
 
 <section>
