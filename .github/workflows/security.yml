@@ -11,13 +11,12 @@ on:
 
 env:
   NODE_VERSION: "22"
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
 jobs:
   security:
     name: Security Scan
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,14 +32,14 @@ jobs:
           version: 10.14.0
 
       - name: Get pnpm store directory
+        id: pnpm-store
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-store.outputs.store_path }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -53,9 +52,7 @@ jobs:
 
       - name: Run Snyk security scan
         uses: snyk/actions/node@master
-        if: ${{ secrets.SNYK_TOKEN != '' }}
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        if: ${{ env.SNYK_TOKEN != '' }}
         with:
           args: --severity-threshold=high
 

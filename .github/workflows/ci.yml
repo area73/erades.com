@@ -28,14 +28,14 @@ jobs:
           version: 10.14.0
 
       - name: Get pnpm store directory
+        id: pnpm-store
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-store.outputs.store_path }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -49,6 +49,9 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
+    env:
+      # expose once at job scope; don't sprinkle secrets in steps
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -64,14 +67,14 @@ jobs:
           version: 10.14.0
 
       - name: Get pnpm store directory
+        id: pnpm-store
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-store.outputs.store_path }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -86,12 +89,11 @@ jobs:
         uses: codecov/codecov-action@v5
         if: ${{ always() && env.CODECOV_TOKEN != '' }}
         with:
+          token: ${{ env.CODECOV_TOKEN }} # pass via input, not step env
           files: ./coverage/**/lcov.info
           flags: unittests
           name: codecov-coverage
           fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
 
   test-e2e:
@@ -184,14 +186,14 @@ jobs:
           version: 10.14.0
 
       - name: Get pnpm store directory
+        id: pnpm-store
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-store.outputs.store_path }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -214,6 +216,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, test, test-e2e, test-visual, build]
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    env:
+      # narrow scope to just this job
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -229,14 +236,14 @@ jobs:
           version: 10.14.0
 
       - name: Get pnpm store directory
+        id: pnpm-store
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "store_path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-store.outputs.store_path }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -251,8 +258,4 @@ jobs:
         run: |
           echo "Deploy step - configure your deployment here"
           # Example: rsync, scp, or deployment to your hosting provider
-          # rsync -avz --delete dist/ user@your-server:/path/to/website/
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          # rsync -avz --delete dist/ "$DEPLOY_HOST:$DEPLOY_PATH"
