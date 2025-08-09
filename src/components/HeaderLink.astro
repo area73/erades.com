@@ -1,10 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types";
-import { Home, FileText, Info, Tag, Hash } from "@lucide/astro";
-import If from "./If.astro";
-import Show from "./Show.astro";
-import Then from "./Then.astro";
-import Else from "./Else.astro";
+import { Home, FileText, Info, Hash } from "@lucide/astro";
+import ShowWhen from "./ShowWhen.astro";
 import IconWrapper from "./IconWrapper.astro";
 
 const { href, lang, ...rest } = Astro.props;
@@ -39,13 +36,13 @@ const Icon = ICONS[href as keyof typeof ICONS];
   aria-current={isActive ? "page" : undefined}
   {...rest}
 >
-  <Show when={Icon}>
+  <ShowWhen when={Icon}>
     <IconWrapper
       Icon={Icon}
       className={"h-4 w-4 mr-2 md:h-6 md:w-6 xl:h-4 xl:w-4 xl:mr-2 md:mr-0 " +
         (isActive ? "text-primary" : "text-muted-foreground")}
     />
-  </Show>
+  </ShowWhen>
   <span
     class="md:hidden lg:inline whitespace-nowrap overflow-hidden text-ellipsis"
   >

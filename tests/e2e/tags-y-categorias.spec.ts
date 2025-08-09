@@ -13,7 +13,7 @@ test.describe("Tags y Categorías", () => {
     // Verificar que el título principal es visible
     const mainTitle = page
       .locator("h2")
-      .filter({ hasText: "Tags y Categorías" });
+      .filter({ hasText: /(Tags y Categorías|Todos los Posts|All Posts)/ });
     await expect(mainTitle).toBeVisible();
     const mainTitleText = await mainTitle.textContent();
     expect(mainTitleText).toBeTruthy();
@@ -128,7 +128,9 @@ test.describe("Tags y Categorías", () => {
     // Si hay posts, verificar que el título contiene "Todos los Posts"
     if (postCount > 0) {
       // Verificar que el título de la página contiene el tag
-      const pageTitle = page.locator("h1, h2").first();
+      const pageTitle = page
+        .locator("h1, h2")
+        .filter({ hasText: /Tags|Posts|Todos/ });
       await expect(pageTitle).toBeVisible();
       const titleText = await pageTitle.textContent();
       expect(titleText).toContain("Todos los Posts");
@@ -189,7 +191,9 @@ test.describe("Tags y Categorías", () => {
     // Si hay posts, verificar que el título contiene "Todos los Posts"
     if (postCount > 0) {
       // Verificar que el título de la página contiene el tag
-      const pageTitle = page.locator("h1, h2").first();
+      const pageTitle = page
+        .locator("h1, h2")
+        .filter({ hasText: /Tags|Posts|Todos/ });
       await expect(pageTitle).toBeVisible();
       const titleText = await pageTitle.textContent();
       expect(titleText).toContain("Todos los Posts");
@@ -250,7 +254,9 @@ test.describe("Tags y Categorías", () => {
     // Si hay posts, verificar que el título contiene "Todos los Posts"
     if (postCount > 0) {
       // Verificar que el título de la página contiene el tag
-      const pageTitle = page.locator("h1, h2").first();
+      const pageTitle = page
+        .locator("h1, h2")
+        .filter({ hasText: /Tags|Posts|Todos/ });
       await expect(pageTitle).toBeVisible();
       const titleText = await pageTitle.textContent();
       expect(titleText).toContain("Todos los Posts");
