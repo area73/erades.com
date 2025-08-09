@@ -12,7 +12,7 @@ const { shown, total, query } = Astro.props;
   Mostrando <span class="text-primary">{shown}</span> de <span
     class="text-primary">{total}</span
   > resultados
-<ShowWhen when={query}>
+  <ShowWhen when={query}>
     <span> para <span class="text-primary">{query}</span></span>
-</ShowWhen>
+  </ShowWhen>
 </p>
