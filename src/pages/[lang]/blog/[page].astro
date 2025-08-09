@@ -4,29 +4,6 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
 import { getCollection } from "astro:content";
 import BlogList from "../../../components/BlogList.astro";
 import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
-export const prerender = true;
-export async function getStaticPaths() {
-  const POSTS_PER_PAGE = 6;
-  const langs = ["es", "en"];
-
-  const paths = [];
-
-  for (const lang of langs) {
-    const posts = (await getCollection("blog"))
-      .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
-      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-    const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-
-    for (let i = 0; i < totalPages; i++) {
-      paths.push({
-        params: { lang, page: String(i + 1) },
-      });
-    }
-  }
-
-  return paths;
-}
 
 const { page } = Astro.params;
 const currentPage = Number(page) || 1;
@@ -58,7 +35,8 @@ function isSortBy(value: string): value is (typeof SORT_BY_OPTIONS)[number] {
 
 const rawSortBy = Astro.url.searchParams.get("sortBy") || "date-desc";
 const sortBy = isSortBy(rawSortBy) ? rawSortBy : "date-desc";
-let viewMode: "grid" | "list" = "grid";
+const rawViewMode = Astro.url.searchParams.get("viewMode");
+let viewMode: "grid" | "list" = rawViewMode === "list" ? "list" : "grid";
 
 function filterPosts(posts: any[], category: string, sort: string): any[] {
   let filtered;
@@ -102,6 +80,7 @@ const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "todas") params.set("category", selectedCategory);
   if (sortBy) params.set("sortBy", sortBy);
+  if (viewMode === "list") params.set("viewMode", viewMode);
   // Siempre incluye el prefijo de idioma
   return (
     (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
