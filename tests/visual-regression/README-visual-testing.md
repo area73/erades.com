@@ -12,17 +12,11 @@ Este proyecto utiliza **Playwright** para tests automáticos de regresión visua
 ## Comandos Disponibles
 
 ```bash
-# Ejecutar todos los tests visuales
-pnpm test:visual
+# Ejecutar todos los tests visuales (Docker)
+pnpm docker:test:visual
 
-# Ejecutar tests visuales con interfaz gráfica
-pnpm test:visual:ui
-
-# Ejecutar tests visuales en modo headed (visible)
-pnpm test:visual:headed
-
-# Actualizar snapshots de referencia (primera vez o cuando hay cambios intencionales)
-pnpm test:visual:update
+# Actualizar snapshots de referencia (primera vez o cuando hay cambios intencionales) (Docker)
+pnpm docker:test:visual:update
 ```
 
 ## Primer Uso
@@ -30,17 +24,14 @@ pnpm test:visual:update
 ### 1. Generar snapshots de referencia
 
 ```bash
-# Asegúrate de que el servidor esté corriendo
-pnpm dev
-
-# En otra terminal, genera los snapshots iniciales
-pnpm test:visual:update
+# Generar snapshots iniciales en entorno consistente (Docker)
+pnpm docker:test:visual:update
 ```
 
 ### 2. Ejecutar tests visuales
 
 ```bash
-pnpm test:visual
+pnpm docker:test:visual
 ```
 
 ## Estructura de Tests
@@ -106,21 +97,15 @@ expect: {
 
 ```bash
 # Después de cambios intencionales en estilos/componentes
-pnpm test:visual:update
+pnpm docker:test:visual:update
 
 # Verificar que los nuevos snapshots son correctos
-pnpm test:visual
+pnpm docker:test:visual
 ```
 
 ### Debugging Visual
 
-```bash
-# Ver tests en navegador con interfaz gráfica
-pnpm test:visual:ui
-
-# Ver tests ejecutándose en tiempo real
-pnpm test:visual:headed
-```
+> Nota: la ejecución con UI/headed se recomienda fuera de CI y sin Docker.
 
 ## Resultados de Tests
 
@@ -170,12 +155,9 @@ Estos archivos se guardan en `test-results/` y se pueden ver en el reporte HTML.
 Para CI/CD, considera:
 
 ```yaml
-# Ejemplo para GitHub Actions
-- name: Run Visual Tests
-  run: |
-    pnpm build
-    pnpm preview &
-    pnpm test:visual
+# Ejemplo para GitHub Actions con Docker
+- name: Run Visual Tests (Docker)
+  run: pnpm docker:test:visual
 ```
 
 ## Resolución de Problemas
@@ -195,14 +177,14 @@ toHaveScreenshot: {
 
 - Usar mismas fuentes y configuración
 - Asegurar carga completa de recursos
-- Considerar usar Docker para consistencia
+- Usar Docker para consistencia en snapshots
 
 ### Snapshots Obsoletos
 
 ```bash
 # Limpiar snapshots existentes y regenerar
 rm -rf tests/*-snapshots/
-pnpm test:visual:update
+pnpm docker:test:visual:update
 ```
 
 ## Monitoreo Continuo

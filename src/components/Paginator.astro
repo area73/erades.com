@@ -1,5 +1,5 @@
 ---
-import Show from "./Show.astro";
+import ShowWhen from "./ShowWhen.astro";
 import If from "./If.astro";
 import Then from "./Then.astro";
 import Else from "./Else.astro";
@@ -35,7 +35,7 @@ const {
 
 {
   (
-    <Show when={totalPages > 1}>
+    <ShowWhen when={totalPages > 1}>
       <nav
         aria-label={ariaLabel}
         role="navigation"
@@ -107,6 +107,6 @@ const {
           Página {currentPage} de {totalPages}
         </div>
       </nav>
-    </Show>
+    </ShowWhen>
   )
 }

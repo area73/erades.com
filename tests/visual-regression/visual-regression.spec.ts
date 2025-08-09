@@ -193,6 +193,18 @@ test.describe("Visual Regression - Mobile", () => {
       state: "visible",
     });
     await page.waitForLoadState("networkidle");
+    // Forzar precarga de imágenes perezosas y estabilizar layout en móvil
+    await page.evaluate(() => {
+      // Scroll suave por la página para disparar intersecciones de lazy-load
+      const total = document.body.scrollHeight;
+      const step = Math.max(1, Math.floor(total / 6));
+      for (let y = 0; y <= total; y += step) {
+        window.scrollTo(0, y);
+      }
+      window.scrollTo(0, 0);
+    });
+    // Pequeña espera para completar decodificación de imágenes
+    await page.waitForTimeout(800);
 
     await expect(page).toHaveScreenshot("blog-landing-mobile-es.png", {
       fullPage: true,

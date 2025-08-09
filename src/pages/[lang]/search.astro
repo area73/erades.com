@@ -10,10 +10,16 @@ const query = Astro.url.searchParams.get("q") || "";
 
 let results = [];
 if (query) {
-  const { origin } = new URL(Astro.request.url);
-  const apiUrl = `${origin}/api/search?q=${encodeURIComponent(query)}`;
-  const res = await fetch(apiUrl);
-  results = await res.json();
+  try {
+    const { origin } = new URL(Astro.request.url);
+    const apiUrl = `${origin}/api/search?q=${encodeURIComponent(query)}`;
+    const res = await fetch(apiUrl);
+    if (res.ok) {
+      results = await res.json();
+    }
+  } catch {
+    results = [];
+  }
 }
 
 const pageParam = Number(Astro.url.searchParams.get("page")) || 1;

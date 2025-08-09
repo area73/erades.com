@@ -1,5 +1,8 @@
+buildx
+Buildx
 flexsearch
 frontmatter
+github
 Linkedin
 lucide
 networkidle

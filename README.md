@@ -45,19 +45,19 @@ src/
 
 ## 🧞 Commands
 
-| Command                | Action                                                      |
-| ---------------------- | ----------------------------------------------------------- |
-| `pnpm dev`             | Start development server at `localhost:4321`                |
-| `pnpm build`           | Build for production (includes FlexSearch index generation) |
-| `pnpm preview`         | Preview production build locally                            |
-| `pnpm test`            | Run unit tests                                              |
-| `pnpm test:watch`      | Run unit tests in watch mode                                |
-| `pnpm test:e2e`        | Run end-to-end tests                                        |
-| `pnpm test:visual`     | Run visual regression tests                                 |
-| `pnpm lint`            | Lint code with ESLint                                       |
-| `pnpm lint:fix`        | Fix linting issues automatically                            |
-| `pnpm translate:es-en` | Translate Spanish posts to English                          |
-| `pnpm translate:en-es` | Translate English posts to Spanish                          |
+| Command                   | Action                                                      |
+| ------------------------- | ----------------------------------------------------------- |
+| `pnpm dev`                | Start development server at `localhost:4321`                |
+| `pnpm build`              | Build for production (includes FlexSearch index generation) |
+| `pnpm preview`            | Preview production build locally                            |
+| `pnpm test`               | Run unit tests                                              |
+| `pnpm test:watch`         | Run unit tests in watch mode                                |
+| `pnpm docker:test:e2e`    | Run end-to-end tests in Docker (Playwright container)       |
+| `pnpm docker:test:visual` | Run visual regression tests in Docker                       |
+| `pnpm lint`               | Lint code with ESLint                                       |
+| `pnpm lint:fix`           | Fix linting issues automatically                            |
+| `pnpm translate:es-en`    | Translate Spanish posts to English                          |
+| `pnpm translate:en-es`    | Translate English posts to Spanish                          |
 
 ## 🎯 Key Features
 
@@ -127,11 +127,11 @@ pnpm lint
 # Unit tests
 pnpm test
 
-# E2E tests
-pnpm test:e2e
+# E2E tests (Docker)
+pnpm docker:test:e2e
 
-# Visual tests
-pnpm test:visual
+# Visual tests (Docker)
+pnpm docker:test:visual
 
 # Build
 pnpm build

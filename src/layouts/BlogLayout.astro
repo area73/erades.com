@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import FormattedDate from "../components/FormattedDate.astro";
-import Show from "../components/Show.astro";
+import ShowWhen from "@components/ShowWhen.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -34,7 +34,7 @@ const { title, description, pubDate, updatedDate, tags } = frontmatter;
     <main class="max-w-[1200px] mx-auto py-8 w-[calc(100%-2em)]">
       <article class="pb-8">
         <div class="prose w-[1200] max-w-[calc(100%-2em)] mx-auto p-4">
-          <Show when={pubDate}>
+          <ShowWhen when={pubDate}>
             <div class="mb-6 py-4 text-center leading-none">
               <h1 class="font-serif text-4xl font-bold text-foreground mb-6">
                 {title}
@@ -43,12 +43,12 @@ const { title, description, pubDate, updatedDate, tags } = frontmatter;
               <div class="flex items-center justify-between my-2">
                 <div>
                   <FormattedDate date={pubDate!} lang={lang} />
-                  <Show when={updatedDate}>
+                  <ShowWhen when={updatedDate}>
                     <div class="italic text-xs">
                       <slot name="updatedLabel" />{" "}
                       <FormattedDate date={updatedDate!} lang={lang} />
                     </div>
-                  </Show>
+                  </ShowWhen>
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
                   {
@@ -59,7 +59,7 @@ const { title, description, pubDate, updatedDate, tags } = frontmatter;
                 </div>
               </div>
             </div>
-          </Show>
+          </ShowWhen>
           <div class="prose max-w-none">
             <slot />
           </div>

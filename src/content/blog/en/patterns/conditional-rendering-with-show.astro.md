@@ -1,4 +1,3 @@
-
 ---
 title: Explicit Conditional Rendering
 description: A functional and maintainable pattern for conditionally displaying UI fragments without overusing logical or ternary operators.
@@ -17,7 +16,7 @@ heroImage: /blog-placeholder-23.jpg
 
 In JSX-based environments like Astro, conditionally rendering content blocks is a common task. But if you overuse ternaries or `&&`, the code ends up looking like a riddle.
 
-This pattern proposes encapsulating visibility logic into a semantic and reusable component: `Show.astro`.
+This pattern proposes encapsulating visibility logic into a semantic and reusable component: `ShowWhen.astro`.
 
 ## The Problem
 
@@ -40,7 +39,7 @@ This pattern is **functional, but opaque.** The `&&` requires understanding prec
 
 We create a dedicated component to represent the _semantic intent_: display content if a condition is met.
 
-### `components/Show.astro`
+### `components/ShowWhen.astro`
 
 ```astro
 ---
@@ -56,16 +55,16 @@ const { when, children } = Astro.props;
 
 ```astro
 ---
-import Show from "~/components/Show.astro";
+import ShowWhen from "~/components/ShowWhen.astro";
 ---
 
 <section>
-  <Show when={currentPage === 1}>
+<ShowWhen when={currentPage === 1}>
     <div>
         <h2>{t(lang, "blogList.title")}</h2>
         <p>{t(lang, "blogList.description")}</p>
       </div>
-  </Show>
+</ShowWhen>
 </section>
 ```
 
