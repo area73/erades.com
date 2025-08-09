@@ -68,6 +68,7 @@ const getCategoryHref = (cat: string) => {
 const getPageHref = (page: number) => {
   const params = new URLSearchParams();
   if (selectedCategory !== "Todas") params.set("category", selectedCategory);
+  if (viewMode === "list") params.set("viewMode", viewMode);
   return (
     (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
