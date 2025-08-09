@@ -118,7 +118,7 @@ describe("Show", () => {
   });
 
   test("does not render children when condition is zero", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: 0,
       },
@@ -132,7 +132,7 @@ describe("Show", () => {
   });
 
   test("renders complex HTML content when condition is true", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: true,
       },
@@ -148,7 +148,7 @@ describe("Show", () => {
   });
 
   test("handles edge case with empty string condition", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: "",
       },
@@ -162,7 +162,7 @@ describe("Show", () => {
   });
 
   test("handles edge case with object condition", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: { key: "value" },
       },
@@ -177,7 +177,7 @@ describe("Show", () => {
   });
 
   test("handles edge case with function condition", async () => {
-    const result = await renderAstroComponent(Show, {
+    const result = await renderAstroComponent(ShowWhen, {
       props: {
         when: () => true,
       },
