@@ -1,7 +1,10 @@
 packages:
-  - "."
+  - .
+
 ignoredBuiltDependencies:
   - esbuild
   - sharp
+
 onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
   - swup
