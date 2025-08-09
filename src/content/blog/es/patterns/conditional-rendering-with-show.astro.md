@@ -16,7 +16,7 @@ heroImage: /blog-placeholder-23.jpg
 
 En entornos JSX como Astro, condicionar bloques de contenido es algo habitual. Pero si abusas de ternarios o `&&`, el código acaba pareciendo un acertijo.
 
-Este patrón propone encapsular la lógica de visibilidad en un componente semántico y reutilizable: `Show.astro`.
+Este patrón propone encapsular la lógica de visibilidad en un componente semántico y reutilizable: `ShowWhen.astro`.
 
 ## El problema
 
@@ -39,7 +39,7 @@ Este patrón es **funcional, pero opaco.** El `&&` exige conocer precedencia y e
 
 Creamos un componente dedicado a representar el _intento semántico_: mostrar contenido si se cumple una condición.
 
-### `components/Show.astro`
+### `components/ShowWhen.astro`
 
 ```astro
 ---
@@ -59,12 +59,12 @@ import ShowWhen from "~/components/ShowWhen.astro";
 ---
 
 <section>
-  <Show when={currentPage === 1}>
+<ShowWhen when={currentPage === 1}>
     <div>
         <h2>{t(lang, "blogList.title")}</h2>
         <p>{t(lang, "blogList.description")}</p>
       </div>
-  </Show>
+</ShowWhen>
 </section>
 ```
 
