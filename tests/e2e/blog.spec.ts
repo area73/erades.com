@@ -18,7 +18,7 @@ test.describe("Blog", () => {
     // Comprobar que el título principal del blog es visible y no vacío
     const mainTitle = page
       .locator("h2")
-      .filter({ hasText: /¿Listo para explorar|Ready to explore/ });
+      .filter({ hasText: /(Todos los Posts|All Posts)/ });
     await expect(mainTitle).toBeVisible();
     const mainTitleText = await mainTitle.textContent();
     expect(mainTitleText).toBeTruthy();

@@ -18,9 +18,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "docker:playwright:base": "docker run --rm -i -v $PWD:$PWD -w $PWD --shm-size=2g mcr.microsoft.com/playwright:v1.54.1-jammy bash -lc",
-    "docker:test:visual": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/visual-regression/\"",
-    "docker:test:visual:update": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/visual-regression/ --update-snapshots\"",
-    "docker:test:e2e": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/e2e/\""
+    "docker:test:visual": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm exec playwright test tests/visual-regression/\"",
+    "docker:test:visual:update": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm exec playwright test tests/visual-regression/ --update-snapshots\"",
+    "docker:test:e2e": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm exec playwright test tests/e2e/\""
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

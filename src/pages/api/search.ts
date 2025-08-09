@@ -40,13 +40,10 @@ function extractIds(results: unknown): string[] {
 }
 
 export const GET: APIRoute = async ({ request }) => {
-  console.error("--- INICIO SSR SEARCH ENDPOINT ---");
-
   const url = new URL(request.url);
   // Cargar los documentos serializados
   const raw = await fs.readFile(INDEX_PATH, "utf-8");
   const docs: BlogDoc[] = JSON.parse(raw);
-  console.error("[SSR] Docs loaded:", docs.length);
 
   // Índice para metadatos (Document)
   const docIndex = new Document<BlogDoc, string>({
@@ -62,11 +59,10 @@ export const GET: APIRoute = async ({ request }) => {
     tokenize: "full",
     cache: true,
   });
-  docs.forEach((doc: BlogDoc, i) => {
+  docs.forEach((doc: BlogDoc) => {
     docIndex.add(doc);
     contentIndex.add(doc.id, doc.content);
   });
-  console.error("[SSR] Index rebuilt in memory.");
 
   const query = (url.searchParams.get("q") || "").toLowerCase().trim();
   // Buscar en metadatos (Document)
