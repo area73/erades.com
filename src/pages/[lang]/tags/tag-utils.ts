@@ -17,7 +17,11 @@ export function getTagCounts(
  * Returns the tags sorted by count descending.
  */
 export function getSortedTags(tagCounts: Record<string, number>): string[] {
-  return Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
+  // Orden determinista: primero por cantidad desc, luego alfabético asc para empates
+  return Object.keys(tagCounts).sort((a, b) => {
+    const diff = tagCounts[b] - tagCounts[a];
+    return diff !== 0 ? diff : a.localeCompare(b);
+  });
 }
 
 /**
@@ -67,9 +71,11 @@ export function getCategoryCounts(
 export function getSortedCategories(
   categoryCounts: Record<string, number>
 ): string[] {
-  return Object.keys(categoryCounts).sort(
-    (a, b) => categoryCounts[b] - categoryCounts[a]
-  );
+  // Orden determinista: primero por cantidad desc, luego alfabético asc para empates
+  return Object.keys(categoryCounts).sort((a, b) => {
+    const diff = categoryCounts[b] - categoryCounts[a];
+    return diff !== 0 ? diff : a.localeCompare(b);
+  });
 }
 
 /**
@@ -107,7 +113,11 @@ export function getTrendingTags(
   tagCounts: Record<string, number>,
   limit: number = 8
 ): string[] {
+  // Orden determinista: primero por cantidad desc, luego alfabético asc para empates
   return Object.keys(tagCounts)
-    .sort((a, b) => tagCounts[b] - tagCounts[a])
+    .sort((a, b) => {
+      const diff = tagCounts[b] - tagCounts[a];
+      return diff !== 0 ? diff : a.localeCompare(b);
+    })
     .slice(0, limit);
 }
