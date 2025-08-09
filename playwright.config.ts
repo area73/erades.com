@@ -20,6 +20,12 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
   reporter: "html",
+  webServer: {
+    command: "pnpm build && pnpm preview",
+    port: 4321,
+    reuseExistingServer: !process.env.CI,
+    env: { PORT: "4321" },
+  },
   use: {
     baseURL: "http://localhost:4321",
     trace: "on-first-retry",
