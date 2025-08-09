@@ -248,12 +248,20 @@ jobs:
       - name: Build application
         run: pnpm build
 
+      - name: Prepare deploy env
+        id: deploy-env
+        shell: bash
+        run: |
+          echo "key=${{ secrets.DEPLOY_KEY }}" >> $GITHUB_OUTPUT
+          echo "host=${{ secrets.DEPLOY_HOST }}" >> $GITHUB_OUTPUT
+          echo "path=${{ secrets.DEPLOY_PATH }}" >> $GITHUB_OUTPUT
+
       - name: Deploy to server
         run: |
           echo "Deploy step - configure your deployment here"
           # Example: rsync, scp, or deployment to your hosting provider
           # rsync -avz --delete dist/ "$DEPLOY_HOST:$DEPLOY_PATH"
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_KEY: ${{ steps.deploy-env.outputs.key }}
+          DEPLOY_HOST: ${{ steps.deploy-env.outputs.host }}
+          DEPLOY_PATH: ${{ steps.deploy-env.outputs.path }}
