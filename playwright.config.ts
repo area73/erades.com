@@ -19,15 +19,16 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
-  reporter: "html",
+  reporter: [["html", { open: "never" }]],
   webServer: {
-    command: "pnpm build && pnpm preview",
-    port: 4321,
+    command: "pnpm build && pnpm preview --host 127.0.0.1 --port 4321",
+    url: "http://127.0.0.1:4321",
+    timeout: 120_000,
     reuseExistingServer: !process.env.CI,
     env: { PORT: "4321" },
   },
   use: {
-    baseURL: "http://localhost:4321",
+    baseURL: "http://127.0.0.1:4321",
     trace: "on-first-retry",
     headless: true,
     // Configuración visual consistente
