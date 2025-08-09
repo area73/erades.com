@@ -16,20 +16,10 @@
     "translate:en-es": "dotenv -e .env -- tsx scripts/translate-posts.ts en es",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test tests/e2e/",
-    "test:e2e:ui": "playwright test tests/e2e/ --ui",
-    "test:e2e:headed": "playwright test tests/e2e/ --headed",
-    "test:visual": "playwright test tests/visual-regression/",
-    "test:visual:enhanced": "playwright test tests/visual-regression/visual-regression-enhanced.spec.ts",
-    "test:visual:basic": "playwright test tests/visual-regression/visual-regression.spec.ts tests/visual-regression/component-visual.spec.ts",
-    "test:visual:update": "playwright test tests/visual-regression/ --update-snapshots",
-    "test:visual:enhanced:update": "playwright test tests/visual-regression/visual-regression-enhanced.spec.ts --update-snapshots",
-    "test:visual:ui": "playwright test tests/visual-regression/ --ui",
-    "test:visual:headed": "playwright test tests/visual-regression/ --headed",
     "docker:playwright:base": "docker run --rm -i -v $PWD:$PWD -w $PWD --shm-size=2g mcr.microsoft.com/playwright:v1.54.1-jammy bash -lc",
-    "docker:test:visual": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm test:visual\"",
-    "docker:test:visual:update": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm test:visual:update\"",
-    "docker:test:e2e": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && pnpm test:e2e\""
+    "docker:test:visual": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/visual-regression/\"",
+    "docker:test:visual:update": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/visual-regression/ --update-snapshots\"",
+    "docker:test:e2e": "pnpm run docker:playwright:base \"corepack enable && pnpm install --frozen-lockfile && playwright test tests/e2e/\""
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

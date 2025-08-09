@@ -109,14 +109,7 @@ jobs:
         run: docker pull mcr.microsoft.com/playwright:v1.54.1-jammy
 
       - name: Run E2E tests inside Playwright container
-        run: |
-          docker run --rm \
-            -v "$PWD":"$PWD" \
-            -w "$PWD" \
-            --shm-size=2g \
-            -e PORT=4321 \
-            mcr.microsoft.com/playwright:v1.54.1-jammy \
-            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm test:e2e"
+        run: pnpm docker:test:e2e
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -142,14 +135,7 @@ jobs:
         run: docker pull mcr.microsoft.com/playwright:v1.54.1-jammy
 
       - name: Run visual regression tests inside Playwright container
-        run: |
-          docker run --rm \
-            -v "$PWD":"$PWD" \
-            -w "$PWD" \
-            --shm-size=2g \
-            -e PORT=4321 \
-            mcr.microsoft.com/playwright:v1.54.1-jammy \
-            bash -lc "corepack enable && pnpm install --frozen-lockfile && pnpm test:visual"
+        run: pnpm docker:test:visual
 
       - name: Upload visual test results
         uses: actions/upload-artifact@v4
