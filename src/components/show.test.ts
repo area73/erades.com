@@ -4,7 +4,7 @@ import { getByText } from "@testing-library/dom";
 import ShowWhen from "./ShowWhen.astro";
 import { renderAstroComponent } from "../test/helpers.ts";
 
-describe("Show", () => {
+describe("ShowWhen", () => {
   test("renders children when condition is true", async () => {
     const result = await renderAstroComponent(ShowWhen, {
       props: {
