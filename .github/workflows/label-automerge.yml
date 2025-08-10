@@ -1,8 +1,8 @@
 name: Label automerge PRs to master
 
 on:
-  workflow_dispatch: {}
-  check_suite:
+  workflow_run:
+    workflows: ["CI"]
     types: [completed]
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   label-automerge:
-    if: github.event_name == 'check_suite' && github.event.check_suite.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Add automerge label when all checks pass
@@ -22,7 +22,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             async function run() {
-              const sha = context.payload?.check_suite?.head_sha;
+              const sha = context.payload?.workflow_run?.head_sha;
               if (!sha) return;
               const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 owner: context.repo.owner,
@@ -34,9 +34,6 @@ jobs:
               );
               if (!targetPr) return;
 
-              // Si llegamos aquí, significa que todos los checks del check_suite pasaron
-              // porque el evento check_suite.completed con conclusion='success' solo se dispara
-              // cuando todos los checks están completos y exitosos
               if (targetPr.base.ref === 'master') {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
