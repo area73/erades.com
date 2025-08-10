@@ -33,14 +33,28 @@ jobs:
 +                (p) => p.state === 'open' && p.base.ref === 'master' && p.head.sha === sha
 +              );
               if (!targetPr) return;
-              const checks = await github.rest.checks.listForRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: sha,
-              });
+              const checks = await github.paginate(
+                github.rest.checks.listForRef,
+                {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: sha,
+                  per_page: 100,
+                }
+              );
               const RELEVANT_CONCLUSIONS = ['success', 'neutral', 'skipped'];
-              const runs = checks.data.check_runs.filter(r => !['Label automerge PRs to master', 'Automerge PRs to master'].includes(r.name));
-              const allPassed = runs.length > 0 && runs.every(r => r.status === 'completed' && RELEVANT_CONCLUSIONS.includes(r.conclusion));
+              const runs = checks
+                .flatMap(page => (page.check_runs ?? page.data?.check_runs ?? []))
+                .filter(r =>
+                  !['Label automerge PRs to master', 'Automerge PRs to master'].includes(r.name)
+                );
+              const allPassed =
+                runs.length > 0 &&
+                runs.every(
+                  r =>
+                    r.status === 'completed' &&
+                    RELEVANT_CONCLUSIONS.includes(r.conclusion)
+                );
               if (allPassed) {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
