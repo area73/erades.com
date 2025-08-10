@@ -1,11 +1,19 @@
 import { test, expect } from "@playwright/test";
+import {
+  setupPageForVisualTest,
+  waitForPageReady,
+} from "../visual-regression/visual-helpers";
 
 test.describe("Blog", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupPageForVisualTest(page);
+  });
   test("navegar al blog y comprobar que se ven los posts y tiene un título", async ({
     page,
   }) => {
     // Ir a la página principal en español
     await page.goto("/es");
+    await waitForPageReady(page);
 
     // Hacer clic en el enlace de "Blog"
     const blogLink = page.getByRole("link", { name: "Blog" });
@@ -13,6 +21,7 @@ test.describe("Blog", () => {
 
     // Esperar a que la URL cambie a la página del blog
     await page.waitForURL(/\/es\/blog/);
+    await waitForPageReady(page);
     expect(page.url()).toMatch(/\/es\/blog/);
 
     // Comprobar que el título principal del blog es visible y no vacío
@@ -48,6 +57,7 @@ test.describe("Blog", () => {
   }) => {
     // Ir a la página de búsqueda con una query que devuelva varios posts
     await page.goto("/es/blog");
+    await waitForPageReady(page);
 
     // Esperar a que los blogposts estén visibles
     const blogPosts = page.locator('[aria-label="grid-card"]');
@@ -66,8 +76,10 @@ test.describe("Blog", () => {
     const sortSelect = page.locator('select[name="sortBy"]');
     await sortSelect.selectOption("title");
 
-    // Esperar a que el orden cambie
-    await page.waitForTimeout(500); // Breve espera para el reordenamiento
+    // Esperar a que el orden cambie: comprobar que el primer título ya no coincide
+    await expect(
+      blogPosts.locator('[aria-label="blog-card-title"]').first()
+    ).not.toHaveText(titlesBefore[0] ?? "", { timeout: 5000 });
     const titlesAfter = await getTitles();
 
     // Comprobar que el orden ha cambiado
@@ -83,6 +95,7 @@ test.describe("Blog", () => {
   }) => {
     // Ir a la página de búsqueda con una query que devuelva varios posts
     await page.goto("/es/blog");
+    await waitForPageReady(page);
 
     // Esperar a que los blogposts en grid estén visibles
     const gridPosts = page.locator('[aria-label="grid-card"]');
@@ -238,6 +251,8 @@ test.describe("Blog", () => {
     // Esperar a que la URL cambie a la última página
     await page.waitForURL(new RegExp(`/es/blog/${lastPageNumber}`));
 
+    // Asegurar que el contenido de la última página está listo
+    await waitForPageReady(page);
     // Obtener los títulos de los posts de la última página
     const blogPosts = page.locator('[aria-label="grid-card"]');
     const getTitles = async () => {
