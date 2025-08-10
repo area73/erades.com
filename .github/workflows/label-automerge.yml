@@ -2,8 +2,7 @@ name: Label automerge PRs to master
 
 on:
   workflow_dispatch: {}
-  workflow_run:
-    workflows: ["CI"]
+  check_suite:
     types: [completed]
 
 permissions:
@@ -14,7 +13,7 @@ permissions:
 
 jobs:
   label-automerge:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'check_suite' && github.event.check_suite.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Add automerge label when all checks pass
@@ -23,7 +22,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             async function run() {
-              const sha = context.payload?.workflow_run?.head_sha;
+              const sha = context.payload?.check_suite?.head_sha;
               if (!sha) return;
               const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 owner: context.repo.owner,
@@ -34,29 +33,11 @@ jobs:
                 (p) => p.state === 'open' && p.base.ref === 'master' && p.head.sha === sha
               );
               if (!targetPr) return;
-              const checks = await github.paginate(
-                github.rest.checks.listForRef,
-                {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  ref: sha,
-                  per_page: 100,
-                }
-              );
-              const RELEVANT_CONCLUSIONS = ['success', 'neutral', 'skipped'];
-              const runs = checks
-                .flatMap(page => (page.check_runs ?? page.data?.check_runs ?? []))
-                .filter(r =>
-                  !['Label automerge PRs to master', 'Automerge PRs to master'].includes(r.name)
-                );
-              const allPassed =
-                runs.length > 0 &&
-                runs.every(
-                  r =>
-                    r.status === 'completed' &&
-                    RELEVANT_CONCLUSIONS.includes(r.conclusion)
-                );
-              if (allPassed) {
+
+              // Si llegamos aquí, significa que todos los checks del check_suite pasaron
+              // porque el evento check_suite.completed con conclusion='success' solo se dispara
+              // cuando todos los checks están completos y exitosos
+              if (targetPr.base.ref === 'master') {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
