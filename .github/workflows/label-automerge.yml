@@ -1,6 +1,7 @@
 name: Label automerge PRs to master
 
 on:
+  workflow_dispatch: {}
   workflow_run:
     workflows: ["CI"]
     types: [completed]
@@ -9,6 +10,7 @@ permissions:
   checks: read
   statuses: read
   pull-requests: write
+  issues: write
 
 jobs:
   label-automerge:
