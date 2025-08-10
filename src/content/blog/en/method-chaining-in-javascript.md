@@ -2,13 +2,14 @@
 title: "Method chaining in javascript"
 description: "Understanding method chaining in JavaScript for creating fluent interfaces and improving code readability through sequential method calls"
 pubDate: "2018-01-08"
-tags: ["javascript", "method chaining"]
-categories: ["javascript"]
+tags:
+  - javascript
+  - method chaining
+categories:
+  - javascript
 draft: false
 heroImage: "/blog-placeholder-20.jpg"
 ---
-
-# Method chaining in Javascript
 
 from [wikipedia](https://en.wikipedia.org/wiki/Method_chaining) <br>
 Method chaining, also known as named parameter idiom, is a common syntax for invoking multiple method calls in object-oriented programming languages.

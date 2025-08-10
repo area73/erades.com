@@ -1,6 +1,6 @@
 ---
-title: Renderizado condicional explícito
-description: Un patrón funcional y mantenible para condicionar fragmentos de UI sin abusar de operadores lógicos ni ternarios.
+title: "Renderizado condicional explícito"
+description: "Un patrón funcional y mantenible para condicionar fragmentos de UI sin abusar de operadores lógicos ni ternarios."
 pubDate: 2025-07-28
 categories:
   - design patterns

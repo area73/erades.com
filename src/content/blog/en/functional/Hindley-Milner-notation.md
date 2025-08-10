@@ -3,8 +3,13 @@ title: "Hindley-Milner notation"
 description: "Understanding Hindley-Milner type notation in functional programming for expressing function signatures and type relationships"
 pubDate: "2019-04-11"
 tags:
-  ["declarative", "Pure functions", "Inmutable", "currying", "Hindley-Milner"]
-categories: ["functional"]
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+  - Hindley-Milner
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-13.jpg"
 ---

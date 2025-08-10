@@ -1,18 +1,18 @@
 ---
-title: declaración de ramificación Vs micro-ramificación
-description: Comparando la bifurcación de declaraciones tradicionales con técnicas de micro-bifurcación en JavaScript para un código más mantenible y funcional
+title: "declaración de ramificación Vs micro-ramificación"
+description: "Comparando la bifurcación de declaraciones tradicionales con técnicas de micro-bifurcación en JavaScript para un código más mantenible y funcional"
 pubDate: 2018-06-06
 tags:
-  - statement brnaching
+  - statement branching
   - micro-branching strategies
 categories:
   - javascript
   - functional
 draft: false
-heroImage: /blog-placeholder-21.jpg
+heroImage: /blog-placeholder-25.png
 ---
 
-# ramificación de sentencias
+## ramificación de sentencias
 
 Cualquier estructura que altera la secuencia de ejecución dentro del ámbito global o funcional. <br>
 Esto incluye:<br>
@@ -63,5 +63,7 @@ window.console && console.log("test");
 
 <br>
 
+<div class="bibliography">
 Bibliografía:<br>
 https://javascriptweblog.wordpress.com/2010/07/26/no-more-ifs-alternatives-to-statement-branching-in-javascript/
+</div>

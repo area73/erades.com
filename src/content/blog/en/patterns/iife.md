@@ -2,8 +2,11 @@
 title: "IIFE"
 description: "Understanding Immediately Invoked Function Expressions (IIFE) in JavaScript and their use in preventing global scope pollution"
 pubDate: "2018-01-14"
-tags: ["design patterns", "IIFE"]
-categories: ["design patterns"]
+tags:
+  - design patterns
+  - IIFE
+categories:
+  - design patterns
 draft: false
 heroImage: "/blog-placeholder-6.jpg"
 ---

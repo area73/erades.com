@@ -3,15 +3,14 @@ title: "transducers"
 description: "Exploring transducers in functional programming for efficient data transformation pipelines without creating intermediate values"
 pubDate: "2019-01-01"
 tags:
-  [
-    "declarative",
-    "Pure functions",
-    "Inmutable",
-    "currying",
-    "functors",
-    "transducers",
-  ]
-categories: ["functional"]
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+  - functors
+  - transducers
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-16.jpg"
 ---
