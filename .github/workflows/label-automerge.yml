@@ -1,10 +1,6 @@
 name: Label automerge PRs to master
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  check_suite:
-    types: [completed]
   workflow_run:
     workflows: ["CI"]
     types: [completed]
@@ -16,9 +12,7 @@ permissions:
 
 jobs:
   label-automerge:
-    if: >-
-      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'master') ||
-      (github.event_name != 'pull_request')
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Add automerge label when all checks pass
@@ -27,47 +21,28 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             async function run() {
-              const pr = context.payload.pull_request;
-              if (!pr) {
-                // Intentar identificar PR desde workflow_run/check_suite
-                const sha = context.payload?.check_suite?.head_sha || context.payload?.workflow_run?.head_sha;
-                if (!sha) return;
-                const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  commit_sha: sha
-                });
-                const openPr = prs.find(p => p.state === 'open');
-                if (!openPr) return;
-                const targetPr = openPr;
-                const checks = await github.rest.checks.listForRef({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  ref: targetPr.head.sha,
-                });
-                const allPassed = checks.data.check_runs.length > 0 && checks.data.check_runs.every(c => c.conclusion === 'success');
-                if (allPassed && targetPr.base.ref === 'master') {
-                  await github.rest.issues.addLabels({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: targetPr.number,
-                    labels: ['automerge'],
-                  });
-                }
-                return;
-              }
-
+              const sha = context.payload?.workflow_run?.head_sha;
+              if (!sha) return;
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: sha
+              });
+              const targetPr = prs.find(p => p.state === 'open' && p.base.ref === 'master');
+              if (!targetPr) return;
               const checks = await github.rest.checks.listForRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: pr.head.sha,
+                ref: sha,
               });
-              const allPassed = checks.data.check_runs.length > 0 && checks.data.check_runs.every(c => c.conclusion === 'success');
-              if (allPassed && pr.base.ref === 'master') {
+              const RELEVANT_CONCLUSIONS = ['success', 'neutral', 'skipped'];
+              const runs = checks.data.check_runs.filter(r => !['Label automerge PRs to master', 'Automerge PRs to master'].includes(r.name));
+              const allPassed = runs.length > 0 && runs.every(r => r.status === 'completed' && RELEVANT_CONCLUSIONS.includes(r.conclusion));
+              if (allPassed) {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  issue_number: pr.number,
+                  issue_number: targetPr.number,
                   labels: ['automerge'],
                 });
               }
