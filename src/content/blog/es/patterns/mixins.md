@@ -1,6 +1,6 @@
 ---
-title: Mixins
-description: Entendiendo los mixins en JavaScript como una solución para la multi-herencia, incluyendo los patrones de delegación, concatenación y herencia funcional
+title: "Mixins"
+description: "Entendiendo los mixins en JavaScript como una solución para la multi-herencia, incluyendo los patrones de delegación, concatenación y herencia funcional"
 pubDate: 2018-11-18
 tags:
   - design patterns

@@ -1,6 +1,6 @@
 ---
-title: combinadores
-description: Comprendiendo los combinadores en la programación funcional como funciones puras de orden superior para componer y controlar el flujo del programa
+title: "combinadores"
+description: "Comprendiendo los combinadores en la programación funcional como funciones puras de orden superior para componer y controlar el flujo del programa"
 pubDate: "2019-01-10"
 tags:
   - declarative

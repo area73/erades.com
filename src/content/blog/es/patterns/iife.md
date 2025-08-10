@@ -1,6 +1,6 @@
 ---
-title: IIFE
-description: Comprendiendo las Expresiones de Función Inmediatamente Invocadas (IIFE) en JavaScript y su uso en la prevención de la contaminación del ámbito global
+title: "IIFE"
+description: "Comprendiendo las Expresiones de Función Inmediatamente Invocadas (IIFE) en JavaScript y su uso en la prevención de la contaminación del ámbito global"
 pubDate: 2018-01-14
 tags:
   - design patterns
