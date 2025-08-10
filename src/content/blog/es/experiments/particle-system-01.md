@@ -1,7 +1,7 @@
 ---
-title: sistema de partículas
+title: "sistema de partículas"
 pubDate: 2019-01-11
-description: Explorando técnicas de animación de sistemas de partículas utilizando Canvas y JavaScript para crear efectos visuales dinámicos
+description: "Explorando técnicas de animación de sistemas de partículas utilizando Canvas y JavaScript para crear efectos visuales dinámicos"
 tags:
   - particle system
 categories:

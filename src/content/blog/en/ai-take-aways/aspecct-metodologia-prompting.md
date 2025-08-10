@@ -1,9 +1,7 @@
 ---
-title: 'Methodologies: How to ask the AI'
-description: >-
-  Practical guide for writing effective prompts using the ASPECCT methodology,
-  with template, real example and comparison with alternative frameworks.
-pubDate: 2025-08-10T00:00:00.000Z
+title: "Methodologies: How to ask the AI"
+description: "Practical guide for writing effective prompts using the ASPECCT methodology, with template, real example and comparison with alternative frameworks."
+pubDate: 2025-08-10
 tags:
   - ASPECCT
   - prompt-engineering
@@ -15,6 +13,7 @@ categories:
 draft: false
 heroImage: /blog-placeholder-21.jpg
 ---
+
 The quality of a model's responses depends largely on the quality of the prompt. **ASPECCT** is a simple and powerful way to structure what you ask for to achieve consistent results.
 
 ## What is ASPECCT

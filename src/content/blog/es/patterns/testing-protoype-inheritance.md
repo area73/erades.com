@@ -1,6 +1,6 @@
 ---
-title: probando la herencia del prototipo
-description: Explorando la herencia de prototipos en JavaScript utilizando el método call para heredar propiedades y métodos entre objetos y funciones
+title: "probando la herencia del prototipo"
+description: "Explorando la herencia de prototipos en JavaScript utilizando el método call para heredar propiedades y métodos entre objetos y funciones"
 pubDate: 2018-11-21
 tags:
   - design patterns
