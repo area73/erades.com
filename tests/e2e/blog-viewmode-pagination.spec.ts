@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Blog view mode persistence across pagination", () => {
-  test("keeps list view when navigating to page 2", async ({ page }) => {
+test.describe("Persistencia del modo de vista a través de la paginación", () => {
+  test("mantiene la vista de lista al navegar a la página 2", async ({
+    page,
+  }) => {
     await page.goto("/es/blog");
 
     // Initial state: grid cards visible
@@ -44,7 +46,7 @@ test.describe("Blog view mode persistence across pagination", () => {
     await expect(activePage).toHaveText("2");
   });
 
-  test("preserves viewMode, category and sort across pagination", async ({
+  test("conserva viewMode, category y sortBy a través de la paginación", async ({
     page,
   }) => {
     await page.goto("/es/blog");
