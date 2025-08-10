@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
+import {
+  setupPageForVisualTest,
+  waitForPageReady,
+} from "../visual-regression/visual-helpers";
 
 test.describe("Buscador", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupPageForVisualTest(page);
+  });
   test("buscar 'func' y comprobar resultados", async ({ page }) => {
     // Ir a la home en español
     await page.goto("/es");
@@ -9,7 +16,7 @@ test.describe("Buscador", () => {
     await page.setViewportSize({ width: 1024, height: 768 });
 
     // Esperar a que la página cargue completamente
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     // Esperar a que el input de búsqueda esté visible (usar el visible, no el primero)
     const searchInputs = page.getByPlaceholder("Buscar en el blog...");
@@ -89,8 +96,10 @@ test.describe("Buscador", () => {
     const sortSelect = page.locator('select[name="sortBy"]');
     await sortSelect.selectOption("title");
 
-    // Esperar a que el orden cambie
-    await page.waitForTimeout(500); // Breve espera para el reordenamiento
+    // Esperar a que el orden cambie de forma determinista: el primer título cambia
+    await expect(
+      blogPosts.locator('[aria-label="blog-card-title"]').first()
+    ).not.toHaveText(titlesBefore[0] ?? "", { timeout: 5000 });
     const titlesAfter = await getTitles();
 
     // Comprobar que el orden ha cambiado
@@ -111,7 +120,7 @@ test.describe("Buscador", () => {
     await page.setViewportSize({ width: 1024, height: 768 });
 
     // Esperar a que la página cargue completamente
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     // Esperar a que los blogposts en grid estén visibles
     const gridPosts = page.locator('[aria-label="grid-card"]');
