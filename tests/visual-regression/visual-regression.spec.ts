@@ -153,8 +153,10 @@ test.describe("Visual Regression Tests", () => {
     const themeToggle = page.getByRole("button", { name: /toggle dark mode/i });
     await themeToggle.click();
 
-    // Esperar a que el tema cambie
-    await page.waitForTimeout(500);
+    // Esperar a que el tema cambie de forma determinista
+    await page.waitForFunction(() =>
+      document.documentElement.classList.contains("dark")
+    );
 
     await expect(page).toHaveScreenshot("homepage-dark-mode.png", {
       fullPage: true,
@@ -219,7 +221,7 @@ test.describe("Visual Regression - Tablet", () => {
     await page.goto("/es");
 
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("homepage-tablet-es.png", {
       fullPage: true,
@@ -233,7 +235,7 @@ test.describe("Visual Regression - Tablet", () => {
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("blog-grid-tablet-layout.png", {
       fullPage: true,
