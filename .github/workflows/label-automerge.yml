@@ -28,7 +28,10 @@ jobs:
                 repo: context.repo.repo,
                 commit_sha: sha
               });
-              const targetPr = prs.find(p => p.state === 'open' && p.base.ref === 'master');
+-              const targetPr = prs.find(p => p.state === 'open' && p.base.ref === 'master');
++              const targetPr = prs.find(
++                (p) => p.state === 'open' && p.base.ref === 'master' && p.head.sha === sha
++              );
               if (!targetPr) return;
               const checks = await github.rest.checks.listForRef({
                 owner: context.repo.owner,
