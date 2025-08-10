@@ -2,8 +2,11 @@
 title: "Global variables are bad"
 description: "Exploring the dangers of global variables in JavaScript, including scope pollution, concurrency issues, and best practices for variable declaration"
 pubDate: "2018-06-14"
-tags: ["javascript", "globals"]
-categories: ["javascript"]
+tags:
+  - javascript
+  - globals
+categories:
+  - javascript
 draft: false
 heroImage: "/blog-placeholder-14.jpg"
 ---
@@ -234,5 +237,10 @@ cat.hasOwnProperty('clone')  //=> true
 ```
 
 <br>
-Bibliography:<br>
+<div class="bibliography">
+
+## Bibliografía:
+
 https://gist.github.com/hallettj/64478
+
+</div>

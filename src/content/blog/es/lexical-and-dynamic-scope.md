@@ -79,7 +79,8 @@ En el ejemplo anterior, el valor de `this` dentro de `printName` depende de cóm
 JavaScript no tiene un alcance dinámico real para las variables, pero entender cómo funcionan `this` y ciertos constructos puede ayudar a evitar confusiones.
 
 <div class="bibliography">
-Bibliografía: <br>
+
+## Bibliografía:
 
 https://stackoverflow.com/questions/36383795/javascript-lhs-and-rhs-lookup
 Curso de Plural sight: Javascript avanzado, por Kyle Simpson

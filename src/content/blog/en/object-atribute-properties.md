@@ -2,8 +2,11 @@
 title: "Object attribute properties"
 description: "Exploring JavaScript object property attributes including value, configurable, enumerable, and writable flags"
 pubDate: "2018-01-12"
-tags: ["javascript", "object properties"]
-categories: ["javascript"]
+tags:
+  - javascript
+  - object properties
+categories:
+  - javascript
 draft: false
 heroImage: "/blog-placeholder-19.jpg"
 ---

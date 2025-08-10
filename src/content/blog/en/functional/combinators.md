@@ -2,8 +2,14 @@
 title: "combinators"
 description: "Understanding combinators in functional programming as higher-order pure functions for composing and controlling program flow"
 pubDate: "2019-01-10"
-tags: ["declarative", "Pure functions", "Inmutable", "currying", "combinator"]
-categories: ["functional"]
+tags:
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+  - combinator
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-10.jpg"
 ---
@@ -89,7 +95,8 @@ different ways and then combine the results.
 <br><br>
 
 <div class="bibliography">
-Bibliography:<br>
+
+## Bibliografía:
 
 - Functional Programming in JavaScript . Ed: MANNING SHELTER ISLAND. Author: Luis Atencio.<br>
 - [Mostly Adequate Guide to functional programming](https://drboolean.gitbooks.io/mostly-adequate-guide-old/content/).

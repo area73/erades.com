@@ -171,9 +171,14 @@ comoÓvalo.call(BotónÓvalo.prototype, { crecerPor: 2, encogerPor: 2 });
 
 **Lectura adicional [Traits](https://github.com/traitsjs/traits.js)**
 
-Bibliografía: <br>
+<div class="bibliography">
+
+## Bibliografía:
+
 [Angus Croll](https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/?blogsub=confirming%23subscribe-blog]) <br/>
 [javascript.info](https://javascript.info/mixins)<br/>
 [Wikipedia](https://es.wikipedia.org/wiki/Mixin)<br/>
 [Eric Elliott](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-6fa6bdf5ad95)<br/>
 [developer.mozilla](https://developer.mozilla.org/es/docs/Web/JavaScript/Herencia_y_la_cadena_de_protipos)<br/>
+
+</div>
