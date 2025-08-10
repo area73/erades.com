@@ -1,3 +1,4 @@
+ASPECCT
 buildx
 Buildx
 flexsearch
@@ -5,6 +6,7 @@ frontmatter
 github
 Linkedin
 lucide
+mantenible
 networkidle
 openai
 redirección

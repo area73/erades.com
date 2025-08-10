@@ -1,6 +1,6 @@
 ---
-title: Las variables globales son malas
-description: Explorando los peligros de las variables globales en JavaScript, incluyendo la contaminación del alcance, problemas de concurrencia y mejores prácticas para la declaración de variables
+title: "Las variables globales son malas"
+description: "Explorando los peligros de las variables globales en JavaScript, incluyendo la contaminación del alcance, problemas de concurrencia y mejores prácticas para la declaración de variables"
 pubDate: 2018-06-14
 tags:
   - javascript
@@ -226,5 +226,7 @@ gato.hasOwnProperty("clonar"); //=> true
 ```
 
 <br>
+<div class="bibliography">
 Bibliografía:<br>
 https://gist.github.com/hallettj/64478
+</div>

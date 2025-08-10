@@ -2,13 +2,16 @@
 title: "Lexical and Dynamic scope"
 description: "Understanding lexical and dynamic scoping in JavaScript, including the eval keyword and its performance implications"
 pubDate: "2018-01-14"
-tags: ["scope", "eval", "javascript", "declarative"]
-categories: ["javascript"]
+tags:
+  - scope
+  - eval
+  - javascript
+  - declarative
+categories:
+  - javascript
 draft: false
 heroImage: "/blog-placeholder-18.jpg"
 ---
-
-# Lexical scoping
 
 ## Evil eval
 
@@ -76,7 +79,8 @@ JavaScript does not have true dynamic scope for variables, but understanding how
 ---
 
 <div class="bibliography">
-Bibliography:<br>
+
+## Bibliografía:
 
 https://stackoverflow.com/questions/36383795/javascript-lhs-and-rhs-lookup<br>
 Plural sight course: Advanced javascript, by kyle Simpson

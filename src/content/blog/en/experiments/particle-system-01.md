@@ -1,7 +1,7 @@
 ---
-title: particle system
+title: "particle system"
 pubDate: 2019-01-11
-description: Exploring particle system animation techniques using Canvas and JavaScript for creating dynamic visual effects
+description: "Exploring particle system animation techniques using Canvas and JavaScript for creating dynamic visual effects"
 tags:
   - particle system
 categories:

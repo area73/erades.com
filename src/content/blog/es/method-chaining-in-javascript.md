@@ -1,6 +1,6 @@
 ---
-title: Encadenamiento de métodos en javascript
-description: Comprendiendo el encadenamiento de métodos en JavaScript para crear interfaces fluidas y mejorar la legibilidad del código a través de llamadas a métodos secuenciales
+title: "Encadenamiento de métodos en javascript"
+description: "Comprendiendo el encadenamiento de métodos en JavaScript para crear interfaces fluidas y mejorar la legibilidad del código a través de llamadas a métodos secuenciales"
 pubDate: 2018-01-08
 tags:
   - javascript

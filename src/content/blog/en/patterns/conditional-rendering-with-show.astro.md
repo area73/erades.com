@@ -1,6 +1,6 @@
 ---
-title: Explicit Conditional Rendering
-description: A functional and maintainable pattern for conditionally displaying UI fragments without overusing logical or ternary operators.
+title: "Explicit Conditional Rendering"
+description: "A functional and maintainable pattern for conditionally displaying UI fragments without overusing logical or ternary operators."
 pubDate: 2025-07-28
 categories:
   - design patterns

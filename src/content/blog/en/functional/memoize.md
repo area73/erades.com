@@ -2,8 +2,14 @@
 title: "Memoize"
 description: "A more function memoizer"
 pubDate: "2019-11-11"
-tags: ["declarative", "Pure functions", "Inmutable", "currying", "functors"]
-categories: ["functional"]
+tags:
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+  - functors
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-9.jpg"
 ---

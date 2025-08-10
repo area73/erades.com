@@ -2,8 +2,14 @@
 title: "monads"
 description: "Exploring monads as specialized functors for handling null data and streamlining error handling in functional programming"
 pubDate: "2019-11-11"
-tags: ["declarative", "Pure functions", "Inmutable", "currying", "functors"]
-categories: ["functional"]
+tags:
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+  - functors
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-8.jpg"
 ---

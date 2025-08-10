@@ -2,8 +2,13 @@
 title: "Mixins"
 description: "Understanding mixins in JavaScript as a solution for multi-inheritance, including delegation, concatenative, and functional inheritance patterns"
 pubDate: "2018-11-18"
-tags: ["design patterns", "mixins", "functional mixins", "inherence"]
-categories: ["design patterns"]
+tags:
+  - design patterns
+  - mixins
+  - functional mixins
+  - inherence
+categories:
+  - design patterns
 draft: false
 heroImage: "/blog-placeholder-7.jpg"
 ---
@@ -166,9 +171,11 @@ asOval.call(OvalButton.prototype, { growBy: 2, shrinkBy: 2 });
 
 **Further reading [Traits](https://github.com/traitsjs/traits.js)**
 
+<div class="bibliography">
 Bibliography: <br>
 [Angus Croll](https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/?blogsub=confirming%23subscribe-blog]) <br/>
 [javascript.info](https://javascript.info/mixins)<br/>
 [Wikipedia](https://en.wikipedia.org/wiki/Mixin)<br/>
 [Eric Elliott](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-6fa6bdf5ad95)<br/>
 [developer.mozilla](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)<br/>
+</div>
