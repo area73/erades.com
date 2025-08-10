@@ -226,5 +226,7 @@ gato.hasOwnProperty("clonar"); //=> true
 ```
 
 <br>
+<div class="bibliography">
 Bibliografía:<br>
 https://gist.github.com/hallettj/64478
+</div>

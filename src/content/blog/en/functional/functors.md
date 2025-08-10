@@ -2,8 +2,13 @@
 title: "programming functors"
 description: "Understanding functors as a design pattern for safely manipulating wrapped values in functional programming"
 pubDate: "2019-01-01"
-tags: ["declarative", "Pure functions", "Inmutable", "currying"]
-categories: ["functional"]
+tags:
+  - declarative
+  - Pure functions
+  - Inmutable
+  - currying
+categories:
+  - functional
 draft: false
 heroImage: "/blog-placeholder-15.jpg"
 ---

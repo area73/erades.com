@@ -2,8 +2,12 @@
 title: "testing prototype inheritance"
 description: "Exploring prototype inheritance in JavaScript using the call method to inherit properties and methods between objects and functions"
 pubDate: "2018-11-21"
-tags: ["design patterns", "prototype", "inheritance"]
-categories: ["design patterns"]
+tags:
+  - design patterns
+  - prototype
+  - inheritance
+categories:
+  - design patterns
 draft: false
 heroImage: "/blog-placeholder-17.jpg"
 ---

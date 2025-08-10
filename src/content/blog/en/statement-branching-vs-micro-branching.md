@@ -2,10 +2,14 @@
 title: "statement branching Vs micro-branching"
 description: "Comparing traditional statement branching with micro-branching techniques in JavaScript for more maintainable and functional code"
 pubDate: "2018-06-06"
-tags: ["statement brnaching", "micro-branching strategies"]
-categories: ["javascript", "functional"]
+tags:
+  - statement brnaching
+  - micro-branching strategies
+categories:
+  - javascript
+  - functional
 draft: false
-heroImage: "/blog-placeholder-21.jpg"
+heroImage: "/blog-placeholder-25.png"
 ---
 
 ## statement branching
@@ -59,5 +63,10 @@ window.console && console.log("test");
 
 <br>
 
-Bibliography:<br>
+<div class="bibliography">
+
+## Bibliografía:
+
 https://javascriptweblog.wordpress.com/2010/07/26/no-more-ifs-alternatives-to-statement-branching-in-javascript/
+
+</div>
