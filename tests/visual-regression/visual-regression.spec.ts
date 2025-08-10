@@ -1,18 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { setupPageForVisualTest, waitForPageReady } from "./visual-helpers";
 
 test.describe("Visual Regression Tests", () => {
   // Configuración común para todos los tests visuales
   test.beforeEach(async ({ page }) => {
-    // Esperar a que las fuentes se carguen completamente
-    await page.addStyleTag({
-      content: `
-        * {
-          font-display: swap !important;
-          animation-duration: 0s !important;
-          transition-duration: 0s !important;
-        }
-      `,
-    });
+    await setupPageForVisualTest(page);
   });
 
   test("Homepage - Español", async ({ page }) => {
@@ -20,7 +12,7 @@ test.describe("Visual Regression Tests", () => {
 
     // Esperar a que el contenido principal se cargue
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     // Screenshot de la página completa
     await expect(page).toHaveScreenshot("homepage-es.png", {
@@ -33,7 +25,7 @@ test.describe("Visual Regression Tests", () => {
     await page.goto("/en");
 
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("homepage-en.png", {
       fullPage: true,
@@ -48,7 +40,7 @@ test.describe("Visual Regression Tests", () => {
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("blog-landing-es.png", {
       fullPage: true,
@@ -62,7 +54,7 @@ test.describe("Visual Regression Tests", () => {
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("blog-landing-en.png", {
       fullPage: true,
@@ -75,7 +67,7 @@ test.describe("Visual Regression Tests", () => {
 
     const searchInput = page.locator('input[type="search"]:visible').first();
     await searchInput.waitFor({ state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("search-page-es.png", {
       fullPage: true,
@@ -87,7 +79,7 @@ test.describe("Visual Regression Tests", () => {
     await page.goto("/es/about");
 
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("about-page-es.png", {
       fullPage: true,
@@ -100,7 +92,7 @@ test.describe("Visual Regression Tests", () => {
 
     const titleElement = page.locator("h2:visible").first();
     await titleElement.waitFor({ state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("tags-page-es.png", {
       fullPage: true,
@@ -112,7 +104,7 @@ test.describe("Visual Regression Tests", () => {
     await page.goto("/es/blog/functional/functional-programming");
 
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot(
       "blog-post-functional-programming.png",
@@ -129,6 +121,7 @@ test.describe("Visual Regression Tests", () => {
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
+    await waitForPageReady(page);
 
     // Screenshot específico del grid de cards
     const gridElement = page.locator('[aria-label="posts-list"]').first();
@@ -141,6 +134,7 @@ test.describe("Visual Regression Tests", () => {
     await page.goto("/es");
 
     await page.waitForSelector('[aria-label="header"]', { state: "visible" });
+    await waitForPageReady(page);
 
     // Screenshot específico del header
     const headerElement = page.locator('[aria-label="header"]').first();
@@ -178,7 +172,7 @@ test.describe("Visual Regression - Mobile", () => {
     await page.goto("/es");
 
     await page.waitForSelector("h1", { state: "visible" });
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("homepage-mobile-es.png", {
       fullPage: true,
@@ -192,19 +186,7 @@ test.describe("Visual Regression - Mobile", () => {
     await page.waitForSelector('[aria-label="grid-card"]', {
       state: "visible",
     });
-    await page.waitForLoadState("networkidle");
-    // Forzar precarga de imágenes perezosas y estabilizar layout en móvil
-    await page.evaluate(() => {
-      // Scroll suave por la página para disparar intersecciones de lazy-load
-      const total = document.body.scrollHeight;
-      const step = Math.max(1, Math.floor(total / 6));
-      for (let y = 0; y <= total; y += step) {
-        window.scrollTo(0, y);
-      }
-      window.scrollTo(0, 0);
-    });
-    // Pequeña espera para completar decodificación de imágenes
-    await page.waitForTimeout(800);
+    await waitForPageReady(page);
 
     await expect(page).toHaveScreenshot("blog-landing-mobile-es.png", {
       fullPage: true,
