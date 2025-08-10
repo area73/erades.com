@@ -2,8 +2,9 @@ name: Automerge PRs to master
 
 on:
   workflow_dispatch: {}
-  workflow_run:
-    workflows: ["CI"]
+  pull_request:
+    types: [labeled]
+  check_suite:
     types: [completed]
 
 permissions:
@@ -14,8 +15,11 @@ permissions:
 
 jobs:
   automerge:
-    # Ejecuta cuando los workflows "CI" y "Security" concluyen con éxito
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    # Ejecuta cuando se añade la etiqueta automerge o cuando todos los checks pasan
+    if: >-
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' &&
+       github.event.label.name == 'automerge') ||
+      (github.event_name == 'check_suite' && github.event.check_suite.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Automerge
