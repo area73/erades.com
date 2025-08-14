@@ -63,7 +63,19 @@ En el caso de los test para WPO los desarrolladores creo que no se dan cuenta el
 
 ### Plan de ataque (síntesis)
 
-1.  Métricas de laboratorio automatizadas (synthetic): Lighthouse CI en local y en CI, con presupuestos de rendimiento y aserciones que rompen el build cuando te pasas. Reportes HTML/JSON almacenados como artefactos y/o en un servidor LHCI. ￼ ￼
-2.  Métricas de campo (RUM): web-vitals en producción para LCP/INP/CLS reales, enviados a tu backend/GA4. Esto te evita optimizar a ciegas. ￼ ￼
-3.  Benchmarks públicos: PSI/CrUX en CI para ver cómo te mide Google (Lighthouse + datos reales agregados). ￼ ￼
-4.  Opcional power-up: sitespeed.io para rastrear múltiples URLs, grabar vídeos/filmstrips y presupuestos más finos; sube resultados a S3/GCS. ￼
+1. Métricas de laboratorio automatizadas (synthetic): Lighthouse CI en local y en CI, con presupuestos de rendimiento y aserciones que rompen el build cuando te pasas. Reportes HTML/JSON almacenados como artefactos y/o en un servidor LHCI. ￼ ￼
+2. Métricas de campo (RUM): web-vitals en producción para LCP/INP/CLS reales, enviados a tu backend/GA4. Esto te evita optimizar a ciegas. ￼ ￼
+3. Benchmarks públicos: PSI/CrUX en CI para ver cómo te mide Google (Lighthouse + datos reales agregados). ￼ ￼
+4. Opcional power-up: sitespeed.io para rastrear múltiples URLs, grabar vídeos/filmstrips y presupuestos más finos; sube resultados a S3/GCS. ￼
+
+### Lighthouse
+
+Instalado lighthouse
+
+Alternativa rápida ejecutar:
+
+```bash
+npx unlighthouse --site https://erades.com
+```
+
+Esto te da las métricas de todo el site.
