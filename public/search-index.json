@@ -714,5 +714,26 @@
     "content": "\n## ramificación de sentencias\n\nCualquier estructura que altera la secuencia de ejecución dentro del ámbito global o funcional. <br>\nEsto incluye:<br>\n\n```\nif\nelse\nswitch\nfor\nwhile\n```\n\nLas sentencias están diseñadas para ejecutarse de forma no lineal. Además del evidente efecto de hinchazón, la ramificación de sentencias tiende a volverse poco intuitiva a medida que avanza.\n\n## micro-ramificación\n\nLógica condicional contenida dentro de una sentencia que no afecta a la secuencia de ejecución de la sentencia.<br>\nLos siguientes operadores facilitan la micro-ramificación: <br>\n\n```\nternary (<cond> ? a : b)\n&&\n||\n```\n\nLa lógica fluye secuencialmente de arriba a abajo e incluso de izquierda a derecha. No hay bifurcaciones en el camino. Solo hay una sentencia de retorno y está al final, donde esperamos que esté. Lo mejor de todo es que es corto. Nada se desperdicia. De hecho, es lo suficientemente conciso como para ser apenas procedimental en absoluto.\n\nLas alternativas a la ramificación de sentencias se dividen en dos amplias categorías: **micro-ramificación** y **sin ramificación en absoluto**\n\n## Estrategias de micro-ramificación\n\n### Guardias (&&) y valores predeterminados (||)\n\n```javascript\n//invocar callback si hay uno\ncallback && callback();\n//retrasar por argumento o 20\ndelayBy(delay || 20);\n//eliminar el nodo de su padre\nnode && node.parent && node.parent.removeChild(node);\n//registrar una prueba en la consola si tenemos una\nwindow.console && console.log(\"test\");\n```\n\n<br>\n\n<blockquote> Algunas cosas tienen un lugar natural. Los pájaros en el cielo, los peces en el mar y una declaración de retorno al final de una función.</blockquote>\n\n<br>\n\n<div class=\"bibliography\">\nBibliografía:<br>\nhttps://javascriptweblog.wordpress.com/2010/07/26/no-more-ifs-alternatives-to-statement-branching-in-javascript/\n</div>\n",
     "path": "/blog/es/statement-branching-vs-micro-branching",
     "id": "es/statement-branching-vs-micro-branching"
+  },
+  {
+    "title": "WPO: Web Performance Optimization",
+    "description": "Expolorando la mejora de la optimización web con AI con los core web vitals",
+    "pubDate": "2025-08-26T00:00:00.000Z",
+    "tags": [
+      "javascript",
+      "wpo",
+      "google-core-web-vitals"
+    ],
+    "categories": [
+      "javascript",
+      "best-practices",
+      "core-web-vitals",
+      "wpo"
+    ],
+    "draft": true,
+    "heroImage": "/blog-placeholder-14.jpg",
+    "content": "\n## Exploración inicial\n\nDespués de crear esta web app [erades.com](https://erades.com) , me voy a centrar el los core web vitals de google.\n\nPara esta tare ame voy a centrar en lighthouse.\n\nLos primeros resultados son estos:\n\n### 2025-08-12\n\n- [Home](../../../../assets/lighthouse/2025-08-12-HOME.html)\n- [Post](../../../../assets/lighthouse/2025-08-12-POST.html)\n- [Search](../../../../assets/lighthouse/2025-08-12-SEARCH.html)\n- [Tags](../../../../assets/lighthouse/2025-08-12-TAGS.html)\n- [Blog](../../../../assets/lighthouse/2025-08-12-BLOG.html)\n",
+    "path": "/blog/es/wpo/wpo",
+    "id": "es/wpo/wpo"
   }
 ]
