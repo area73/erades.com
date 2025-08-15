@@ -11,8 +11,6 @@ updates:
     open-pull-requests-limit: 10
     reviewers:
       - "rerades"
-    assignees:
-      - "rerades"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -40,8 +38,6 @@ updates:
       timezone: "UTC"
     open-pull-requests-limit: 5
     reviewers:
-      - "rerades"
-    assignees:
       - "rerades"
     commit-message:
       prefix: "ci"
