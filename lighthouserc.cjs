@@ -1,7 +1,8 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: "pnpm preview --port 4321 --host",
+      startServerCommand:
+        "./node_modules/.bin/astro preview --port 4321 --host",
       url: [
         "http://localhost:4321/es?device=mobile",
         "http://localhost:4321/es/blog?device=mobile",
