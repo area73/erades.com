@@ -72,9 +72,9 @@ module.exports = {
       },
     },
     upload: {
-      target: "filesystem",
-      outputDir: "./coverage-lighthouse/desktop",
-      reportFilenamePattern: "%%DATETIME%%-%%PATHNAME%%-desktop.%%EXTENSION%%",
+      target: "lhci",
+      serverBaseUrl: "http://localhost:9001",
+      token: process.env.LHCI_BUILD_TOKEN,
     },
   },
 };

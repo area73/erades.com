@@ -16,85 +16,157 @@ pnpm install
 pnpm build
 ```
 
-### 3. Iniciar el servidor
+### 3. Ejecutar pruebas de Lighthouse
 
 ```bash
-pnpm lhci:server:start
+pnpm lhci:ci:mobile
 ```
 
-### 4. Ejecutar pruebas
+O para escritorio:
 
 ```bash
-pnpm lhci:autorun:server
+pnpm lhci:ci:desktop
 ```
 
-## 📊 Acceso al Dashboard
+## 📊 Resultados
 
-Una vez que el servidor esté corriendo, puedes acceder al dashboard en:
+Los resultados de las pruebas se generan en `coverage-lighthouse/`:
 
-- **URL**: http://localhost:9001
-- **Puerto**: 9001
+- `coverage-lighthouse/mobile/` para reportes móviles
+- `coverage-lighthouse/desktop/` para reportes de escritorio
+
+Estos reportes son los que se subirán manualmente al servidor si lo deseas.
+
+## 🐳 Lighthouse CI Server con Docker
+
+Basado en la guía oficial de LHCI Server [documentación](https://googlechrome.github.io/lighthouse-ci/docs/server.html):
+
+### Estructura y persistencia
+
+- La base de datos SQLite se persiste en `db/lighthouse/` (bajo control de versiones).
+- Se utiliza la imagen `patrickhulce/lhci-server` y se monta el volumen en `/data`.
+
+Archivo `docker-compose.lhci.yml`:
+
+```yaml
+version: "3.8"
+services:
+  lhci-server:
+    image: patrickhulce/lhci-server
+    container_name: lhci-server
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./db/lighthouse:/data
+    restart: unless-stopped
+```
+
+Scripts útiles en `package.json`:
+
+```json
+{
+  "scripts": {
+    "lhci:server:up": "docker compose -f docker-compose.lhci.yml up -d",
+    "lhci:server:down": "docker compose -f docker-compose.lhci.yml down",
+    "lhci:server:logs": "docker compose -f docker-compose.lhci.yml logs -f",
+    "lhci:server:ps": "docker compose -f docker-compose.lhci.yml ps"
+  }
+}
+```
+
+### Pasos para levantar el servidor
+
+1. Crear directorio de base de datos si no existe: `mkdir -p db/lighthouse`
+2. Arrancar el servidor: `pnpm lhci:server:up`
+3. Abrir `http://localhost:9001` en el navegador
+
+Sin autenticación ni reglas de firewall, accesible localmente.
+
+### Inicializar el primer proyecto (persistente)
+
+Cuando visites `http://localhost:9001/app/projects` verás el mensaje para correr el asistente. Para dejar la configuración persistida en `db/lighthouse/lhci.db` usa:
+
+```bash
+pnpm lhci:wizard:db
+```
+
+Este comando ejecuta el wizard de LHCI apuntando a la misma base de datos SQLite persistida por Docker.
+
+Alternativa con Docker (usa el contenedor del servidor):
+
+```bash
+docker exec -it lhci-server node /usr/src/lhci/node_modules/.bin/lhci wizard \
+  --storage.storageMethod=sql \
+  --storage.sqlDialect=sqlite \
+  --storage.sqlDatabasePath=/data/lhci.db
+```
+
+Ambos métodos escriben en `db/lighthouse/lhci.db`, dejando tokens y proyecto configurados de forma permanente.
+
+### Ejecutar auditorías y subir automáticamente al servidor
+
+Con la configuración actual, `lhci autorun` sube directamente al servidor local (SQLite persistente):
+
+```bash
+pnpm lhci:server:up  # asegurarse que el server está corriendo
+pnpm lhci:ci:mobile  # móvil (usa LHCI_BUILD_TOKEN de .env)
+pnpm lhci:ci:desktop # escritorio (usa LHCI_BUILD_TOKEN de .env)
+```
+
+Los resultados quedarán en `db/lighthouse/lhci.db` y visibles en `http://localhost:9001`.
+
+#### Importar reportes existentes desde `coverage-lighthouse/` (opcional)
+
+1. Asegúrate de tener el token de proyecto (build token). Si no lo tienes, ejecútalo con el wizard y copia el token.
+2. Exporta el token en el entorno para evitar exponerlo en los scripts (se usa `LHCI_BUILD_TOKEN`):
+
+```bash
+export LHCI_BUILD_TOKEN=TU_BUILD_TOKEN
+```
+
+3. Sube los reportes ya generados:
+
+```bash
+pnpm lhci:upload:desktop
+pnpm lhci:upload:mobile
+```
+
+O todo junto:
+
+```bash
+pnpm lhci:upload:all
+```
+
+Esto leerá los ficheros en `coverage-lighthouse/desktop` y `coverage-lighthouse/mobile` y los subirá a `http://localhost:9001`, quedando almacenados en la base de datos persistente `db/lighthouse/lhci.db`.
 
 ## 🔧 Scripts Disponibles
 
-### Servidor
+### Lighthouse CI
 
-- `pnpm lhci:server` - Inicia el servidor en modo básico
-- `pnpm lhci:server:start` - Inicia el servidor con configuración SQL
-- `pnpm lhci:collect:server` - Ejecuta solo la recolección de datos
-- `pnpm lhci:assert:server` - Ejecuta solo las aserciones
-- `pnpm lhci:upload:server` - Sube los resultados al servidor
-- `pnpm lhci:autorun:server` - Ejecuta todo el flujo completo
-
-### Script de Automatización
-
-```bash
-./scripts/run-lighthouse-server.sh
-```
-
-Este script automatiza todo el proceso:
-
-1. Construye el proyecto
-2. Inicia el servidor
-3. Ejecuta las pruebas
-4. Mantiene el servidor corriendo
+- `pnpm lhci:ci:mobile` - Ejecuta pruebas en modo móvil
+- `pnpm lhci:ci:desktop` - Ejecuta pruebas en modo escritorio
+- `pnpm lhci:upload` - Sube los resultados al directorio de métricas
 
 ## 📁 Estructura de Archivos
 
 ```
-├── lighthouserc.server.js     # Configuración del servidor
-├── .lighthouseci/             # Directorio de datos del servidor
-│   └── server.db              # Base de datos SQLite
-├── scripts/
-│   └── run-lighthouse-server.sh  # Script de automatización
+├── lighthouserc.cjs           # Configuración para móvil
+├── lighthouserc.desktop.cjs   # Configuración para escritorio
+├── metrics/
+│   └── lighthouse/            # Resultados de las pruebas
 └── docs/
     └── lighthouse-server.md   # Esta documentación
 ```
 
 ## ⚙️ Configuración
 
-### Variables de Entorno (Opcional)
+### Configuración de Lighthouse CI
 
-Crea un archivo `.env.lighthouse` con:
+Los archivos de configuración contienen:
 
-```env
-LHCI_SERVER_PORT=9001
-LHCI_SERVER_DB_PATH=./.lighthouseci/server.db
-LHCI_SERVER_STORAGE_METHOD=sql
-LHCI_COLLECT_NUMBER_OF_RUNS=3
-LHCI_ASSERT_PERFORMANCE_MIN_SCORE=0.9
-LHCI_ASSERT_ACCESSIBILITY_MIN_SCORE=0.95
-LHCI_ASSERT_SEO_MIN_SCORE=0.95
-```
-
-### Configuración del Servidor
-
-El archivo `lighthouserc.server.js` contiene:
-
-- **Puerto**: 9001
-- **Almacenamiento**: SQLite
+- **lighthouserc.cjs**: Configuración para pruebas móviles
+- **lighthouserc.desktop.cjs**: Configuración para pruebas de escritorio
 - **URLs de prueba**: Páginas principales del sitio
-- **Configuración de escritorio**: 1350x940
 - **Presupuestos**: Límites de rendimiento
 - **Aserciones**: Umbrales de calidad
 
@@ -121,48 +193,24 @@ El archivo `lighthouserc.server.js` contiene:
 - **Fonts**: Máximo 400KB, 8 archivos
 - **Third-party**: Máximo 150KB, 15 archivos
 
-## 🔍 Uso del Dashboard
+## 🔍 Análisis de Resultados
 
-### Vista General
+### Reportes Generados
 
-- **Timeline**: Historial de ejecuciones
-- **Trends**: Tendencias de rendimiento
-- **Comparisons**: Comparación entre ejecuciones
+Los resultados se guardan en `metrics/lighthouse/` con:
 
-### Detalles de Ejecución
+- **Reportes HTML**: Visualización completa de resultados
+- **Datos JSON**: Información estructurada para análisis
+- **Métricas**: Puntuaciones por categoría y Core Web Vitals
 
-- **Scores**: Puntuaciones por categoría
-- **Metrics**: Métricas detalladas
-- **Opportunities**: Oportunidades de mejora
-- **Diagnostics**: Diagnósticos técnicos
+### Interpretación
 
-### Exportación
-
-- **JSON**: Datos estructurados
-- **CSV**: Datos tabulares
-- **HTML**: Reportes completos
+- **Performance**: Puntuación de rendimiento (0-100)
+- **Accessibility**: Puntuación de accesibilidad (0-100)
+- **SEO**: Puntuación de SEO (0-100)
+- **Best Practices**: Puntuación de mejores prácticas (0-100)
 
 ## 🛠️ Solución de Problemas
-
-### Servidor no inicia
-
-```bash
-# Verificar puerto disponible
-lsof -i :9001
-
-# Cambiar puerto
-pnpm lhci:server --port=9002
-```
-
-### Base de datos corrupta
-
-```bash
-# Eliminar base de datos
-rm .lighthouseci/server.db
-
-# Reiniciar servidor
-pnpm lhci:server:start
-```
 
 ### Errores de construcción
 
@@ -177,17 +225,26 @@ pnpm install
 pnpm build
 ```
 
+### Problemas con Lighthouse CI
+
+```bash
+# Limpiar resultados anteriores
+rm -rf metrics/lighthouse/
+
+# Reinstalar dependencias de Lighthouse
+pnpm install @lhci/cli
+```
+
 ## 🔄 Integración con CI/CD
 
 Para integrar con GitHub Actions, agrega este job:
 
 ```yaml
-- name: Lighthouse CI Server
+- name: Lighthouse CI
   run: |
     pnpm build
-    pnpm lhci:autorun:server
-  env:
-    LHCI_SERVER_PORT: 9001
+    pnpm lhci:ci:mobile
+    pnpm lhci:ci:desktop
 ```
 
 ## 📚 Recursos Adicionales

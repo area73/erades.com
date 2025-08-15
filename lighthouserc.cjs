@@ -65,9 +65,9 @@ module.exports = {
       },
     },
     upload: {
-      target: "filesystem",
-      outputDir: "./coverage-lighthouse/mobile",
-      reportFilenamePattern: "%%DATETIME%%-%%PATHNAME%%-mobile.%%EXTENSION%%",
+      target: "lhci",
+      serverBaseUrl: "http://localhost:9001",
+      token: process.env.LHCI_BUILD_TOKEN,
     },
   },
 };

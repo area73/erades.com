@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  lhci-server:
+    image: patrickhulce/lhci-server
+    container_name: lhci-server
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./db/lighthouse:/data
+    restart: unless-stopped

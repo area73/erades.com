@@ -1,0 +1,25 @@
+---
+alwaysApply: true
+---
+
+# Estas son las premisas que debes de seguir siempre
+
+- El proyecto que estás creando está construido con Astro y typeScript y tailwindCSS versión 4, (es importante que no te confundas con la versión 3).
+
+- Utiliza siempre que puedas componentes Astro y usa SSR, se permite integración con un adapter de node.
+
+- El contenido de los post quiero que se genere como static site generator , no voy a usar ninguna base de datos.
+
+- Es muy importante que las páginas puedan ser rastreadas por los navegadores así que premiaremos el SEO y los core web vitals
+
+- Favorece el uso de Static Site Generator para el contenido.
+
+- La librería de componentes a usar si necesitaras referencias es shadcn-ui y tienes toda sus referencias en este mismo proyecto en el directorio "\_\_references/shadcn-ui"
+
+- Para la guía visual quiero que utilices como base todo lo que está dentro del directorio "\_\_references/ui-reference"
+
+- Quiero usar sólo componentes Astro, en el caso de que no puedas usar un componente astro me tienes que preguntar que hacer.
+
+- En componentes Astro puros (.astro),
+  NO uses className en el HTML principal del archivo .astro.
+  SIEMPRE usa class.
