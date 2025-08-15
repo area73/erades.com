@@ -1,0 +1,48 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+---
+description: Discourages the use of default exports except where required by the framework.
+autoAttach:
+  - include: '**/*.ts'
+    reason: Applies to all TypeScript files.
+  - include: '**/*.tsx'
+    reason: Applies to all TypeScript React files.
+---
+
+# Default Exports
+
+Unless explicitly required by the framework, do not use default exports.
+
+```ts
+// BAD
+export default function myFunction() {
+  return <div>Hello</div>;
+}
+
+// GOOD
+export function myFunction() {
+  return <div>Hello</div>;
+}
+```
+
+Default exports create confusion from the importing file.
+
+```ts
+// BAD
+import myFunction from "./myFunction";
+
+// GOOD
+import { myFunction } from "./myFunction";
+```
+
+There are certain situations where a framework may require a default export. For instance, Next.js requires a default export for pages.
+
+```tsx
+// This is fine, if required by the framework
+export default function MyPage() {
+  return <div>Hello</div>;
+}
+```

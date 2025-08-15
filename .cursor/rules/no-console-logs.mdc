@@ -1,0 +1,19 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+---
+description: Enforces removal of all console.log statements from TypeScript and Astro files before committing.
+autoAttach:
+  - include: '**/*.ts'
+    reason: Applies to all TypeScript files.
+  - include: '**/*.astro'
+    reason: Applies to all Astro files.
+---
+
+# No Console Logs
+
+Remove all `console.log` statements from `.ts` and `.astro` files before committing.
+
+Reference: [src directory](mdc:src)
