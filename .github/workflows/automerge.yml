@@ -1,9 +1,8 @@
-name: Automerge PRs to master
+name: Auto Merge PRs
 
 on:
-  workflow_dispatch: {}
   pull_request:
-    types: [labeled]
+    types: [labeled, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: write
@@ -13,14 +12,20 @@ permissions:
 
 jobs:
   automerge:
-    # Ejecuta únicamente cuando se añade la etiqueta automerge
-    if: github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'automerge'
+    if: github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     steps:
-      - name: Automerge
-        uses: pascalgn/automerge-action@v0.16.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Esperar a que los status checks pasen
+        uses: WyriHaximus/github-action-wait-for-status@v1
         with:
-          mergeMethod: squash
-          labels: "automerge"
+          ignoreActions: true
+
+      - name: Habilitar auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
