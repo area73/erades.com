@@ -1,0 +1,20 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+---
+description: Enforces grouping and ordering of imports by type in TypeScript and Astro files.
+autoAttach:
+  - include: '**/*.ts'
+    reason: Applies to all TypeScript files.
+  - include: '**/*.astro'
+    reason: Applies to all Astro files.
+---
+
+# Import Order
+
+Group imports by type: external, internal, and relative.
+Order imports accordingly in `.ts` and `.astro` files.
+
+Reference: [src directory](mdc:src)
