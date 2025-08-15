@@ -189,7 +189,7 @@ Este sitio web incluye múltiples feeds RSS para facilitar la suscripción al co
 ### Feeds Disponibles
 
 - **RSS Español** (`/rss.xml`) - Solo posts en español
-- **RSS English** (`/en/rss.xml`) - Solo posts en inglés  
+- **RSS English** (`/en/rss.xml`) - Solo posts en inglés
 - **RSS Combinado** (`/feed.xml`) - Todos los posts (español e inglés)
 
 ### Características

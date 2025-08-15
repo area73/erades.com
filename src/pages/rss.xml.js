@@ -5,7 +5,7 @@ import { t } from "../i18n";
 
 export async function GET(context) {
   const posts = await getCollection("blog");
-  
+
   // Filtrar posts en español (que no estén en draft)
   const spanishPosts = posts
     .filter((post) => post.id.startsWith("es/") && !post.data.draft)

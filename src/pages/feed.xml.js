@@ -4,7 +4,7 @@ import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from "../consts";
 
 export async function GET(context) {
   const posts = await getCollection("blog");
-  
+
   // Obtener todos los posts (español e inglés) que no estén en draft
   const allPosts = posts
     .filter((post) => !post.data.draft)
@@ -19,7 +19,10 @@ export async function GET(context) {
       description: post.data.description,
       pubDate: post.data.pubDate,
       updatedDate: post.data.updatedDate,
-      link: `/${post.id.startsWith("es/") ? "es" : "en"}/blog/${post.id.replace(/^(es|en)\//, "")}/`,
+      link: `/${post.id.startsWith("es/") ? "es" : "en"}/blog/${post.id.replace(
+        /^(es|en)\//,
+        ""
+      )}/`,
       categories: [...post.data.tags, ...post.data.categories],
     })),
     customData: `<language>es-ES</language>`,

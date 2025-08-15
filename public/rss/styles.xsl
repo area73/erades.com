@@ -102,7 +102,7 @@
             <p><strong>Última actualización:</strong> <xsl:value-of select="/rss/channel/lastBuildDate"/></p>
           </xsl:if>
         </div>
-        
+
         <xsl:for-each select="/rss/channel/item">
           <div class="item">
             <h3><a href="{link}"><xsl:value-of select="title"/></a></h3>
@@ -125,7 +125,7 @@
             </xsl:if>
           </div>
         </xsl:for-each>
-        
+
         <div class="footer">
           <p>Feed RSS generado con Astro - <xsl:value-of select="/rss/channel/title"/></p>
         </div>
