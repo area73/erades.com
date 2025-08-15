@@ -3,12 +3,12 @@ module.exports = {
     collect: {
       startServerCommand: "pnpm preview --port 4321 --host",
       url: [
-        "http://localhost:4321/es",
-        "http://localhost:4321/es/blog",
-        "https://erades.com/es/about",
-        "http://localhost:4321/es/tags",
-        "https://erades.com/es/search?q=func",
-        "https://erades.com/es/blog/ai-take-aways/i18n/",
+        "http://localhost:4321/es?device=mobile",
+        "http://localhost:4321/es/blog?device=mobile",
+        "https://erades.com/es/about?device=mobile",
+        "http://localhost:4321/es/tags?device=mobile",
+        "https://erades.com/es/search?q=func&device=mobile",
+        "https://erades.com/es/blog/ai-take-aways/i18n?device=mobile",
       ],
       numberOfRuns: 3,
       settings: {
