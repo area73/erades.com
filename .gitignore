@@ -1,4 +1,8 @@
 
+.lighthouseci/
+coverage-lighthouse/
+
+
 .pnpm-store
 
 playwright-report/
