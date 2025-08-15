@@ -16,26 +16,18 @@ pnpm install
 pnpm build
 ```
 
-### 3. Ejecutar pruebas de Lighthouse
+### 3. Ejecutar Lighthouse (mobile + desktop en un único build)
 
 ```bash
-pnpm lhci:ci:mobile
-```
-
-O para escritorio:
-
-```bash
-pnpm lhci:ci:desktop
+pnpm lhci:server:up       # asegúrate de que el server está levantado
+pnpm lhci:ci:both         # hace 2 collect (mobile y desktop aditivo) y 1 upload
 ```
 
 ## 📊 Resultados
 
-Los resultados de las pruebas se generan en `coverage-lighthouse/`:
-
-- `coverage-lighthouse/mobile/` para reportes móviles
-- `coverage-lighthouse/desktop/` para reportes de escritorio
-
-Estos reportes son los que se subirán manualmente al servidor si lo deseas.
+Los resultados se suben automáticamente al servidor LHCI local y quedan
+persistidos en la base de datos SQLite: `db/lighthouse/lhci.db`. Puedes
+visualizarlos en `http://localhost:9001`.
 
 ## 🐳 Lighthouse CI Server con Docker
 
@@ -105,55 +97,34 @@ Ambos métodos escriben en `db/lighthouse/lhci.db`, dejando tokens y proyecto co
 
 ### Ejecutar auditorías y subir automáticamente al servidor
 
-Con la configuración actual, `lhci autorun` sube directamente al servidor local (SQLite persistente):
+Con la configuración actual, se recomienda ejecutar dos `collect` (mobile y desktop con `--additive`) y un único `upload` por hash de commit:
 
 ```bash
 pnpm lhci:server:up  # asegurarse que el server está corriendo
-pnpm lhci:ci:mobile  # móvil (usa LHCI_BUILD_TOKEN de .env)
-pnpm lhci:ci:desktop # escritorio (usa LHCI_BUILD_TOKEN de .env)
+pnpm lhci:ci:both    # 2 collects (uno mobile, otro desktop aditivo) + 1 upload
 ```
 
-Los resultados quedarán en `db/lighthouse/lhci.db` y visibles en `http://localhost:9001`.
+Notas:
 
-#### Importar reportes existentes desde `coverage-lighthouse/` (opcional)
-
-1. Asegúrate de tener el token de proyecto (build token). Si no lo tienes, ejecútalo con el wizard y copia el token.
-2. Exporta el token en el entorno para evitar exponerlo en los scripts (se usa `LHCI_BUILD_TOKEN`):
-
-```bash
-export LHCI_BUILD_TOKEN=TU_BUILD_TOKEN
-```
-
-3. Sube los reportes ya generados:
-
-```bash
-pnpm lhci:upload:desktop
-pnpm lhci:upload:mobile
-```
-
-O todo junto:
-
-```bash
-pnpm lhci:upload:all
-```
-
-Esto leerá los ficheros en `coverage-lighthouse/desktop` y `coverage-lighthouse/mobile` y los subirá a `http://localhost:9001`, quedando almacenados en la base de datos persistente `db/lighthouse/lhci.db`.
+- El servidor rechaza uploads duplicados para el mismo hash.
+- Desktop se distingue en el dashboard usando `?device=desktop` en las URLs de `lighthouserc.desktop.cjs`.
 
 ## 🔧 Scripts Disponibles
 
 ### Lighthouse CI
 
-- `pnpm lhci:ci:mobile` - Ejecuta pruebas en modo móvil
-- `pnpm lhci:ci:desktop` - Ejecuta pruebas en modo escritorio
-- `pnpm lhci:upload` - Sube los resultados al directorio de métricas
+- `pnpm lhci:ci:both` - Ejecuta mobile + desktop (aditivo) y realiza un único upload
+- `pnpm lhci:ci:mobile` - (opcional) Solo móvil
+- `pnpm lhci:ci:desktop` - (opcional) Solo escritorio
 
 ## 📁 Estructura de Archivos
 
 ```
-├── lighthouserc.cjs           # Configuración para móvil
-├── lighthouserc.desktop.cjs   # Configuración para escritorio
-├── metrics/
-│   └── lighthouse/            # Resultados de las pruebas
+├── lighthouserc.cjs           # Configuración para móvil (URLs base)
+├── lighthouserc.desktop.cjs   # Configuración para escritorio (emulación + ?device=desktop)
+├── db/
+│   └── lighthouse/
+│       └── lhci.db            # Base de datos persistente del servidor LHCI
 └── docs/
     └── lighthouse-server.md   # Esta documentación
 ```
@@ -164,8 +135,8 @@ Esto leerá los ficheros en `coverage-lighthouse/desktop` y `coverage-lighthouse
 
 Los archivos de configuración contienen:
 
-- **lighthouserc.cjs**: Configuración para pruebas móviles
-- **lighthouserc.desktop.cjs**: Configuración para pruebas de escritorio
+- **lighthouserc.cjs**: Configuración para pruebas móviles (preset por defecto)
+- **lighthouserc.desktop.cjs**: Configuración para escritorio (emulación de pantalla, `formFactor: desktop` y URLs con `?device=desktop`)
 - **URLs de prueba**: Páginas principales del sitio
 - **Presupuestos**: Límites de rendimiento
 - **Aserciones**: Umbrales de calidad
@@ -237,14 +208,14 @@ pnpm install @lhci/cli
 
 ## 🔄 Integración con CI/CD
 
-Para integrar con GitHub Actions, agrega este job:
+Para integrar con GitHub Actions, agrega este job (un único upload por commit):
 
 ```yaml
 - name: Lighthouse CI
   run: |
     pnpm build
-    pnpm lhci:ci:mobile
-    pnpm lhci:ci:desktop
+    pnpm lhci:server:up
+    pnpm lhci:ci:both
 ```
 
 ## 📚 Recursos Adicionales
