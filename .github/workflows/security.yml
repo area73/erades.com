@@ -11,12 +11,9 @@ on:
 
 env:
   NODE_VERSION: "22"
-  SNYK_API: https://api.eu.snyk.io # EU
-  SNYK_ORG: erades
 
 permissions:
   contents: read
-  security-events: write # por si publicas SARIF con Snyk en el futuro
   actions: read
 
 jobs:
@@ -54,25 +51,6 @@ jobs:
 
       - name: Run npm audit
         run: pnpm audit --audit-level moderate
-
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} # debe existir en repo/org
-          SNYK_API: ${{ env.SNYK_API }} # define si tu org NO está en US
-        with:
-          args: >-
-            test
-            --all-projects
-            --org=${{ env.SNYK_ORG }}
-            --severity-threshold=high
-
-      # === Diagnóstico opcional si sigue el 401 (quitar si no hace falta) ===
-      # - name: Snyk debug
-      #   run: npx snyk@latest test -d --org="${SNYK_ORG}" || true
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #     SNYK_API: ${{ env.SNYK_API }}
 
   dependency-review:
     name: Dependency Review

@@ -112,7 +112,7 @@ This project includes a comprehensive CI/CD pipeline with GitHub Actions:
 - ✅ Unit tests with Vitest (coverage reporting)
 - ✅ E2E tests with Playwright
 - ✅ Visual regression tests
-- ✅ Security scans with npm audit and Snyk
+- ✅ Security scans with npm audit
 - ✅ Build verification
 - ✅ Automatic deployment to production (master branch only)
 
