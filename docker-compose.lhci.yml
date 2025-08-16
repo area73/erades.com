@@ -2,6 +2,7 @@ version: "3.8"
 services:
   lhci-server:
     image: patrickhulce/lhci-server
+    user: "0:0"
     container_name: lhci-server
     ports:
       - "9001:9001"
