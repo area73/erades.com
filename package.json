@@ -15,7 +15,7 @@
     "prelhci:ci:mobile": "dotenv -e .env -- node -e \"if(!process.env.LHCI_BUILD_TOKEN){console.error('LHCI_BUILD_TOKEN not set');process.exit(1)}\"",
     "prelhci:ci:desktop": "dotenv -e .env -- node -e \"if(!process.env.LHCI_BUILD_TOKEN){console.error('LHCI_BUILD_TOKEN not set');process.exit(1)}\"",
     "prelhci:ci:both": "dotenv -e .env -- node -e \"if(!process.env.LHCI_BUILD_TOKEN){console.error('LHCI_BUILD_TOKEN not set');process.exit(1)}\"",
-    "lhci:ci:both": "dotenv -e .env -- bash -lc \"lhci collect --config=./lighthouserc.cjs && lhci collect --config=./lighthouserc.desktop.cjs --collect.additive && lhci assert --config=./lighthouserc.cjs && lhci assert --config=./lighthouserc.desktop.cjs && lhci upload --config=./lighthouserc.cjs\"",
+    "lhci:ci:both": "dotenv -e .env -- bash -lc \"lhci collect --config=./lighthouserc.cjs && lhci collect --config=./lighthouserc.desktop.cjs --collect.additive && lhci assert --config=./lighthouserc.cjs && lhci assert --config=./lighthouserc.desktop.cjs && lhci upload --config=./lighthouserc.cjs --ignoreDuplicateBuildFailure\"",
     "lhci:server:up": "docker compose -f docker-compose.lhci.yml up -d",
     "lhci:server:down": "docker compose -f docker-compose.lhci.yml down",
     "lhci:server:logs": "docker compose -f docker-compose.lhci.yml logs -f",
