@@ -112,7 +112,7 @@ This project includes a comprehensive CI/CD pipeline with GitHub Actions:
 - ✅ Unit tests with Vitest (coverage reporting)
 - ✅ E2E tests with Playwright
 - ✅ Visual regression tests
-- ✅ Security scans with npm audit and Snyk
+- ✅ Security scans with npm audit
 - ✅ Build verification
 - ✅ Automatic deployment to production (master branch only)
 
@@ -181,6 +181,37 @@ The project is configured for Node.js deployment with:
 - Server-side rendering for SEO
 - Automatic sitemap generation
 - RSS feed generation
+
+## RSS Feeds
+
+Este sitio web incluye múltiples feeds RSS para facilitar la suscripción al contenido:
+
+### Feeds Disponibles
+
+- **RSS Español** (`/rss.xml`) - Solo posts en español
+- **RSS English** (`/en/rss.xml`) - Solo posts en inglés
+- **RSS Combinado** (`/feed.xml`) - Todos los posts (español e inglés)
+
+### Características
+
+- ✅ Filtrado automático de posts en draft
+- ✅ Ordenamiento por fecha de publicación (más reciente primero)
+- ✅ Metadatos completos (fechas, categorías, tags)
+- ✅ Presentación visual mejorada con XSL
+- ✅ Soporte multiidioma
+- ✅ Enlaces corregidos para estructura de rutas
+
+### Cómo Suscribirse
+
+1. Copia la URL del feed que prefieras
+2. Añádela a tu lector RSS favorito
+3. ¡Listo! Recibirás notificaciones de nuevos posts
+
+### Lectores RSS Recomendados
+
+- **Web**: Feedly, Inoreader, NewsBlur
+- **Desktop**: NetNewsWire (macOS), RSS Guard (Windows/Linux)
+- **Mobile**: Feedly, Inoreader, NetNewsWire (iOS)
 
 ## 📝 Contributing
 

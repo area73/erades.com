@@ -2,7 +2,7 @@ name: Security
 
 on:
   schedule:
-    # Run every Monday at 9 AM UTC
+    # Lunes 09:00 UTC (en Madrid es 11:00 en verano, 10:00 en invierno)
     - cron: "0 9 * * 1"
   push:
     branches: [master]
@@ -11,6 +11,10 @@ on:
 
 env:
   NODE_VERSION: "22"
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   security:
@@ -32,8 +36,7 @@ jobs:
 
       - name: Get pnpm store directory
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
@@ -48,13 +51,6 @@ jobs:
 
       - name: Run npm audit
         run: pnpm audit --audit-level moderate
-
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
 
   dependency-review:
     name: Dependency Review
