@@ -74,5 +74,12 @@
       "title": "Categorías",
       "posts": "posts"
     }
+  },
+  "rss": {
+    "title": "Feed RSS de {siteTitle}",
+    "description": "Suscríbete para recibir las últimas publicaciones del blog",
+    "language": "es-ES",
+    "lastBuildDate": "Última actualización",
+    "generator": "Generado con Astro"
   }
 }
