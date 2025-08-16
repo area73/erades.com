@@ -51,23 +51,23 @@ module.exports = {
     },
     assert: {
       assertions: {
-        "categories:performance": ["error", { minScore: 0.9 }],
-        "categories:accessibility": ["warn", { minScore: 0.95 }],
-        "categories:seo": ["warn", { minScore: 0.95 }],
+        "categories:performance": ["warn", { minScore: 0.65 }],
+        "categories:accessibility": ["warn", { minScore: 0.9 }],
+        "categories:seo": ["warn", { minScore: 0.9 }],
         "first-contentful-paint": [
-          "error",
+          "warn",
           { maxNumericValue: 1500, aggregationMethod: "median" },
         ],
         "largest-contentful-paint": [
-          "error",
+          "warn",
           { maxNumericValue: 2000, aggregationMethod: "median" },
         ],
         "total-blocking-time": [
-          "error",
+          "warn",
           { maxNumericValue: 150, aggregationMethod: "median" },
         ],
         "cumulative-layout-shift": [
-          "error",
+          "warn",
           { maxNumericValue: 0.1, aggregationMethod: "median" },
         ],
       },

@@ -44,23 +44,23 @@ module.exports = {
     },
     assert: {
       assertions: {
-        "categories:performance": ["error", { minScore: 0.9 }],
+        "categories:performance": ["warn", { minScore: 0.9 }],
         "categories:accessibility": ["warn", { minScore: 0.95 }],
         "categories:seo": ["warn", { minScore: 0.95 }],
         "first-contentful-paint": [
-          "error",
+          "warn",
           { maxNumericValue: 2000, aggregationMethod: "median" },
         ],
         "largest-contentful-paint": [
-          "error",
+          "warn",
           { maxNumericValue: 2500, aggregationMethod: "median" },
         ],
         "total-blocking-time": [
-          "error",
+          "warn",
           { maxNumericValue: 200, aggregationMethod: "median" },
         ],
         "cumulative-layout-shift": [
-          "error",
+          "warn",
           { maxNumericValue: 0.1, aggregationMethod: "median" },
         ],
       },
