@@ -2,7 +2,7 @@ name: Security
 
 on:
   schedule:
-    # Run every Monday at 9 AM UTC
+    # Lunes 09:00 UTC (en Madrid es 11:00 en verano, 10:00 en invierno)
     - cron: "0 9 * * 1"
   push:
     branches: [master]
@@ -11,6 +11,13 @@ on:
 
 env:
   NODE_VERSION: "22"
+  SNYK_API: https://api.eu.snyk.io # EU
+  SNYK_ORG: erades
+
+permissions:
+  contents: read
+  security-events: write # por si publicas SARIF con Snyk en el futuro
+  actions: read
 
 jobs:
   security:
@@ -32,8 +39,7 @@ jobs:
 
       - name: Get pnpm store directory
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
@@ -52,9 +58,21 @@ jobs:
       - name: Run Snyk security scan
         uses: snyk/actions/node@master
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} # debe existir en repo/org
+          SNYK_API: ${{ env.SNYK_API }} # define si tu org NO está en US
         with:
-          args: --severity-threshold=high
+          args: >-
+            test
+            --all-projects
+            --org=${{ env.SNYK_ORG }}
+            --severity-threshold=high
+
+      # === Diagnóstico opcional si sigue el 401 (quitar si no hace falta) ===
+      # - name: Snyk debug
+      #   run: npx snyk@latest test -d --org="${SNYK_ORG}" || true
+      #   env:
+      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #     SNYK_API: ${{ env.SNYK_API }}
 
   dependency-review:
     name: Dependency Review
