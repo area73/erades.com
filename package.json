@@ -10,7 +10,7 @@
     "build:flexsearch": "tsx scripts/generate-flexsearch-index.ts",
     "preview": "astro preview",
     "lhci:wizard:db": "lhci wizard --storage.storageMethod=sql --storage.sqlDialect=sqlite --storage.sqlDatabasePath=./db/lighthouse/lhci.db",
-    "lhci:ci:both": "dotenv -e .env -- bash -lc \"lhci collect --config=./lighthouserc.cjs && lhci collect --config=./lighthouserc.desktop.cjs --collect.additive && lhci assert --config=./lighthouserc.cjs && lhci assert --config=./lighthouserc.desktop.cjs && lhci upload --config=./lighthouserc.cjs\"",
+    "lhci:ci:both": "dotenv -e .env -- bash -lc \"lhci collect --config=./lighthouserc.cjs && lhci collect --config=./lighthouserc.desktop.cjs --collect.additive && lhci assert --config=./lighthouserc.cjs && lhci assert --config=./lighthouserc.desktop.cjs && lhci upload --config=./lighthouserc.cjs --ignoreDuplicateBuildFailure\"",
     "lhci:server:up": "docker compose -f docker-compose.lhci.yml up -d",
     "lhci:server:down": "docker compose -f docker-compose.lhci.yml down",
     "lhci:server:logs": "docker compose -f docker-compose.lhci.yml logs -f",
