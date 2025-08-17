@@ -9,71 +9,143 @@ import If from "../../components/If.astro";
 import Then from "../../components/Then.astro";
 
 const { lang: langParam } = Astro.params;
-const lang = (langParam ?? "es") as "es" | "en";
-const posts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const featured = posts.slice(0, 3);
+const isValidLang = langParam === "es" || langParam === "en";
+const fallbackLang = (
+	Astro.cookies.get("lang")?.value ??
+	((Astro.request.headers.get("accept-language") || "")
+		.toLowerCase()
+		.startsWith("en")
+		? "en"
+		: "es")
+) as "es" | "en";
+const lang = (isValidLang ? (langParam as "es" | "en") : fallbackLang);
+
+if (!isValidLang) {
+	Astro.response.status = 404;
+}
+
+const posts = isValidLang
+	? (await getCollection("blog"))
+			.filter((p) => !p.data.draft && p.id.startsWith(`${lang}/`))
+			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	: [];
+const featured = isValidLang ? posts.slice(0, 3) : [];
+
+const pageTitle = isValidLang
+	? SITE_TITLE
+	: `404 - ${t(lang, "error.404.title")} | ${SITE_TITLE}`;
+const pageDescription = isValidLang
+	? SITE_DESCRIPTION
+	: t(lang, "error.404.description");
 ---
 
 <Layout
-  title={SITE_TITLE}
-  description={SITE_DESCRIPTION}
+  title={pageTitle}
+  description={pageDescription}
   tags={[]}
   categories={[]}
   draft={false}
   lang={lang}
 >
   <section>
-    <div class="mx-auto">
-      <!-- Hero Section -->
-      <div class="text-center mb-16">
-        <h1
-          class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
-        >
-          {
-            tWithInterpolation(lang, "home.hero.title", {
-              siteTitle: SITE_TITLE,
-            })
-          }
-        </h1>
-        <p
-          class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
-        >
-          {t(lang, "home.hero.description")}
-        </p>
-      </div>
-
-      <!-- Featured Content -->
-      <ul class="decoration-none grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          featured.map((post) => (
-            <li>
-              <BlogCard post={post} variant="grid" lang={lang} />
-            </li>
-          ))
-        }
-      </ul>
-
-      <!-- Call to Action -->
-      <div class="text-center mt-16">
-        <div class="bg-card rounded-xl p-8 shadow-medium">
-          <h2
-            class="font-serif text-2xl font-semibold text-card-foreground mb-4"
+    {isValidLang ? (
+      <div class="mx-auto">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+          <h1
+            class="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6"
           >
-            {t(lang, "home.cta.title")}
-          </h2>
-          <p class="text-muted-foreground mb-12">
-            {t(lang, "home.cta.description")}
+            {
+              tWithInterpolation(lang, "home.hero.title", {
+                siteTitle: SITE_TITLE,
+              })
+            }
+          </h1>
+          <p
+            class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+          >
+            {t(lang, "home.hero.description")}
           </p>
-          <a
-            href={`/${lang}/blog/`}
-            class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary/10"
-          >
-            {t(lang, "home.cta.button")}
-          </a>
+        </div>
+
+        <!-- Featured Content -->
+        <ul class="decoration-none grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {
+            featured.map((post, index) => (
+              <li>
+                <BlogCard post={post} variant="grid" lang={lang} index={index} />
+              </li>
+            ))
+          }
+        </ul>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-16">
+          <div class="bg-card rounded-xl p-8 shadow-medium">
+            <h2
+              class="font-serif text-2xl font-semibold text-card-foreground mb-4"
+            >
+              {t(lang, "home.cta.title")}
+            </h2>
+            <p class="text-muted-foreground mb-12">
+              {t(lang, "home.cta.description")}
+            </p>
+            <a
+              href={`/${lang}/blog/`}
+              class="capitalize px-8 py-4 rounded-md border font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary/10"
+            >
+              {t(lang, "home.cta.button")}
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    ) : (
+      <div class="min-h-[60vh] flex items-center justify-center">
+        <div class="text-center">
+          <div class="mb-8">
+            <h1 class="text-8xl font-bold text-muted-foreground mb-4">404</h1>
+            <h2 class="text-2xl font-semibold text-foreground mb-4">
+              {t(lang, "error.404.title")}
+            </h2>
+            <p class="text-muted-foreground mb-8 max-w-md mx-auto">
+              {t(lang, "error.404.description")}
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <a
+              href={`/${lang}/`}
+              class="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              {t(lang, "error.404.goHome")}
+            </a>
+
+            <div class="text-sm text-muted-foreground">
+              <p>{t(lang, "error.404.orTry")}</p>
+              <div class="mt-2 space-x-4">
+                <a
+                  href={`/${lang}/blog/`}
+                  class="hover:text-foreground transition-colors"
+                >
+                  {t(lang, "menu.blog")}
+                </a>
+                <a
+                  href={`/${lang}/about/`}
+                  class="hover:text-foreground transition-colors"
+                >
+                  {t(lang, "menu.about")}
+                </a>
+                <a
+                  href={`/${lang}/search/`}
+                  class="hover:text-foreground transition-colors"
+                >
+                  {t(lang, "search.title")}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
   </section>
 </Layout>
