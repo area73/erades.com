@@ -12,9 +12,9 @@ const langFromPath = pathname.startsWith("/es/")
     : (Astro.cookies.get("lang")?.value ??
       ((Astro.request.headers.get("accept-language") || "")
         .toLowerCase()
-        .startsWith("en")
-        ? "en"
-        : "es"));
+        .startsWith("es")
+        ? "es"
+        : "en"));
 
 const lang = langFromPath as "es" | "en";
 ---
