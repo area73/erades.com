@@ -37,6 +37,13 @@ const viteConfig = {
 };
 
 export default defineConfig({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["es", "en"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   site: "https://erades.com",
   output: "server",
   adapter: node({
@@ -73,7 +80,7 @@ export default defineConfig({
     mdx(),
     sitemap({
       i18n: {
-        defaultLocale: "es",
+        defaultLocale: "en",
         locales: {
           es: "es-ES",
           en: "en-US",
