@@ -16,7 +16,7 @@ const fallbackLang = (
 		.toLowerCase()
 		.startsWith("en")
 		? "en"
-		: "es")
+		: "en")
 ) as "es" | "en";
 const lang = (isValidLang ? (langParam as "es" | "en") : fallbackLang);
 
