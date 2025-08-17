@@ -55,7 +55,7 @@ export default defineConfig({
     },
   },
   integrations: [
-    /* swup({
+    swup({
       containers: ["main"],
       cache: true,
       preload: true,
@@ -73,7 +73,7 @@ export default defineConfig({
       debug: false,
       loadOnIdle: true,
       globalInstance: false,
-    }), */
+    }),
     astroExpressiveCode({
       themes: ["dracula"],
     }),
