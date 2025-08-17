@@ -81,5 +81,13 @@
     "language": "en-US",
     "lastBuildDate": "Last updated",
     "generator": "Generated with Astro"
+  },
+  "error": {
+    "404": {
+      "title": "Page not found",
+      "description": "Sorry, the page you're looking for doesn't exist or has been moved.",
+      "goHome": "Go home",
+      "orTry": "Or try:"
+    }
   }
 }

@@ -81,5 +81,13 @@
     "language": "es-ES",
     "lastBuildDate": "Última actualización",
     "generator": "Generado con Astro"
+  },
+  "error": {
+    "404": {
+      "title": "Página no encontrada",
+      "description": "Lo sentimos, la página que buscas no existe o ha sido movida.",
+      "goHome": "Ir al inicio",
+      "orTry": "O prueba con:"
+    }
   }
 }
