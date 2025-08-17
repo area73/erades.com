@@ -38,7 +38,7 @@ const viteConfig = {
 
 export default defineConfig({
   i18n: {
-    defaultLocale: "es",
+    defaultLocale: "en",
     locales: ["es", "en"],
     routing: {
       prefixDefaultLocale: false,
@@ -80,7 +80,7 @@ export default defineConfig({
     mdx(),
     sitemap({
       i18n: {
-        defaultLocale: "es",
+        defaultLocale: "en",
         locales: {
           es: "es-ES",
           en: "en-US",
