@@ -4,12 +4,6 @@ import { SITE_TITLE } from "../consts";
 import { t } from "../i18n";
 import { Fragment } from "astro/compiler-runtime";
 
-console.log("--- 404 PAGE TRIGGERED ---");
-console.log("Pathname:", Astro.url.pathname);
-console.log(
-  "Headers:",
-  JSON.stringify(Object.fromEntries(Astro.request.headers.entries()))
-);
 // Detectar el idioma basado en la URL o headers
 const pathname = Astro.url.pathname;
 const langFromPath = pathname.startsWith("/es/")
