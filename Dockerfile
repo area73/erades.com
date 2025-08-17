@@ -28,11 +28,11 @@ RUN pnpm install --prod --frozen-lockfile
 FROM runner AS final
 
 # Copy runtime deps and built app
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
+COPY --chown=nodeuser:nodeuser --from=prod-deps /app/node_modules ./node_modules
+COPY --chown=nodeuser:nodeuser --from=build /app/dist ./dist
 # Copy source assets needed by astro:assets runtime and public files
-COPY --from=build /app/public ./public
-COPY --from=build /app/src/assets ./src/assets
+COPY --chown=nodeuser:nodeuser --from=build /app/public ./public
+COPY --chown=nodeuser:nodeuser --from=build /app/src/assets ./src/assets
 
 # Run as non-root for security
 RUN useradd -m -u 1001 nodeuser
