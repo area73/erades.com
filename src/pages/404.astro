@@ -1,0 +1,76 @@
+---
+import Layout from "../layouts/BlogPost.astro";
+import { SITE_TITLE } from "../consts";
+import { t } from "../i18n";
+
+// Detectar el idioma basado en la URL o headers
+const pathname = Astro.url.pathname;
+const langFromPath = pathname.startsWith("/es/")
+  ? "es"
+  : pathname.startsWith("/en/")
+    ? "en"
+    : (Astro.cookies.get("lang")?.value ??
+      ((Astro.request.headers.get("accept-language") || "")
+        .toLowerCase()
+        .startsWith("en")
+        ? "en"
+        : "es"));
+
+const lang = langFromPath as "es" | "en";
+---
+
+<Layout
+  title={`404 - ${t(lang, "error.404.title")} | ${SITE_TITLE}`}
+  description={t(lang, "error.404.description")}
+  tags={[]}
+  categories={[]}
+  draft={false}
+  lang={lang}
+>
+  <section class="min-h-[60vh] flex items-center justify-center">
+    <div class="text-center">
+      <div class="mb-8">
+        <h1 class="text-8xl font-bold text-muted-foreground mb-4">404</h1>
+        <h2 class="text-2xl font-semibold text-foreground mb-4">
+          {t(lang, "error.404.title")}
+        </h2>
+        <p class="text-muted-foreground mb-8 max-w-md mx-auto">
+          {t(lang, "error.404.description")}
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <a
+          href={`/${lang}/`}
+          class="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+        >
+          {t(lang, "error.404.goHome")}
+        </a>
+
+        <div class="text-sm text-muted-foreground">
+          <p>{t(lang, "error.404.orTry")}</p>
+          <div class="mt-2 space-x-4">
+            <a
+              href={`/${lang}/blog/`}
+              class="hover:text-foreground transition-colors"
+            >
+              {t(lang, "menu.blog")}
+            </a>
+            <a
+              href={`/${lang}/about/`}
+              class="hover:text-foreground transition-colors"
+            >
+              {t(lang, "menu.about")}
+            </a>
+            <a
+              href={`/${lang}/search/`}
+              class="hover:text-foreground transition-colors"
+            >
+              {t(lang, "search.title")}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
