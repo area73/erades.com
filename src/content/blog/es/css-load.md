@@ -10,7 +10,7 @@ categories:
   - css
   - best-practices
 draft: false
-heroImage: /blog-placeholder-10.jpg
+heroImage: /blog-placeholder-26.png
 ---
 
 ## ¿Por qué es importante conocer cómo se carga el CSS?

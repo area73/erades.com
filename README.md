@@ -13,7 +13,6 @@ A modern, multilingual blog built with Astro, TypeScript, and Tailwind CSS v4. T
 - **Modern Tech Stack**: Astro 5, TypeScript, Tailwind CSS v4, Vitest, Playwright
 - **Server-Side Rendering**: Fast, SEO-friendly SSR with Node adapter
 - **Code Highlighting**: Syntax highlighting with Expressive Code
-- **Smooth Navigation**: Swup.js for seamless page transitions
 
 ## 🚀 Tech Stack
 
