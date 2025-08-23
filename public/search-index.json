@@ -399,6 +399,44 @@
     "id": "es/ai-take-aways/i18n"
   },
   {
+    "title": "css-load",
+    "description": "Estrategias para cargar CSS de forma eficiente.",
+    "pubDate": "2025-08-23T00:00:00.000Z",
+    "tags": [
+      "css",
+      "performance",
+      "wpo"
+    ],
+    "categories": [
+      "css",
+      "best-practices"
+    ],
+    "draft": false,
+    "heroImage": "/blog-placeholder-10.jpg",
+    "content": "\n## ¿Por qué es importante conocer cómo se carga el CSS?\n\nA lo mejor podemos pensar que es por el peso (muchos bites a enviar al cliente), pero la respuesta es más\nsimple, porque **bloquea el renderizado del navegador**.\n\n### **Este sería el diagrama de carga de los CSS**\n\n![css-load](/css-load.drawio.png)\n\n**HTML Parser:** Es el primer paso, donde el navegador analiza el documento HTML para crear el DOM.\n\n**CSS Parser:** Cuando el analizador de HTML encuentra hojas de estilo CSS, se las pasa al analizador de CSS.\n\n**CSSOM (CSS Object Model):** El analizador de CSS crea el CSSOM, una estructura en forma de árbol que representa los estilos del documento.\n\n**DOM:** El analizador de HTML crea esta estructura de árbol del documento HTML.\n\n**Render Tree (Árbol de Renderizado):** Es el renderizado a partir de la combinación del DOM y el CSSOM. Este árbol incluye solo los elementos visibles y sus estilos calculados y se aplica a la vez que las reglas de cascada.\n\n**Cascade Rules (Reglas de Cascada):** Aquí es donde el navegador aplica las reglas de cascada, especificidad y herencia de CSS para determinar los estilos finales de cada elemento.\n\n**Final Computed Style (Estilo Calculado Final):** Es el resultado final para cada elemento, mostrando todos los estilos aplicados, que se utiliza para los pasos posteriores de Layout/reflow (maquetación) y Paint (pintado).\n\n### Maneras de cargar un CSS\n\n#### Externo (`<link ...>`)\n\n```html\n<head>\n  <!-- Carga bloqueante por defecto -->\n  <link rel=\"stylesheet\" href=\"/assets/styles.css\" />\n</head>\n```\n\n**Notas:**\n\n- Bloquea el primer render hasta parsear `styles.css`.\n- Para atenuarlo podríamos limitarlo por media por ejemplo sacando fuera los estilos de print\n\n```html\n<link rel=\"stylesheet\" href=\"/assets/print.css\" media=\"print\" />\n```\n\n#### Interno (`<style>`)\n\n```html\n<head>\n  <style>\n    :root {\n      --brand: #0a66c2;\n    }\n    body {\n      color: var(--brand);\n    }\n  </style>\n</head>\n```\n\n**Notas:**\n\n- Se parsea in situ.\n- Útil para critical CSS pequeño.\n\n#### Inline (en el atributo style)\n\n```html\n<div style=\"color: tomato; font-weight: 600\">Texto con estilo inline</div>\n```\n\n**Notas:**\n\n- Máxima precedencia (salvo `!important`).\n- No cachea\n- No reutilizable (el HTML se puede cachear pero el parseo se tiene que volver a hacer)\n\n#### Importándolo dentro de otro CSS (`@import`)\n\n```css\n/* main.css */\n@import url(\"/assets/base.css\");\n@import url(\"/assets/theme.css\") screen and (min-width: 48rem);\n\n.container {\n  margin-inline: auto;\n}\n```\n\nO desde `<style>`:\n\n```html\n<style>\n  @import url(\"/assets/base.css\");\n  body {\n    font-family: system-ui;\n  }\n</style>\n```\n\n**Notas:**\n\n- Evalúa en orden de aparición.\n- Penaliza rendimiento\n  - **Request en cadena**\n  - Genera nuevas peticiones a servidores.\n- **Problemas serios de seguridad**, te pueden robar los user/psw con un simple CSS\n- Si después de esto lo quieres seguir usando supongo que será porque te gusta el riesgo. Yo tenía una frase de joven para cuando hacía locuras\n  > Commander Salamander: Too fast to live, too young to die\"\n\n#### Dinámico por JS (inyectando `<link>` o `<style>`)\n\n```html\n<!-- **Insertar link dinámico (lazy styles)** -->\n<script>\n  const link = document.createElement(\"link\");\n  link.rel = \"stylesheet\";\n  link.href = \"/assets/chunk-above-the-fold.css\";\n  document.head.appendChild(link);\n</script>\n```\n\n```html\n<!-- **Insertar style con reglas (generadas o feature‑flag)** -->\n<script>\n  const style = document.createElement(\"style\");\n  style.textContent = `\n    .promo { display: grid; gap: 0.5rem; }\n    @media (prefers-color-scheme: dark) {\n      .promo { color: white; }\n    }\n  `;\n  document.head.appendChild(style);\n</script>\n```\n\n**Notas:**\n\n- Se aplican al terminar de parsear/adjuntar.\n- Útil para code‑splitting de estilos o tematizado runtime.\n\n### En resumen\n\nSi atendemos a los bloqueos, diferenciando **bloqueo de red** (latencia/descarga) y **bloqueo de parseo/render** (el parser se para mientras procesa reglas), tendríamos algo así:\n\n| Forma de carga              | Bloqueo de red | Bloqueo de parseo/render | Notas                                                                 |\n| --------------------------- | -------------- | ------------------------ | --------------------------------------------------------------------- |\n| **Hoja externa (link)**     | ✅ Sí          | ✅ Sí (hasta integrar)   | Espera a descargar → parsear → integrar en CSSOM. Bloquea FCP/LCP.    |\n| **Interno (style)**         | ❌ No          | ✅ Sí (mínimo)           | Se parsea inline en el HTML. No hay espera de red, solo CPU local.    |\n| **Inline (atributo style)** | ❌ No          | ✅ Sí (al aplicar)       | Se aplica al instante al elemento. Coste mínimo por regla puntual.    |\n| **@import en CSS**          | ✅ Sí (extra)  | ✅ Sí                    | **Peor caso:** descarga en cadena → cada import bloquea el siguiente. |\n| **Dinámico (JS)**           | ✅ Sí          | ❌ No (async)            | Se descarga al insertar el `<link>`/`<style>`. No bloquea el parser.  |\n\n**Conclusión**\n\n- Lo que realmente mata tu render son las **descargas externas síncronas** (link + import).\n- Inline e interno sólo paran el parser localmente (normalmente irrelevante salvo CSS gigante).\n- **Dinámico no bloquea el parser** porque ocurre después, pero **retrasa la aplicación de estilos** hasta que se descarga/aplica (AKA FOUC → Flash of Unstyled Content).\n\n---\n\n### Bola extra: Estrategias conocidas para minimizar el bloqueo\n\n- Critical CSS en línea para el above-the-fold.\n- `preload` del CSS principal y aplicar como stylesheet cuando cargue.\n- Defer del CSS no crítico con `media` y `onload` (el viejo truquito de javascript).\n- Dividir CSS por ruta o layout.\n\n### Preload + swap (adelantar descarga; aplicar tras `onload`)\n\n```html\n<link\n  rel=\"preload\"\n  as=\"style\"\n  href=\"/assets/late.css\"\n  onload=\"this.rel='stylesheet'\"\n/>\n<noscript><link rel=\"stylesheet\" href=\"/assets/late.css\" /></noscript>\n```\n\n**notas:**\n\n- No aplica estilos hasta el onload (evita bloquear el primer render).\n- Hay que mantener un fallback en `<noscript>` por si las moscas.\n\n### Media para cargar sin bloquear y activar luego\n\n```html\n<link\n  rel=\"stylesheet\"\n  href=\"/assets/print.css\"\n  media=\"print\"\n  onload=\"this.media='all'\"\n/>\n```\n\n- Se descarga en segundo plano\n- Se activa cuando cambias media a `all` .\n",
+    "path": "/blog/es/css-load",
+    "id": "es/css-load"
+  },
+  {
+    "title": "css-load",
+    "description": "Estrategias para cargar CSS de forma eficiente.",
+    "pubDate": "2025-08-23T00:00:00.000Z",
+    "tags": [
+      "css",
+      "performance",
+      "wpo"
+    ],
+    "categories": [
+      "css",
+      "best-practices"
+    ],
+    "draft": true,
+    "heroImage": "/blog-placeholder-10.jpg",
+    "content": "\n## A igualdad de especificidad ¿quién gana?\n\n### Precedencia\n\n!important > inline > autor > user agent. Luego especificidad. Luego orden.\n",
+    "path": "/blog/es/css-precedence",
+    "id": "es/css-precedence"
+  },
+  {
     "title": "sistema de partículas",
     "pubDate": "2019-01-11T00:00:00.000Z",
     "description": "Explorando técnicas de animación de sistemas de partículas utilizando Canvas y JavaScript para crear efectos visuales dinámicos",
