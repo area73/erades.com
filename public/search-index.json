@@ -377,27 +377,6 @@
     "id": "en/statement-branching-vs-micro-branching"
   },
   {
-    "title": "WPO: Web Performance Optimization",
-    "description": "Exploring web optimization improvement with AI using core web vitals",
-    "pubDate": "2025-08-26T00:00:00.000Z",
-    "tags": [
-      "javascript",
-      "wpo",
-      "google-core-web-vitals"
-    ],
-    "categories": [
-      "javascript",
-      "best-practices",
-      "core-web-vitals",
-      "wpo"
-    ],
-    "draft": true,
-    "heroImage": "/blog-placeholder-14.jpg",
-    "content": "\n## Initial Exploration\n\nAfter creating this web app [erades.com](https://erades.com), I'm going to focus on Google's core web vitals.\n\nFor this task, I will concentrate on Lighthouse.\n\nThe initial results are these:\n\n### 2025-08-12\n\n#### Desktop\n\n- [Home](../../../../assets/lighthouse/2025-08-12-HOME.html)\n- [Post](../../../../assets/lighthouse/2025-08-12-POST.html)\n- [Search](../../../../assets/lighthouse/2025-08-12-SEARCH.html)\n- [Tags](../../../../assets/lighthouse/2025-08-12-TAGS.html)\n- [Blog](../../../../assets/lighthouse/2025-08-12-BLOG.html)\n\n#### Mobile\n\n- [Home](../../../../assets/lighthouse/2025-08-12-HOME-mobile.html)\n- [Post](../../../../assets/lighthouse/2025-08-12-POST-mobile.html)\n- [Search](../../../../assets/lighthouse/2025-08-12-SEARCH-mobile.html)\n- [Tags](../../../../assets/lighthouse/2025-08-12-TAGS-mobile.html)\n- [Blog](../../../../assets/lighthouse/2025-08-12-BLOG-mobile.html)\n\n## Initial thoughts\n\nThe data yields good results due in part to the used technology stack (Server-side rendering and static site generation) and the selected meta-framework Astro.\n\nBut to achieve acceptable data, the developer has to be an expert and have fought a lot on frontend battles to understand the best practices.\n\nStill, things always escape, and there should be a way to control the core web vitals from the beginning to keep improving the numbers.\n\nOn the other hand, to achieve this, we would have to include these checks programmatically.\n\nToday, unit tests and e2e or functional tests are already part of developers' DNA. However, I see that automatic visual regression tests and performance tests do not quite catch on developers. Partly, I believe it is due to the increased time to run the pipelines.\n\nHowever, I consider that the automatic visual regression tests are essential. In fact, if I had to choose between unit or component tests and visual regression tests, I would opt for regression ones.\n\nIn the case of the tests for WPO, I think developers do not realize the value these tests represent for the business. They think more about the work that these tests entail than about the benefit.\n\n## Work Approach\n\n- To be able to extract statistics programmatically, I'm going to find a way to implement Lighthouse or similar tools.\n\n### Attack Plan (synthesis)\n\n1. Automated lab metrics (synthetic): Local and CI Lighthouse CI, with performance budgets and assertions that break the build when you go over. HTML/JSON reports stored as artifacts and/or on a LHCI server.\n2. Field Metrics (RUM): real LCP/INP/CLS in production via web-vitals, sent to your backend/GA4. This keeps you from optimizing blindly.\n3. Public benchmarks: PSI/CrUX in CI to see how Google measures you (Lighthouse + aggregated real data).\n4. Optional power-up: sitespeed.io to track multiple URLs, record videos/filmstrips, and more precise budgets; upload results to S3/GCS.\n\n### Lighthouse\n\nInstalled Lighthouse\n\nQuick alternative to run:\n\n```bash\nnpx unlighthouse --site https://erades.com\n```\n\nThis gives you the metrics of the entire site.\n",
-    "path": "/en/blog/wpo/wpo",
-    "id": "en/wpo/wpo"
-  },
-  {
     "title": "Metodologías: Cómo preguntar a la IA",
     "description": "Guía práctica para redactar prompts efectivos usando la metodología ASPECCT, con plantilla, ejemplo real y comparación con marcos alternativos.",
     "pubDate": "2025-08-10T00:00:00.000Z",
