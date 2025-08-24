@@ -1,9 +1,9 @@
 ---
-import Layout from "../../../layouts/BlogPost.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
+import Layout from "../../../../layouts/BlogPost.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../../consts";
 import { getCollection } from "astro:content";
-import BlogList from "../../../components/BlogList.astro";
-import { SORT_BY_OPTIONS, sortPosts } from "../../../utils/sort-utils";
+import BlogList from "../../../../components/BlogList.astro";
+import { SORT_BY_OPTIONS, sortPosts } from "../../../../utils/sort-utils";
 
 const { page } = Astro.params;
 const currentPage = Number(page) || 1;
@@ -82,9 +82,8 @@ const getPageHref = (page: number) => {
   if (selectedCategory !== "todas") params.set("category", selectedCategory);
   if (sortBy) params.set("sortBy", sortBy);
   if (viewMode === "list") params.set("viewMode", viewMode);
-  // Siempre incluye el prefijo de idioma
   return (
-    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/page/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };

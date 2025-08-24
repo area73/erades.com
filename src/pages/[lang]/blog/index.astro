@@ -73,7 +73,7 @@ const getPageHref = (page: number) => {
   if (sortBy) params.set("sortBy", sortBy);
   if (viewMode === "list") params.set("viewMode", viewMode);
   return (
-    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/${page}/`) +
+    (page === 1 ? `/${lang}/blog/` : `/${lang}/blog/page/${page}/`) +
     (params.toString() ? `?${params.toString()}` : "")
   );
 };

@@ -1,6 +1,6 @@
 ---
-title: "css-load"
-description: "Estrategias para cargar CSS de forma eficiente."
+title: "CSS: estrategias de carga"
+description: "Guía práctica sobre carga de CSS: bloqueo de render, estrategias (preload, media, inline) y rendimiento web."
 pubDate: 2025-08-23
 tags:
   - css
@@ -18,27 +18,25 @@ heroImage: /blog-placeholder-26.png
 A lo mejor podemos pensar que es por el peso (muchos bites a enviar al cliente), pero la respuesta es más
 simple, porque **bloquea el renderizado del navegador**.
 
-### **Este sería el diagrama de carga de los CSS**
+### **Diagrama de carga de los CSS**
 
 ![css-load](/css-load.drawio.png)
 
-**HTML Parser:** Es el primer paso, donde el navegador analiza el documento HTML para crear el DOM.
+- **HTML Parser:**<br>
+  Es el primer paso, donde el navegador analiza el documento HTML para crear el DOM.
+- **CSS Parser:**<br>
+  Cuando el analizador de HTML encuentra hojas de estilo CSS, se las pasa al analizador de CSS.
+- **CSSOM (CSS Object Model):**<br>El analizador de CSS crea el CSSOM, una estructura en forma de árbol que representa los estilos del documento.
+- **DOM:**<br>El analizador de HTML crea esta estructura de árbol del documento HTML.
+- **Render Tree (Árbol de Renderizado):**<br>Es el renderizado a partir de la combinación del DOM y el CSSOM. Este árbol incluye solo los elementos visibles y sus estilos calculados y se aplica a la vez que las reglas de cascada.
+- **Cascade Rules (Reglas de Cascada):**<br> Aquí es donde el navegador aplica las reglas de cascada, especificidad y herencia de CSS para determinar los estilos finales de cada elemento.
+- **Final Computed Style (Estilo Calculado Final):**<br> Es el resultado final para cada elemento, mostrando todos los estilos aplicados, que se utiliza para los pasos posteriores de Layout/reflow (maquetación) y Paint (pintado).
 
-**CSS Parser:** Cuando el analizador de HTML encuentra hojas de estilo CSS, se las pasa al analizador de CSS.
+### **Maneras de cargar un CSS**
 
-**CSSOM (CSS Object Model):** El analizador de CSS crea el CSSOM, una estructura en forma de árbol que representa los estilos del documento.
+#### **Externo** (`<link ...>`)
 
-**DOM:** El analizador de HTML crea esta estructura de árbol del documento HTML.
-
-**Render Tree (Árbol de Renderizado):** Es el renderizado a partir de la combinación del DOM y el CSSOM. Este árbol incluye solo los elementos visibles y sus estilos calculados y se aplica a la vez que las reglas de cascada.
-
-**Cascade Rules (Reglas de Cascada):** Aquí es donde el navegador aplica las reglas de cascada, especificidad y herencia de CSS para determinar los estilos finales de cada elemento.
-
-**Final Computed Style (Estilo Calculado Final):** Es el resultado final para cada elemento, mostrando todos los estilos aplicados, que se utiliza para los pasos posteriores de Layout/reflow (maquetación) y Paint (pintado).
-
-### Maneras de cargar un CSS
-
-#### Externo (`<link ...>`)
+<br>
 
 ```html
 <head>
@@ -49,7 +47,7 @@ simple, porque **bloquea el renderizado del navegador**.
 
 **Notas:**
 
-- Bloquea el primer render hasta parsear `styles.css`.
+- **Bloquea el primer render** hasta parsear `styles.css`.
 - Para atenuarlo podríamos limitarlo por media por ejemplo sacando fuera los estilos de print
 
 ```html
@@ -57,6 +55,8 @@ simple, porque **bloquea el renderizado del navegador**.
 ```
 
 #### Interno (`<style>`)
+
+<hr>
 
 ```html
 <head>
@@ -78,6 +78,8 @@ simple, porque **bloquea el renderizado del navegador**.
 
 #### Inline (en el atributo style)
 
+<hr>
+
 ```html
 <div style="color: tomato; font-weight: 600">Texto con estilo inline</div>
 ```
@@ -89,6 +91,8 @@ simple, porque **bloquea el renderizado del navegador**.
 - No reutilizable (el HTML se puede cachear pero el parseo se tiene que volver a hacer)
 
 #### Importándolo dentro de otro CSS (`@import`)
+
+<hr>
 
 ```css
 /* main.css */
@@ -122,6 +126,8 @@ O desde `<style>`:
   > Commander Salamander: Too fast to live, too young to die"
 
 #### Dinámico por JS (inyectando `<link>` o `<style>`)
+
+<hr>
 
 ```html
 <!-- **Insertar link dinámico (lazy styles)** -->

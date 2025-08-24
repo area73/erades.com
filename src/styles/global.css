@@ -52,15 +52,22 @@
     line-height: var(--line-height-2xl);
   }
   h2 {
+    color: var(--foreground-dim);
+    font-weight: 700;
     font-size: var(--text-xl);
     line-height: var(--line-height-2xl);
   }
   h3 {
+    color: var(--foreground-dim);
+    font-weight: 700;
     font-size: var(--text-lg);
     line-height: var(--line-height-lg);
   }
   h4 {
+    color: var(--foreground-dim);
+    font-weight: 700;
     margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     line-height: var(--line-height-sm);
     font-size: var(--text-md);
     font-weight: var(--font-weight-medium);
@@ -68,10 +75,14 @@
   h5 {
     font-size: var(--text-sm);
     line-height: var(--line-height-sm);
+    color: var(--foreground-dim);
+    font-weight: 700;
   }
   h6 {
     font-size: var(--text-xs);
     line-height: var(--line-height-xs);
+    color: var(--foreground-dim);
+    font-weight: 700;
   }
   p {
     font-size: var(--text-md);
@@ -197,10 +208,99 @@
     margin-bottom: 0;
   }
 
+  /* Tablas */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: var(--spacing-lg) 0;
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+  }
+
+  caption {
+    caption-side: bottom;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+
+  thead th {
+    background-color: var(--accent-foreground);
+    color: var(--accent);
+    text-align: left;
+    font-weight: 700;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+    vertical-align: bottom;
+  }
+
+  tbody td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: var(--muted);
+  }
+
+  tbody tr:hover {
+    background-color: var(--accent);
+  }
+
+  /* Bordes redondeados en cabecera y última fila */
+  thead th:first-child {
+    border-top-left-radius: var(--radius);
+  }
+  thead th:last-child {
+    border-top-right-radius: var(--radius);
+  }
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: var(--radius);
+  }
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: var(--radius);
+  }
+
+  /* Contenido dentro de celdas */
+  td > p:last-child,
+  th > p:last-child {
+    margin-bottom: 0;
+  }
+
+  td strong,
+  th strong {
+    color: var(--foreground);
+  }
+
+  /* Responsivo: reducir padding en pantallas pequeñas */
+  @media (max-width: 640px) {
+    thead th,
+    tbody td {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--text-sm);
+    }
+  }
+
+  /* Separador horizontal */
+  hr {
+    border: none;
+    height: 2px;
+    background-color: var(--accent);
+    margin: 8px 0;
+  }
+
   :root {
     /* Colores base - paleta moderna y sofisticada */
     --background: hsl(0 0% 99%);
     --foreground: hsl(215 25% 15%);
+    --foreground-dim: hsl(215 05% 50%);
 
     /* Superficie y tarjetas con sutiles variaciones */
     --card: hsl(0 0% 100%);
@@ -299,6 +399,7 @@ html.dark {
   --color-header-background: hsl(215 16% 14%);
   --background: hsl(215 28% 8%);
   --foreground: hsl(60, 20%, 95%);
+  --foreground-dim: hsl(215 05% 40%);
 
   --card: hsl(215 28% 10%);
   --card-foreground: hsl(215 20% 95%);
