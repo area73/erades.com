@@ -1,6 +1,7 @@
 # lighthouse
 .lighthouseci/
 coverage-lighthouse/
+db/lighthouse/
 
 .lighthouseci/
 coverage-lighthouse/
