@@ -33,7 +33,8 @@
     "docker:playwright:base": "docker run --rm --init       -v $PWD:/work -w /work       --shm-size=2g       -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright       -v ${PW_BROWSERS_VOL:-erades_pw_browsers}:/ms-playwright       -v ${PW_NODE_MODULES_VOL:-erades_pw_node_modules}:/work/node_modules       -v ${PW_STORE_VOL:-erades_pw_pnpm_store}:/work/.pnpm-store       erades-com-e2e bash -lc '         set -euo pipefail;         pnpm config set store-dir /work/.pnpm-store;         pnpm install --frozen-lockfile --reporter default;         exec \"$@\"       '",
     "docker:test:e2e": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/e2e/",
     "docker:test:visual": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/",
-    "docker:test:visual:update": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/ --update-snapshots"
+    "docker:test:visual:update": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/ --update-snapshots",
+    "docker:test:visual:enhanced:update": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/visual-regression-enhanced.spec.ts --update-snapshots"
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",

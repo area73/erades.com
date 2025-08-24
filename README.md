@@ -16,10 +16,10 @@ A modern, multilingual blog built with Astro, TypeScript, and Tailwind CSS v4. T
 
 ## 🚀 Tech Stack
 
-- **Framework**: Astro 5.7.10
-- **Styling**: Tailwind CSS v4.1.5
-- **Language**: TypeScript 5.8.3
-- **Testing**: Vitest 3.1.3, Playwright 1.54.1
+- **Framework**: Astro 5.13.2
+- **Styling**: Tailwind CSS v4.1.12
+- **Language**: TypeScript 5.9.2
+- **Testing**: Vitest 3.2.4, Playwright 1.54.2
 - **Search**: FlexSearch 0.8.205
 - **Deployment**: Node.js adapter (standalone mode)
 
@@ -44,19 +44,22 @@ src/
 
 ## 🧞 Commands
 
-| Command                   | Action                                                      |
-| ------------------------- | ----------------------------------------------------------- |
-| `pnpm dev`                | Start development server at `localhost:4321`                |
-| `pnpm build`              | Build for production (includes FlexSearch index generation) |
-| `pnpm preview`            | Preview production build locally                            |
-| `pnpm test`               | Run unit tests                                              |
-| `pnpm test:watch`         | Run unit tests in watch mode                                |
-| `pnpm docker:test:e2e`    | Run end-to-end tests in Docker (Playwright container)       |
-| `pnpm docker:test:visual` | Run visual regression tests in Docker                       |
-| `pnpm lint`               | Lint code with ESLint                                       |
-| `pnpm lint:fix`           | Fix linting issues automatically                            |
-| `pnpm translate:es-en`    | Translate Spanish posts to English                          |
-| `pnpm translate:en-es`    | Translate English posts to Spanish                          |
+| Command                                   | Action                                                      |
+| ----------------------------------------- | ----------------------------------------------------------- |
+| `pnpm dev`                                | Start development server at `localhost:4321`                |
+| `pnpm build`                              | Build for production (includes FlexSearch index generation) |
+| `pnpm preview`                            | Preview production build locally                            |
+| `pnpm test`                               | Run unit tests                                              |
+| `pnpm test:watch`                         | Run unit tests in watch mode                                |
+| `pnpm coverage`                           | Run unit tests with coverage report                         |
+| `pnpm docker:test:e2e`                    | Run end-to-end tests in Docker (Playwright container)       |
+| `pnpm docker:test:visual`                 | Run visual regression tests in Docker                       |
+| `pnpm docker:test:visual:update`          | Update visual regression snapshots                          |
+| `pnpm docker:test:visual:enhanced:update` | Update enhanced visual snapshots                            |
+| `pnpm lint`                               | Lint code with ESLint                                       |
+| `pnpm lint:fix`                           | Fix linting issues automatically                            |
+| `pnpm translate:es-en`                    | Translate Spanish posts to English                          |
+| `pnpm translate:en-es`                    | Translate English posts to Spanish                          |
 
 ## 🎯 Key Features
 
@@ -75,7 +78,7 @@ src/
 ### Comprehensive Testing
 
 - **Unit Tests**: Vitest with happy-dom for component testing
-- **E2E Tests**: Playwright for full user journey testing
+- **E2E Tests**: Playwright for full user journey testing in Docker containers
 - **Visual Regression**: Automated visual testing with snapshots
 - **Coverage**: Code coverage reporting with V8
 
@@ -96,24 +99,48 @@ src/
 
 ## 🚀 CI/CD Pipeline
 
-This project includes a comprehensive CI/CD pipeline with GitHub Actions:
+This project includes a comprehensive CI/CD pipeline with GitHub Actions optimized for speed and reliability:
 
 ### Automated Workflows
 
 - **CI**: Runs on every push and PR with linting, unit tests, E2E tests, visual tests, and build
 - **Security**: Weekly security scans and dependency reviews
 - **Visual Snapshots**: Manual workflow to update visual regression snapshots
+- **Auto Merge**: Automated PR merging with quality gates
 - **Dependabot**: Automated dependency updates with smart filtering
+
+### Container Strategy
+
+The CI/CD pipeline uses a hybrid approach for optimal performance:
+
+**Jobs Node** (lint, test, build):
+
+- Use pnpm cache on GitHub runners
+- Install dependencies locally
+- Fast execution for simple tasks
+
+**Jobs Docker** (E2E, Visual):
+
+- Build optimized `erades-com-e2e` image with buildx cache
+- Execute tests inside containers for consistency
+- Use named volumes for persistence
 
 ### Quality Gates
 
 - ✅ Linting with ESLint (zero warnings)
 - ✅ Unit tests with Vitest (coverage reporting)
-- ✅ E2E tests with Playwright
-- ✅ Visual regression tests
-- ✅ Security scans with npm audit
+- ✅ E2E tests with Playwright in containers
+- ✅ Visual regression tests with snapshots
+- ✅ Security scans with pnpm audit
 - ✅ Build verification
 - ✅ Automatic deployment to production (master branch only)
+
+### Optimizations
+
+- **Concurrency**: Prevents infinite queues by canceling previous runs
+- **Buildx Cache**: GHCR-based cache for faster Docker image builds
+- **Timeouts**: Prevents zombie jobs and resource waste
+- **Named Volumes**: Consistency between local and CI environments
 
 ### Local Development
 
@@ -126,11 +153,17 @@ pnpm lint
 # Unit tests
 pnpm test
 
+# Unit tests with coverage
+pnpm coverage
+
 # E2E tests (Docker)
 pnpm docker:test:e2e
 
 # Visual tests (Docker)
 pnpm docker:test:visual
+
+# Update visual snapshots
+pnpm docker:test:visual:update
 
 # Build
 pnpm build
@@ -167,9 +200,9 @@ The build process includes:
 
 ## 📊 Testing Strategy
 
-- **Unit Tests**: Component and utility function testing
-- **E2E Tests**: Full user journey testing across languages
-- **Visual Regression**: Automated visual testing for UI consistency
+- **Unit Tests**: Component and utility function testing with Vitest
+- **E2E Tests**: Full user journey testing across languages in Docker containers
+- **Visual Regression**: Automated visual testing for UI consistency with snapshots
 - **Performance**: Lighthouse CI integration for performance monitoring
 
 ## 🚀 Deployment
@@ -219,6 +252,7 @@ Este sitio web incluye múltiples feeds RSS para facilitar la suscripción al co
 3. Maintain visual regression snapshots
 4. Follow the established component patterns
 5. Use proper i18n for all user-facing text
+6. Ensure all CI checks pass before submitting PRs
 
 ## 📄 License
 
