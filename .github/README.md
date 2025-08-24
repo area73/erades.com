@@ -17,7 +17,7 @@ El workflow principal que se ejecuta en cada push y pull request:
 **Características:**
 
 - Concurrency para cancelar runs anteriores automáticamente
-- Cache de buildx con GHCR para optimizar construcción de imagen Docker
+- Cache de buildx local para optimizar construcción de imagen Docker
 - Estrategia "todo dentro del contenedor" para tests E2E y visuales
 
 ### 2. Update Visual Snapshots (`update-snapshots.yml`)
@@ -27,7 +27,7 @@ Workflow manual para actualizar snapshots de regresión visual:
 - Se puede ejecutar manualmente desde GitHub Actions
 - Permite elegir entre ambiente "enhanced" o "basic"
 - Crea automáticamente un PR con los snapshots actualizados
-- Usa el mismo cache de buildx que el CI principal (timeout: 30min)
+- Usa el mismo cache de buildx local que el CI principal (timeout: 30min)
 
 ### 3. Security (`security.yml`)
 
@@ -93,14 +93,14 @@ El archivo `dependabot.yml` está configurado para:
 
 **Jobs Docker** (E2E, Visual):
 
-- Construyen imagen `erades-com-e2e` con cache de buildx
+- Construyen imagen `erades-com-e2e` con cache de buildx local
 - Ejecutan tests dentro del contenedor
 - Usan volúmenes nombrados para persistencia
 
 ### Cache Optimizado
 
 - **Cache de pnpm**: Para jobs Node (lint, test, build)
-- **Cache de buildx**: Para construcción de imagen Docker en GHCR
+- **Cache de buildx local**: Para construcción de imagen Docker en `/tmp/.buildx-cache`
 - **Volúmenes Docker**: Para navegadores, node_modules y store de pnpm
 
 ## Artifacts
@@ -141,8 +141,8 @@ Si el build falla:
 
 Si el cache de buildx no funciona:
 
-1. Verifica que el token de GitHub tenga permisos para GHCR
-2. Confirma que el repositorio esté configurado correctamente
+1. Verifica que el directorio `/tmp/.buildx-cache` tenga permisos de escritura
+2. Confirma que el runner tenga espacio suficiente en disco
 3. Revisa los logs de construcción de Docker
 
 ### Timeouts
@@ -159,7 +159,7 @@ Si los jobs fallan por timeout:
 ## Optimizaciones Implementadas
 
 - **Concurrency**: Evita colas infinitas cancelando runs anteriores
-- **Cache de buildx**: Reduce tiempo de construcción de imagen Docker
+- **Cache de buildx local**: Reduce tiempo de construcción de imagen Docker
 - **Timeouts**: Previene jobs zombis y uso excesivo de recursos
 - **Volúmenes nombrados**: Coherencia entre local y CI
 - **Estrategia unificada**: Todo dentro del contenedor para tests E2E/visuales

@@ -140,7 +140,7 @@ The CI/CD pipeline uses a hybrid approach for optimal performance:
 ### Optimizations
 
 - **Concurrency**: Prevents infinite queues by canceling previous runs
-- **Buildx Cache**: GHCR-based cache for faster Docker image builds
+- **Buildx Local Cache**: Local cache for faster Docker image builds
 - **Timeouts**: Prevents zombie jobs and resource waste
 - **Named Volumes**: Consistency between local and CI environments
 
