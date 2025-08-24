@@ -32,14 +32,20 @@ async function main() {
     const raw = await fs.readFile(file, "utf-8");
     const { data, content } = matter(raw);
     const relPath = path.relative(BLOG_DIR, file).replace(/\\/g, "/");
+    const slugNoExt = relPath.replace(/\.mdx?$/, "");
+    const [locale, ...segments] = slugNoExt.split("/");
+    const normalizedLocale = locale === "en" ? "en" : "es"; // limit to supported locales
+    const blogPath = `/${normalizedLocale}/blog/${segments.join(
+      "/"
+    )}`.toLowerCase();
     docs.push({
       ...data,
       tags: Array.isArray(data.tags) ? data.tags : [],
       categories: Array.isArray(data.categories) ? data.categories : [],
       heroImage: typeof data.heroImage === "string" ? data.heroImage : "",
       content,
-      path: `/blog/${relPath.replace(/\.mdx?$/, "")}`.toLowerCase(),
-      id: relPath.replace(/\.mdx?$/, "").toLowerCase(), // slug completo como id
+      path: blogPath,
+      id: slugNoExt.toLowerCase(), // slug completo como id
     });
   }
   console.log(`[FlexSearch] Parsed ${docs.length} documents.`);

@@ -134,15 +134,24 @@ test.describe("Buscador", () => {
     // Cambiar a la vista de lista (list)
     // El componente ViewModeToggle usa enlaces con title
     const listViewButton = page.locator('a[title="Vista lista"]').first();
-
-    // Esperar a que el botón esté visible y hacer clic
-    await expect(listViewButton).toBeVisible({ timeout: 10000 });
     await listViewButton.click();
 
-    // Esperar a que los grid-cards desaparezcan y aparezcan los list-cards
-    await expect(gridPosts).toHaveCount(0);
+    // Esperar a que la URL cambie para incluir viewMode=list
+    await page.waitForURL(/viewMode=list/);
+
+    // Esperar a que la página se recargue completamente
+    await waitForPageReady(page);
+
+    // Esperar a que los list-cards aparezcan antes de verificar que los grid-cards han desaparecido
     const listPosts = page.locator('[aria-label="list-card"]');
-    expect(await listPosts.count()).toBeGreaterThan(0);
+    await expect(listPosts).toHaveCount(gridCount, { timeout: 10000 });
+
+    // Ahora verificar que los grid-cards han desaparecido
+    // Usar un nuevo locator después del cambio de página para asegurar que se actualiza
+    await expect(page.locator('[aria-label="grid-card"]')).toHaveCount(0);
+
+    // Verificar que el número de list-cards coincide con el número original de grid-cards
+    expect(await listPosts.count()).toBe(gridCount);
   });
 
   test("al hacer clic en un blogpost navega al detalle y el título coincide", async ({

@@ -93,7 +93,7 @@ test.describe("Blog", () => {
   test("cambiar la vista de grid a list actualiza los aria-labels", async ({
     page,
   }) => {
-    // Ir a la página de búsqueda con una query que devuelva varios posts
+    // Ir a la página del blog
     await page.goto("/es/blog");
     await waitForPageReady(page);
 
@@ -111,10 +111,22 @@ test.describe("Blog", () => {
     const listViewButton = page.locator('a[title="Vista lista"]').first();
     await listViewButton.click();
 
-    // Esperar a que los grid-cards desaparezcan y aparezcan los list-cards
-    await expect(gridPosts).toHaveCount(0);
+    // Esperar a que la URL cambie para incluir viewMode=list
+    await page.waitForURL(/viewMode=list/);
+
+    // Esperar a que la página se recargue completamente
+    await waitForPageReady(page);
+
+    // Esperar a que los list-cards aparezcan antes de verificar que los grid-cards han desaparecido
     const listPosts = page.locator('[aria-label="list-card"]');
-    expect(await listPosts.count()).toBeGreaterThan(0);
+    await expect(listPosts).toHaveCount(gridCount, { timeout: 10000 });
+
+    // Ahora verificar que los grid-cards han desaparecido
+    // Usar un nuevo locator después del cambio de página para asegurar que se actualiza
+    await expect(page.locator('[aria-label="grid-card"]')).toHaveCount(0);
+
+    // Verificar que el número de list-cards coincide con el número original de grid-cards
+    expect(await listPosts.count()).toBe(gridCount);
   });
 
   test("al hacer clic en un blogpost navega al detalle y el título coincide", async ({
@@ -176,7 +188,7 @@ test.describe("Blog", () => {
     await page2Link.click();
 
     // Esperar a que la URL cambie a la página 2
-    await page.waitForURL(/\/es\/blog\/2/);
+    await page.waitForURL(/\/es\/blog\/page\/2/);
 
     // Esperar un poco más para asegurar que el contenido se carga
     await page.waitForTimeout(1000);
@@ -249,7 +261,7 @@ test.describe("Blog", () => {
     await lastPageLink.click();
 
     // Esperar a que la URL cambie a la última página
-    await page.waitForURL(new RegExp(`/es/blog/${lastPageNumber}`));
+    await page.waitForURL(new RegExp(`/es/blog/page/${lastPageNumber}`));
 
     // Asegurar que el contenido de la última página está listo
     await waitForPageReady(page);
