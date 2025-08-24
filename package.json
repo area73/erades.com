@@ -29,10 +29,11 @@
     "docker:run": "docker run -p 4317:4317 erades-com",
     "docker:stop": "docker stop erades-com",
     "docker:remove": "docker rm erades-com",
-    "docker:playwright:base": "docker run --rm --init       -v $PWD:/work -w /work       --shm-size=2g       -e PNPM_HOME=/usr/local/share/pnpm       -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright       -v erades_pw_browsers:/ms-playwright       -v erades_pw_node_modules:/work/node_modules       -v erades_pw_pnpm_store:/work/.pnpm-store       mcr.microsoft.com/playwright:v1.54.1-jammy bash -lc '         set -euo pipefail;         echo [step] start;         echo [step] node: $(node -v);         corepack enable; COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack prepare pnpm@10.14.0 --activate;         pnpm config set store-dir /work/.pnpm-store;         pnpm install --frozen-lockfile --reporter default;         echo [step] exec; exec \"$@\"       '",
-    "docker:test:e2e": "pnpm run docker:playwright:base -- pnpm exec playwright test tests/e2e/",
-    "docker:test:visual": "pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/",
-    "docker:test:visual:update": "pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/ --update-snapshots"
+    "docker:playwright:build": "DOCKER_BUILDKIT=1 docker build -f Dockerfile.e2e -t erades-com-e2e .",
+    "docker:playwright:base": "docker run --rm --init       -v $PWD:/work -w /work       --shm-size=2g       -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright       -v ${PW_BROWSERS_VOL:-erades_pw_browsers}:/ms-playwright       -v ${PW_NODE_MODULES_VOL:-erades_pw_node_modules}:/work/node_modules       -v ${PW_STORE_VOL:-erades_pw_pnpm_store}:/work/.pnpm-store       erades-com-e2e bash -lc '         set -euo pipefail;         pnpm config set store-dir /work/.pnpm-store;         pnpm install --frozen-lockfile --reporter default;         exec \"$@\"       '",
+    "docker:test:e2e": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/e2e/",
+    "docker:test:visual": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/",
+    "docker:test:visual:update": "pnpm run docker:playwright:build && pnpm run docker:playwright:base -- pnpm exec playwright test tests/visual-regression/ --update-snapshots"
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",
