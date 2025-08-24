@@ -6,7 +6,6 @@ import sitemap from "@astrojs/sitemap";
 import astroExpressiveCode from "astro-expressive-code";
 import tailwindcss from "@tailwindcss/vite";
 import node from "@astrojs/node";
-import swup, { Theme } from "@swup/astro";
 // https://astro.build/config
 // Predefine Vite config with JSDoc typing to avoid excess property checks
 /** @type {import('vite').UserConfig} */
@@ -55,25 +54,6 @@ export default defineConfig({
     },
   },
   integrations: [
-    swup({
-      containers: ["main"],
-      cache: true,
-      preload: true,
-      accessibility: true,
-      native: true,
-      forms: false,
-      morph: false,
-      parallel: false,
-      progress: true,
-      routes: false,
-      smoothScrolling: true,
-      updateBodyClass: false,
-      updateHead: true,
-      reloadScripts: true,
-      debug: false,
-      loadOnIdle: true,
-      globalInstance: false,
-    }),
     astroExpressiveCode({
       themes: ["dracula"],
     }),

@@ -21,7 +21,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
   reporter: [["html", { open: "never" }]],
   webServer: {
-    command: "pnpm build && pnpm preview --host 127.0.0.1 --port 4321",
+    command: "pnpm build && pnpm preview --host 0.0.0.0 --port 4321",
     url: "http://127.0.0.1:4321",
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
