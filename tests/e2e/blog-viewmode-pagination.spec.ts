@@ -46,6 +46,12 @@ test.describe("Persistencia del modo de vista a través de la paginación", () =
     await expect(activePage).toHaveText("2");
   });
 
+  /**
+   * Verifica que al cambiar al modo de vista "lista" en el blog,
+   * navegar a la página 2 mediante la paginación mantiene el modo de vista seleccionado (list view)
+   * y no regresa al modo grid. También comprueba que los elementos de accesibilidad
+   * (aria-labels y aria-current) reflejan correctamente el estado de la paginación.
+   */
   test("conserva viewMode, category y sortBy a través de la paginación", async ({
     page,
   }) => {
@@ -82,15 +88,10 @@ test.describe("Persistencia del modo de vista a través de la paginación", () =
     await page.getByRole("link", { name: "Ir a página 2" }).first().click();
 
     // URL should still contain parameters
-    await expect(page).toHaveURL(/\/es\/blog\/2/);
+    await expect(page).toHaveURL(/\/es\/blog\/page\/2/);
     await expect(page).toHaveURL(/viewMode=list/);
     await expect(page).toHaveURL(/sortBy=title/);
-    // If category was clicked, it should be preserved
-    // (Don't fail if not present on the site)
-    const urlHasCategory = /[?&]category=/.test(page.url());
-    if (urlHasCategory) {
-      await expect(page).toHaveURL(/category=/);
-    }
+    await expect(page).toHaveURL(/category=/);
 
     // Still list view
     await page.waitForSelector('[aria-label="list-card"]');
