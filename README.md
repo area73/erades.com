@@ -2,7 +2,7 @@
 
 A modern, multilingual blog built with Astro, TypeScript, and Tailwind CSS v4. This project features advanced search capabilities, comprehensive testing, and excellent performance optimization.
 
-## 🌟 Features
+## 🌟 Features !
 
 - **Multilingual Support**: Full i18n with Spanish (es) and English (en) locales
 - **Advanced Search**: FlexSearch-powered search with real-time results
