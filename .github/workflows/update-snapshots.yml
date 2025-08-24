@@ -27,16 +27,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.14.0
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -54,15 +44,15 @@ jobs:
 
       # Necesitas el build ANTES de que Playwright lance el webServer (preview)
       - name: Build app (inside container)
-        run: pnpm run docker:playwright:base -- pnpm build
+        run: pnpm ci:docker:build
 
       # Ejecuta la suite que actualiza snapshots; el webServer lo lanza Playwright según tu config
       - name: Update snapshots (inside container)
         run: |
           if [ "${{ github.event.inputs.environment }}" = "enhanced" ]; then
-            pnpm run docker:playwright:base -- pnpm test:visual:enhanced:update
+            pnpm ci:docker:test:visual:enhanced:update
           else
-            pnpm run docker:playwright:base -- pnpm test:visual:update
+            pnpm ci:docker:test:visual:update
           fi
 
       - name: Create Pull Request with updated snapshots
