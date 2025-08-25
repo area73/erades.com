@@ -1,6 +1,6 @@
-import type { MiddlewareResponseHandler } from "astro";
+import type { MiddlewareHandler } from "astro";
 
-export const onRequest: MiddlewareResponseHandler = async (context, next) => {
+export const onRequest: MiddlewareHandler = async (context, next) => {
   const response = await next();
 
   const url = new URL(context.request.url);
@@ -14,7 +14,13 @@ export const onRequest: MiddlewareResponseHandler = async (context, next) => {
   // Cache-Control específico por tipo de contenido
   if (pathname.startsWith("/api/")) {
     response.headers.set("Cache-Control", "no-cache, must-revalidate");
-  } else if (pathname.includes(".json") || pathname.includes(".xml")) {
+  } else if (
+    pathname.includes(".json") ||
+    pathname.includes(".xml") ||
+    pathname === "/feed" ||
+    pathname === "/rss" ||
+    pathname === "/en/rss"
+  ) {
     response.headers.set("Cache-Control", "max-age=300, must-revalidate");
   } else if (pathname.startsWith("/blog/")) {
     response.headers.set("Cache-Control", "max-age=3600, must-revalidate");
