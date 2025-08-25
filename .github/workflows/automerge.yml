@@ -22,8 +22,8 @@ jobs:
       - name: Esperar a que los status checks pasen
         uses: WyriHaximus/github-action-wait-for-status@v1
         with:
-          ignoreActions: automerge
-          ref: ${{ github.event.pull_request.head.sha }}
+          ignoreActions: "Auto Merge PRs"
+          waitForCheck: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
