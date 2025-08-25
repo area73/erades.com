@@ -97,6 +97,7 @@ export const GET: APIRoute = async ({ request }) => {
   return new Response(JSON.stringify(results), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-cache, must-revalidate",
     },
   });
 };
