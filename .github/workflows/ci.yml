@@ -148,6 +148,7 @@ jobs:
           docker buildx build \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
+            --load \
             -f Dockerfile.e2e -t erades-com-e2e .
 
       - name: Move cache
@@ -213,6 +214,7 @@ jobs:
           docker buildx build \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
+            --load \
             -f Dockerfile.e2e -t erades-com-e2e .
 
       - name: Move cache
