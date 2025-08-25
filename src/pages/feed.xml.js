@@ -10,7 +10,7 @@ export async function GET(context) {
     .filter((post) => !post.data.draft)
     .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate));
 
-  return rss({
+  const rssContent = await rss({
     title: `${SITE_TITLE} - RSS Feed`,
     description: `${SITE_DESCRIPTION} - RSS Feed con posts en español e inglés`,
     site: SITE_URL,
@@ -27,5 +27,12 @@ export async function GET(context) {
     })),
     customData: `<language>es-ES</language>`,
     stylesheet: "/rss/styles.xsl",
+  });
+
+  return new Response(rssContent, {
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "max-age=300, must-revalidate",
+    },
   });
 }

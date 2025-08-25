@@ -11,7 +11,7 @@ export async function GET(context) {
     .filter((post) => post.id.startsWith("es/") && !post.data.draft)
     .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate));
 
-  return rss({
+  const rssContent = await rss({
     title: t("es", "rss.title").replace("{siteTitle}", SITE_TITLE),
     description: t("es", "rss.description"),
     site: SITE_URL,
@@ -25,5 +25,12 @@ export async function GET(context) {
     })),
     customData: `<language>es-ES</language>`,
     stylesheet: "/rss/styles.xsl",
+  });
+
+  return new Response(rssContent, {
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "max-age=300, must-revalidate",
+    },
   });
 }
