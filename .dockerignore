@@ -7,7 +7,6 @@ dist
 coverage
 playwright-report
 test-results
-tests
 *.log
 *.local
 .env*
