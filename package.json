@@ -26,7 +26,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "docker:build": "docker build -t erades-com .",
-    "docker:run": "docker run -p 4317:4317 erades-com",
+    "docker:run": "docker run -p 8080:8080 erades-com",
     "docker:stop": "docker stop erades-com",
     "docker:remove": "docker rm erades-com",
     "docker:playwright:build": "DOCKER_BUILDKIT=1 docker build -f Dockerfile.e2e -t erades-com-e2e .",
@@ -40,7 +40,6 @@
     "ci:docker:build": "docker run --rm --init -v $PWD:/work -w /work --shm-size=2g -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright -v ${PW_BROWSERS_VOL:-ga_pw_browsers}:/ms-playwright -v ${PW_NODE_MODULES_VOL:-ga_pw_node_modules}:/work/node_modules -v ${PW_STORE_VOL:-ga_pw_pnpm_store}:/work/.pnpm-store erades-com-e2e bash -lc 'set -euo pipefail; pnpm config set store-dir /work/.pnpm-store; pnpm install --frozen-lockfile --reporter default; pnpm build'",
     "ci:docker:test:visual:update": "docker run --rm --init -v $PWD:/work -w /work --shm-size=2g -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright -v ${PW_BROWSERS_VOL:-ga_pw_browsers}:/ms-playwright -v ${PW_NODE_MODULES_VOL:-ga_pw_node_modules}:/work/node_modules -v ${PW_STORE_VOL:-ga_pw_pnpm_store}:/work/.pnpm-store erades-com-e2e bash -lc 'set -euo pipefail; pnpm config set store-dir /work/.pnpm-store; pnpm install --frozen-lockfile --reporter default; pnpm exec playwright test tests/visual-regression/ --update-snapshots'",
     "ci:docker:test:visual:enhanced:update": "docker run --rm --init -v $PWD:/work -w /work --shm-size=2g -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright -v ${PW_BROWSERS_VOL:-ga_pw_browsers}:/ms-playwright -v ${PW_NODE_MODULES_VOL:-ga_pw_node_modules}:/work/node_modules -v ${PW_STORE_VOL:-ga_pw_pnpm_store}:/work/.pnpm-store erades-com-e2e bash -lc 'set -euo pipefail; pnpm config set store-dir /work/.pnpm-store; pnpm install --frozen-lockfile --reporter default; pnpm exec playwright test tests/visual-regression/visual-regression-enhanced.spec.ts --update-snapshots'"
-
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",
