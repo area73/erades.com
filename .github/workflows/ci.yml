@@ -143,19 +143,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build test image with cache
+      - name: Build test image
         run: |
-          docker buildx build \
-            --builder default \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
-            --load \
-            -f Dockerfile.e2e -t erades-com-e2e .
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          docker build -f Dockerfile.e2e -t erades-com-e2e .
 
       - name: Run visual tests (inside container)
         run: pnpm ci:docker:test:visual
@@ -210,19 +200,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build test image with cache
+      - name: Build test image
         run: |
-          docker buildx build \
-            --builder default \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
-            --load \
-            -f Dockerfile.e2e -t erades-com-e2e .
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          docker build -f Dockerfile.e2e -t erades-com-e2e .
 
       - name: Run E2E tests (inside container)
         run: pnpm ci:docker:test:e2e
