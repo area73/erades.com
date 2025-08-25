@@ -17,7 +17,7 @@ In JavaScript we can only inherit from a single object. There can be only one **
 an object.
 And a class may extend only one other class.
 
-**To solve the use of multi inheritance we use mixins**.
+To solve the use of multi inheritance we use mixins.
 
 In object-oriented programming languages, a Mixin is a class that contains methods for use by
 other classes without having to be the parent class of those other classes.
@@ -28,7 +28,7 @@ This pattern is an example of enforcing the [**dependency inversion principle**]
 ## Inheriting "methods"
 
 JavaScript does not have methods in the form that class-based languages define them.
-**In JavaScript, any function can be added to an object in the form of a property**.
+In JavaScript, any function can be added to an object in the form of a property.
 An inherited function acts just as any other property, including property shadowing
 
 There is more than one type of prototypal inheritance:
@@ -72,7 +72,7 @@ example </a>
 
 ## Concatenative
 
-**Using Object.assign() as mixin**
+### Using Object.assign() as mixin
 
 ```javascript
 // mixin
@@ -96,7 +96,7 @@ Object.assign(User.prototype, sayHiMixin);
 new User("Dude").sayHi(); // Hello Dude!
 ```
 
-**or if you were using classes you could do something like this:**
+### or if you were using classes you could do something like this:
 
 ```javascript
 class User extends Person {
@@ -139,7 +139,7 @@ var circle1 = new Circle(5);
 circle1.area(); //78.54
 ```
 
-**Mixins as verbs instead of nouns**
+### Mixins as verbs instead of nouns
 
 ### Adding Options
 
@@ -169,7 +169,7 @@ var OvalButton = function (/*...*/) {
 asOval.call(OvalButton.prototype, { growBy: 2, shrinkBy: 2 });
 ```
 
-**Further reading [Traits](https://github.com/traitsjs/traits.js)**
+### Further reading [Traits](https://github.com/traitsjs/traits.js)
 
 <div class="bibliography">
 Bibliography: <br>
