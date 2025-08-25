@@ -146,6 +146,7 @@ jobs:
       - name: Build test image with cache
         run: |
           docker buildx build \
+            --builder default \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
             --load \
@@ -212,6 +213,7 @@ jobs:
       - name: Build test image with cache
         run: |
           docker buildx build \
+            --builder default \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
             --load \
