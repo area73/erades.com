@@ -3,14 +3,21 @@ FROM mcr.microsoft.com/playwright:v1.54.1-jammy
 
 # Fija pnpm en la imagen (sin Corepack en runtime)
 ARG PNPM_VERSION=10.14.0
+ENV PNPM_STORE_DIR=/pnpm-store
 RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate \
- && pnpm -v
+ && pnpm -v \
+ && mkdir -p ${PNPM_STORE_DIR}
 
 WORKDIR /work
 
 # Copiamos lo mínimo para resolver deps
 COPY package.json pnpm-lock.yaml ./
+# Instala dependencias de producción y dev (para ejecutar build/test dentro de la imagen)
+RUN pnpm install --frozen-lockfile --prefer-offline
+
+# Copia el resto del código (tests, src, config)
+COPY . .
 
 # Precalienta el store con BuildKit cache (muy rápido en rebuilds)
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    pnpm fetch
+RUN pnpm config set store-dir ${PNPM_STORE_DIR} \
+ && pnpm fetch
