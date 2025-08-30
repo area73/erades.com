@@ -18,9 +18,8 @@ services:
       BASE_URL: "http://host.docker.internal:4321"
       CI: "${CI:-false}"
     shm_size: "1g" # evita crashes de Chromium
-    # No arrancamos servidor aquí. Solo runner de tests.
-    # TODO: faltarían los tests de visual regression
-    command: ["pnpm", "test:e2e"]
+    # No arrancamos servidor aquí. Solo runner de tests visuales.
+    command: ["pnpm", "exec", "playwright", "test", "--config=playwright.visual.config.ts"]
 
 volumes:
   tests-node-modules:

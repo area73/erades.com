@@ -1,40 +1,34 @@
 import { defineConfig, devices } from "@playwright/test";
 import os from "os";
 
+// Config exclusivo para tests E2E
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 30 * 1000,
   reporter: [["html", { open: "never" }]],
-  workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75),
+
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:4321", // sobreescrito en compose/CI
+    // Para E2E arrancamos el servidor con webServer (ver abajo)
+    baseURL: process.env.BASE_URL || "http://127.0.0.1:4321",
     headless: true,
-    trace: "on",
+    trace: "on-first-retry",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    // Configuración visual consistente
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
+
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
 
   expect: {
     timeout: 5000,
-    // Configuración para regresión visual
-    toHaveScreenshot: {
-      threshold: 0.2, // 20% tolerance para diferencias menores
-      maxDiffPixels: 1000, // Máximo de píxeles diferentes permitidos
-    },
-    toMatchSnapshot: {
-      threshold: 0.2,
-    },
   },
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75), // 75% de CPUs disponibles
-  // IMPORTANT: Playwright config (sin webServer, baseURL externo)
-  /*
+
+  // Arranca la app para las pruebas E2E
   webServer: {
     command: "pnpm build && pnpm start",
     url: "http://127.0.0.1:4321",
@@ -42,5 +36,4 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     env: { PORT: "4321" },
   },
-  */
 });
