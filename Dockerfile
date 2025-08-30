@@ -1,43 +1,33 @@
-FROM node:22-bookworm-slim AS base
-WORKDIR /app
-RUN corepack enable
+# Runner de tests E2E/visual.
+# Imagen oficial multi-arch de Playwright con deps/navegadores.
+ARG PLAYWRIGHT_TAG=mcr.microsoft.com/playwright:v1.55.0-jammy
+FROM ${PLAYWRIGHT_TAG}
 
-# --- Install deps
-FROM base AS deps
+# 1) PNPM via Corepack con versión fija (evita claves TUF antiguas)
+#    Elige una versión de pnpm que tengas validada con tu lockfile
+ARG PNPM_VERSION=10.14.0
+
+# Habilita corepack y activa pnpm en esa versión
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
+ENV COREPACK_ENABLE_DOWNLOADS=0
+# (Opcional) Congela descargas de corepack para que NO intente tocar nada más
+# ENV COREPACK_ENABLE_DOWNLOADS=0
+
+WORKDIR /tests
+
+
+# 2) Instala deps del runner (node_modules aislado del host)
 COPY package.json pnpm-lock.yaml ./
+RUN pnpm --version && pnpm install --frozen-lockfile
+
+# Copiamos manifest para cachear deps del runner de tests
+COPY package.json pnpm-lock.yaml ./
+# Instala solo lo necesario para ejecutar los tests dentro del contenedor
+# (esto crea su propio node_modules separado del host)
 RUN pnpm install --frozen-lockfile
 
-# --- Build
-FROM deps AS build
+# Copiamos el resto (tests, config, etc.). Si prefieres bind-mount, este COPY es opcional.
 COPY . .
-RUN pnpm run build
 
-# --- Runtime image
-FROM base AS runner
-WORKDIR /app
-ENV NODE_ENV=production \
-    HOST=0.0.0.0 \
-    PORT=8080
-EXPOSE 8080
-
-# Install only production dependencies for runtime (e.g., sharp for /_image)
-FROM base AS prod-deps
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile
-
-FROM runner AS final
-
-# Run as non-root for security
-RUN useradd -m -u 1001 nodeuser
-USER nodeuser
-
-# Copy runtime deps and built app
-COPY --chown=nodeuser:nodeuser --from=prod-deps /app/node_modules ./node_modules
-COPY --chown=nodeuser:nodeuser --from=build /app/dist ./dist
-# Copy source assets needed by astro:assets runtime and public files
-COPY --chown=nodeuser:nodeuser --from=build /app/public ./public
-COPY --chown=nodeuser:nodeuser --from=build /app/src/assets ./src/assets
-
-CMD ["node", "./dist/server/entry.mjs"]
-
-
+# No exponemos puertos; el servidor vive FUERA.
+# Entrypoint/command se define desde docker compose o CLI.

@@ -1,0 +1,27 @@
+services:
+  erades-com:
+    container_name: erades-com
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Monta el repo, pero NO compartas node_modules
+    volumes:
+      - .:/tests:delegated
+      - tests-node-modules:/tests/node_modules
+      - pnpm-store:/root/.local/share/pnpm
+      - playwright-cache:/root/.cache/ms-playwright
+    # Resuelve host.docker.internal también en Linux (GitHub runners)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # BASE_URL = servidor Astro corriendo en tu HOST (fuera del contenedor)
+      BASE_URL: "http://host.docker.internal:4321"
+      CI: "${CI:-false}"
+    shm_size: "1g" # evita crashes de Chromium
+    # No arrancamos servidor aquí. Solo runner de tests visuales.
+    command: ["pnpm", "exec", "playwright", "test", "--config=playwright.visual.config.ts"]
+
+volumes:
+  tests-node-modules:
+  pnpm-store:
+  playwright-cache:

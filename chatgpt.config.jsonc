@@ -1,0 +1,88 @@
+// Configuración de ChatGPT/Codex para este repositorio.
+// Formato: JSONC (JSON con comentarios).
+// Propósito: orientar a la IA sobre estilo, paths y comandos útiles.
+{
+  // Nombre lógico del proyecto
+  "projectName": "erades.com",
+
+  // Idioma preferente para mensajes y docs
+  "defaultLanguage": "es",
+
+  // Tono de las respuestas del asistente
+  "assistantStyle": "concise-direct-friendly",
+
+  // Metadatos del stack y entorno
+  "codebase": {
+    "frameworks": ["Astro", "TypeScript", "TailwindCSS"],
+    "testing": ["Vitest", "Playwright"],
+    "lint": "ESLint",
+    "packageManager": "pnpm",
+    "node": ">=22.13.0"
+  },
+
+  // Atajos hacia scripts existentes del proyecto
+  "scripts": {
+    "dev": "pnpm dev",
+    "build": "pnpm build",
+    "preview": "pnpm preview",
+    "typecheck": "pnpm typecheck",
+    "lint": "pnpm lint",
+    "lintFix": "pnpm lint:fix",
+    "testUnit": "pnpm test:unit",
+    "testE2E": "pnpm test:e2e"
+  },
+
+  // Rutas a considerar/ignorar en búsquedas y cambios
+  "paths": {
+    "include": [
+      "src/**",
+      "public/**",
+      "tests/**",
+      "scripts/**",
+      "astro.config.mjs",
+      "vitest.config.ts",
+      "playwright.config.ts",
+      "tailwind.config.js",
+      "eslint.config.js",
+      "tsconfig.json",
+      "package.json"
+    ],
+    "exclude": [
+      "dist/**",
+      ".astro/**",
+      "node_modules/**",
+      ".git/**",
+      ".pnpm-store/**",
+      "db/**",
+      "coverage/**"
+    ]
+  },
+
+  // Reglas operativas para el asistente en este repo
+  "assistantRules": [
+    "Preferir cambios mínimos y enfocados al estilo del repo.",
+    "No modificar archivos no relacionados al objetivo.",
+    "Usar español cuando el archivo/contenido esté en español.",
+    "Para tareas multi‑paso, usar update_plan con pasos breves.",
+    "Antes de comandos, enviar un preámbulo corto.",
+    "Referenciar archivos con rutas clicables y número de línea."
+  ],
+
+  // Guías de ejecución de comandos y validación previa a finalizar
+  "commandGuidelines": {
+    "chunkReadMaxLines": 250,
+    "searchTool": "rg",
+    "validateBeforeFinish": ["pnpm typecheck", "pnpm lint", "pnpm test:unit"]
+  },
+
+  // Pistas para CI/monitorización (opcional)
+  "ci": {
+    "lighthouse": {
+      "collectMobileAndDesktop": true,
+      "serverDockerCompose": "docker-compose.lhci.yml"
+    }
+  },
+
+  // Nota: este archivo no afecta el build en producción.
+  "notes": "Guía práctica para asistentes en este repo; editable según preferencias."
+}

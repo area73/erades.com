@@ -1,9 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 import os from "os";
 
-// Config exclusivo para tests E2E
+// Config exclusivo para regresión visual (sin webServer)
 export default defineConfig({
-  testDir: "tests/e2e",
+  testDir: "tests/visual-regression",
   timeout: 30 * 1000,
   reporter: [["html", { open: "never" }]],
   fullyParallel: true,
@@ -12,10 +12,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75),
 
   use: {
-    // Para E2E arrancamos el servidor con webServer (ver abajo)
-    baseURL: process.env.BASE_URL || "http://127.0.0.1:4321",
+    // BASE_URL debe apuntar a un servidor ya arrancado (host o externo)
+    baseURL: process.env.BASE_URL || "http://localhost:4321",
     headless: true,
-    trace: "on-first-retry",
+    trace: "off",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
     viewport: { width: 1280, height: 720 },
@@ -26,14 +26,10 @@ export default defineConfig({
 
   expect: {
     timeout: 5000,
-  },
-
-  // Arranca la app para las pruebas E2E
-  webServer: {
-    command: "pnpm build && pnpm start",
-    url: "http://127.0.0.1:4321",
-    timeout: 120_000,
-    reuseExistingServer: !process.env.CI,
-    env: { PORT: "4321" },
+    toHaveScreenshot: {
+      threshold: 0.2,
+      maxDiffPixels: 1000,
+    },
+    toMatchSnapshot: { threshold: 0.2 },
   },
 });

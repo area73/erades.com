@@ -9,6 +9,7 @@ lucide
 mantenible
 networkidle
 openai
+PWDEBUG
 redirección
 shiki
 swup

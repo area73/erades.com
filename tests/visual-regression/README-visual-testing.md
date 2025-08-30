@@ -4,6 +4,13 @@
 
 Este proyecto utiliza **Playwright** para tests automáticos de regresión visual que detectan cambios visuales no deseados en la interfaz de usuario.
 
+## Consideración especial
+
+Como los test aitmáticos de regresión visual dependen en gran medida del sistema operativo y del navegador que se utilza, tenemos que seguir una estrategia de dockerización para asegurarnos que estos test se corren de igual fomra en local que en el CI.
+
+Esto quioere decir que los packetes de instalación de node_modules no pueden ser los mismos en local que en el docker.
+Además nos tenemos que asegurar que las imagens visuales de referencia se guarden en local para poderla tener en el control de versiones
+
 ## Archivos de Tests Visuales
 
 - `visual-regression.spec.ts` - Tests de páginas completas y flujos principales
@@ -12,11 +19,11 @@ Este proyecto utiliza **Playwright** para tests automáticos de regresión visua
 ## Comandos Disponibles
 
 ```bash
-# Ejecutar todos los tests visuales (Docker)
-pnpm docker:test:visual
+# Ejecutar todos los tests visuales
+pnpm test:visual
 
 # Actualizar snapshots de referencia (primera vez o cuando hay cambios intencionales) (Docker)
-pnpm docker:test:visual:update
+pnpm test:visual:update
 ```
 
 ## Primer Uso
@@ -24,14 +31,14 @@ pnpm docker:test:visual:update
 ### 1. Generar snapshots de referencia
 
 ```bash
-# Generar snapshots iniciales en entorno consistente (Docker)
-pnpm docker:test:visual:update
+# Generar snapshots iniciales en entorno consistente
+pnpm test:visual:update
 ```
 
 ### 2. Ejecutar tests visuales
 
 ```bash
-pnpm docker:test:visual
+pnpm test:visual
 ```
 
 ## Estructura de Tests
@@ -89,7 +96,7 @@ expect: {
 ### Desarrollo Normal
 
 1. Hacer cambios en el código
-2. Ejecutar `pnpm test:visual`
+2. Ejecutar `pnpm test:visual` que levanta una imagen docker y hace las pruebas con el navegador en docker
 3. Si fallan, revisar los diffs generados
 4. Si los cambios son intencionales, ejecutar `pnpm test:visual:update`
 
@@ -97,10 +104,10 @@ expect: {
 
 ```bash
 # Después de cambios intencionales en estilos/componentes
-pnpm docker:test:visual:update
+pnpm test:visual:update
 
 # Verificar que los nuevos snapshots son correctos
-pnpm docker:test:visual
+pnpm test:visual
 ```
 
 ### Debugging Visual
@@ -111,7 +118,7 @@ pnpm docker:test:visual
 
 ### Ubicación de Snapshots
 
-```
+```bash
 tests/
 ├── visual-regression.spec.ts-snapshots/
 │   ├── homepage-es-chromium-darwin.png
@@ -157,7 +164,7 @@ Para CI/CD, considera:
 ```yaml
 # Ejemplo para GitHub Actions con Docker
 - name: Run Visual Tests (Docker)
-  run: pnpm docker:test:visual
+  run: pnpm ci:test:visual
 ```
 
 ## Resolución de Problemas
@@ -184,15 +191,9 @@ toHaveScreenshot: {
 ```bash
 # Limpiar snapshots existentes y regenerar
 rm -rf tests/*-snapshots/
-pnpm docker:test:visual:update
+pnpm test:visual:update
 ```
 
 ## Monitoreo Continuo
 
-Considera integrar herramientas adicionales para regresión visual continua:
-
-- **Chromatic** (Storybook)
-- **Percy** (Browserstack)
-- **Applitools** (AI-powered)
-
-Pero con Playwright ya tienes una base sólida y gratuita para regresión visual efectiva.
+Con Playwright ya tienes una base sólida y gratuita para regresión visual efectiva.
