@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -91,8 +93,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Install Playwright Browsers
-        uses: microsoft/playwright-github-action@v1
       - name: Build app
         run: pnpm build
       - name: Start server
@@ -102,8 +102,25 @@ jobs:
             if curl -fsS "$BASE_URL" >/dev/null; then echo "Server is up"; break; fi
             sleep 2
           done
-      - name: Run visual tests
-        run: pnpm exec playwright test --config=playwright.visual.config.ts
+      - name: Build visual test runner image
+        run: docker compose build
+      - name: Run visual tests (Docker)
+        run: pnpm run test:visual
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-visual-report
+          path: playwright-report
+      - name: Upload Playwright test-results (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results
+      - name: Show server log
+        if: always()
+        run: cat server.log || true
 
   Build:
     name: Build-App
