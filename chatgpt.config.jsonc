@@ -72,11 +72,7 @@
   "commandGuidelines": {
     "chunkReadMaxLines": 250,
     "searchTool": "rg",
-    "validateBeforeFinish": [
-      "pnpm typecheck",
-      "pnpm lint",
-      "pnpm test:unit"
-    ]
+    "validateBeforeFinish": ["pnpm typecheck", "pnpm lint", "pnpm test:unit"]
   },
 
   // Pistas para CI/monitorización (opcional)
@@ -90,4 +86,3 @@
   // Nota: este archivo no afecta el build en producción.
   "notes": "Guía práctica para asistentes en este repo; editable según preferencias."
 }
-
