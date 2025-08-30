@@ -29,13 +29,11 @@
     "test:unit:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:headed": "PWDEBUG=1 playwright test --headed",
-    "test:visual": "playwright test --config=playwright.visual.config.ts",
-    "test:visual:headed": "PWDEBUG=1 playwright test --config=playwright.visual.config.ts --headed",
-    "test:visual:update": "playwright test --config=playwright.visual.config.ts --update-snapshots",
+    "test:visual": "pnpm compose:run && playwright test --config=playwright.visual.config.ts",
+    "test:visual:update": "pnpm compose:run && playwright test --config=playwright.visual.config.ts --update-snapshots",
+    "test:visual:headed": "PWDEBUG=1 pnpm compose:run && playwright test --config=playwright.visual.config.ts --headed",
     "compose:build": "docker compose build",
-    "compose:run": "docker compose run --rm -e CI=true erades-com pnpm test:e2e",
-    "compose:test:visual": "docker compose run --rm -e CI=true erades-com pnpm test:visual",
-    "compose:test:visual:update": "docker compose run --rm -e CI=true erades-com pnpm test:visual:update"
+    "compose:run": "docker compose run --rm -e CI=true erades-com"
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",

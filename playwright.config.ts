@@ -36,7 +36,7 @@ export default defineConfig({
   // IMPORTANT: Playwright config (sin webServer, baseURL externo)
   /*
   webServer: {
-    command: "pnpm build && pnpm preview --host 0.0.0.0 --port 4321",
+    command: "pnpm build && pnpm start",
     url: "http://127.0.0.1:4321",
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
