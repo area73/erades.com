@@ -20,7 +20,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -38,7 +38,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -56,7 +56,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -75,7 +75,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -93,7 +93,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -113,7 +113,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -131,7 +131,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -148,7 +148,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -174,7 +174,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -199,7 +199,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -215,7 +215,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -227,7 +227,7 @@ describe("BlogCardGrid.astro", () => {
       // Act & Assert
       await expect(
         renderAstroComponent(BlogCardGrid, {
-          props: { post: undefined, lang: "es" },
+          props: { post: undefined, lang: "es", index: 0 },
         })
       ).rejects.toThrow();
     });
@@ -243,7 +243,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -260,7 +260,7 @@ describe("BlogCardGrid.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardGrid, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert

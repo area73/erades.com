@@ -22,6 +22,7 @@ describe("BlogCard", () => {
       props: {
         post: mockPost,
         lang: "en",
+        index: 0,
       },
     });
 
@@ -36,6 +37,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -49,6 +51,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "list",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -62,6 +65,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -75,6 +79,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "list",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -88,6 +93,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -102,6 +108,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -116,6 +123,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "list",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -131,6 +139,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -147,6 +156,7 @@ describe("BlogCard", () => {
         post: postWithoutImage,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
@@ -161,6 +171,7 @@ describe("BlogCard", () => {
         post: mockPost,
         variant: "grid",
         lang: "en",
+        index: 0,
       },
     });
 
