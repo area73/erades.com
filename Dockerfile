@@ -28,9 +28,8 @@ COPY --from=builder /app/dist ./dist
 RUN chown -R node:node /app
 USER node
 
-# Cloud Run injects PORT. Default to 8080 and expose it.
+# Platform injects PORT (Render, etc.). Default to 8080.
 ENV PORT=8080
 EXPOSE 8080
 
 CMD ["node", "./dist/server/entry.mjs"]
-
