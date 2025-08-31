@@ -3,7 +3,7 @@ services:
     container_name: erades-com
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.visual-test
     # Monta el repo, pero NO compartas node_modules
     volumes:
       - .:/tests:delegated
