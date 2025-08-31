@@ -72,9 +72,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Install Playwright browsers and dependencies
-        run: npx playwright install --with-deps
+      - run:
+          pnpm install --frozen-lockfile
+          # Instala Playwright y sus dependencias
+      - uses: microsoft/playwright-github-action@v1
+        with:
+          run-tests: false # No ejecuta tests todavía; solo instala
       - run: pnpm test:e2e
 
   # Visual-Regression-Tests:
