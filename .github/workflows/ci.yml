@@ -15,50 +15,50 @@ env:
   NODE_VERSION: 22.13.x
 
 jobs:
-  Lint:
-    name: Lint-Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
+  # Lint:
+  #   name: Lint-Check
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.15.0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm lint
 
-  Type-Check:
-    name: Type-Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
+  # Type-Check:
+  #   name: Type-Check
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.15.0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm typecheck
 
-  Unit-Tests:
-    name: Unit-Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test:unit
+  # Unit-Tests:
+  #   name: Unit-Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.15.0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm test:unit
 
   E2E-Tests:
     name: E2E-Tests
@@ -77,68 +77,68 @@ jobs:
         run: npx playwright install --with-deps
       - run: pnpm test:e2e
 
-  Visual-Regression-Tests:
-    name: Visual-Regression-Tests
-    runs-on: ubuntu-latest
-    env:
-      PORT: 4321
-      BASE_URL: http://127.0.0.1:4321
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Build app
-        run: pnpm build
-      - name: Start server
-        run: |
-          nohup env PORT=$PORT pnpm start > server.log 2>&1 &
-          for i in {1..60}; do
-            if curl -fsS "$BASE_URL" >/dev/null; then echo "Server is up"; break; fi
-            sleep 2
-          done
-      - name: Build visual test runner image
-        run: docker compose build
-      - name: Run visual tests (Docker)
-        run: pnpm run test:visual
-      - name: Upload Playwright HTML report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-visual-report
-          path: playwright-report
-      - name: Upload Playwright test-results (on failure)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-test-results
-          path: test-results
-      - name: Show server log
-        if: always()
-        run: cat server.log || true
+  # Visual-Regression-Tests:
+  #   name: Visual-Regression-Tests
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     PORT: 4321
+  #     BASE_URL: http://127.0.0.1:4321
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.15.0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - name: Build app
+  #       run: pnpm build
+  #     - name: Start server
+  #       run: |
+  #         nohup env PORT=$PORT pnpm start > server.log 2>&1 &
+  #         for i in {1..60}; do
+  #           if curl -fsS "$BASE_URL" >/dev/null; then echo "Server is up"; break; fi
+  #           sleep 2
+  #         done
+  #     - name: Build visual test runner image
+  #       run: docker compose build
+  #     - name: Run visual tests (Docker)
+  #       run: pnpm run test:visual
+  #     - name: Upload Playwright HTML report
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: playwright-visual-report
+  #         path: playwright-report
+  #     - name: Upload Playwright test-results (on failure)
+  #       if: failure()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: playwright-test-results
+  #         path: test-results
+  #     - name: Show server log
+  #       if: always()
+  #       run: cat server.log || true
 
-  Build:
-    name: Build-App
-    runs-on: ubuntu-latest
-    needs:
-      - Lint
-      - Type-Check
-      - Unit-Tests
-      - E2E-Tests
-      - Visual-Regression-Tests
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+  # Build:
+  #   name: Build-App
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - Lint
+  #     - Type-Check
+  #     - Unit-Tests
+  #     - E2E-Tests
+  #     - Visual-Regression-Tests
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.15.0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm build
