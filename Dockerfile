@@ -1,33 +1,36 @@
-# Runner de tests E2E/visual.
-# Imagen oficial multi-arch de Playwright con deps/navegadores.
-ARG PLAYWRIGHT_TAG=mcr.microsoft.com/playwright:v1.55.0-jammy
-FROM ${PLAYWRIGHT_TAG}
+# Production image for erades.com
 
-# 1) PNPM via Corepack con versión fija (evita claves TUF antiguas)
-#    Elige una versión de pnpm que tengas validada con tu lockfile
+FROM node:22-slim AS builder
+
+# Enable Corepack and install pnpm at fixed version
 ARG PNPM_VERSION=10.15.0
-
-# Habilita corepack y activa pnpm en esa versión
 RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
-ENV COREPACK_ENABLE_DOWNLOADS=0
-# (Opcional) Congela descargas de corepack para que NO intente tocar nada más
-# ENV COREPACK_ENABLE_DOWNLOADS=0
 
-WORKDIR /tests
+WORKDIR /app
 
-
-# 2) Instala deps del runner (node_modules aislado del host)
+# Install dependencies based on lockfile
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm --version && pnpm install --frozen-lockfile
-
-# Copiamos manifest para cachear deps del runner de tests
-COPY package.json pnpm-lock.yaml ./
-# Instala solo lo necesario para ejecutar los tests dentro del contenedor
-# (esto crea su propio node_modules separado del host)
 RUN pnpm install --frozen-lockfile
 
-# Copiamos el resto (tests, config, etc.). Si prefieres bind-mount, este COPY es opcional.
+# Copy source code and build the site
 COPY . .
+RUN pnpm run build
 
-# No exponemos puertos; el servidor vive FUERA.
-# Entrypoint/command se define desde docker compose o CLI.
+# --- Runtime image ---
+FROM node:22-slim AS runner
+ENV NODE_ENV=production
+WORKDIR /app
+
+# Copy built output
+COPY --from=builder /app/dist ./dist
+
+# Ensure non-root permissions
+RUN chown -R node:node /app
+USER node
+
+# Cloud Run injects PORT. Default to 8080 and expose it.
+ENV PORT=8080
+EXPOSE 8080
+
+CMD ["node", "./dist/server/entry.mjs"]
+
