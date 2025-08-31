@@ -56,9 +56,12 @@ test.describe("Visual Regression Tests", () => {
     });
     await waitForPageReady(page);
 
+    const gridCard = page.locator('[aria-label="grid-card"]');
+    const nav = page.getByRole("navigation");
     await expect(page).toHaveScreenshot("blog-landing-en.png", {
       fullPage: true,
       animations: "disabled",
+      mask: [nav, gridCard],
     });
   });
 

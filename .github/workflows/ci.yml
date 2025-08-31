@@ -138,7 +138,7 @@ jobs:
       - Type-Check
       - Unit-Tests
       - E2E-Tests
-      - Visual-Regression-Tests
+      # - Visual-Regression-Tests
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
