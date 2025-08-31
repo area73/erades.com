@@ -173,7 +173,13 @@ test.describe("Enhanced Visual Regression Tests", () => {
     });
 
     if (response?.status() === 404) {
-      await screenshotPage(page, "404-page-enhanced.png");
+      const nav = page.getByRole("navigation");
+      const notFound = page.getByRole("heading", {
+        name: "Página no encontrada",
+      });
+      await screenshotPage(page, "404-page-enhanced.png", {
+        mask: [nav, notFound],
+      });
     }
   });
 });
