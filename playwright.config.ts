@@ -33,9 +33,9 @@ export default defineConfig({
     // start immediately for the tests. Locally Playwright will only
     //start the already built server.
     command: "pnpm build && pnpm start",
-    url: "http://127.0.0.1:4321",
+    port: 4321,
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
-    env: { PORT: "4321" },
+    env: { PORT: "4321", HOST: "127.0.0.1" },
   },
 });
