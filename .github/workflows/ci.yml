@@ -89,6 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PORT: 4321
+      HOST: 0.0.0.0
       BASE_URL: http://127.0.0.1:4321
     steps:
       - uses: actions/checkout@v4
@@ -104,7 +105,7 @@ jobs:
         run: pnpm build
       - name: Start server
         run: |
-          nohup env PORT=$PORT pnpm start > server.log 2>&1 &
+          nohup env PORT=$PORT HOST=$HOST pnpm start > server.log 2>&1 &
           for i in {1..60}; do
             if curl -fsS "$BASE_URL" >/dev/null; then echo "Server is up"; break; fi
             sleep 2
