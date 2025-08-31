@@ -5,7 +5,6 @@ import { ChevronDown, Menu, Linkedin, X } from "@lucide/astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import SocialProfileMenu from "./SocialProfileMenu.astro";
 import { t } from "../i18n";
-import { Image } from "astro:assets";
 import logoImage from "../assets/area73-small.png";
 import avatarImage from "../assets/avatar.png";
 
@@ -32,13 +31,15 @@ if (typeof window !== "undefined") {
         href="/"
         class="flex items-center gap-2 font-bold text-lg whitespace-nowrap"
       >
-        <Image
+        <img
           loading="eager"
-          src={logoImage}
+          src={logoImage.src}
           alt={t(lang as "en" | "es", "logo.alt")}
           class="h-12 w-12 object-contain"
-          width={48}
-          height={48}
+          width="48"
+          height="48"
+          decoding="async"
+          fetchpriority="high"
         />
       </a>
     </div>
@@ -144,13 +145,15 @@ if (typeof window !== "undefined") {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <Image
+              <img
                 loading="eager"
-                src={avatarImage}
+                src={avatarImage.src}
                 alt={t(lang as "en" | "es", "avatar.alt")}
                 class="h-8 w-8 rounded-full object-cover"
-                width={32}
-                height={32}
+                width="32"
+                height="32"
+                decoding="async"
+                fetchpriority="auto"
               />
               <ChevronDown class="ml-1 h-4 w-4 text-muted-foreground" />
             </button>
