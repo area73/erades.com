@@ -108,7 +108,6 @@ This project includes a comprehensive CI/CD pipeline with GitHub Actions optimiz
 - **CI**: Runs on every push and PR with linting, unit tests, E2E tests, visual tests, and build
 - **Security**: Weekly security scans and dependency reviews
 - **Visual Snapshots**: Manual workflow to update visual regression snapshots
-- **Auto Merge**: Automated PR merging with quality gates
 - **Dependabot**: Automated dependency updates with smart filtering
 
 ### Container Strategy

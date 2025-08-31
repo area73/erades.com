@@ -18,7 +18,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -36,7 +36,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -54,7 +54,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -70,7 +70,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -89,7 +89,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -107,7 +107,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -127,7 +127,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -144,7 +144,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -170,7 +170,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -192,7 +192,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -209,7 +209,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -231,7 +231,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -259,7 +259,7 @@ describe("BlogCardList.astro", () => {
       // Act & Assert
       await expect(
         renderAstroComponent(BlogCardList, {
-          props: { post: undefined, lang: "es" },
+          props: { post: undefined, lang: "es", index: 0 },
         })
       ).rejects.toThrow();
     });
@@ -275,7 +275,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert
@@ -292,7 +292,7 @@ describe("BlogCardList.astro", () => {
 
       // Act
       const result = await renderAstroComponent(BlogCardList, {
-        props: { post: mockPost, lang: "es" },
+        props: { post: mockPost, lang: "es", index: 0 },
       });
 
       // Assert

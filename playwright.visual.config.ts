@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75),
+  workers: process.env.CI ? 4 : Math.ceil(os.cpus().length * 0.75),
 
   use: {
     // BASE_URL debe apuntar a un servidor ya arrancado (host o externo)

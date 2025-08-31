@@ -12,7 +12,6 @@ export default defineConfig({
   workers: process.env.CI ? 1 : Math.ceil(os.cpus().length * 0.75),
 
   use: {
-    // Para E2E arrancamos el servidor con webServer (ver abajo)
     baseURL: process.env.BASE_URL || "http://127.0.0.1:4321",
     headless: true,
     trace: "on-first-retry",
@@ -30,10 +29,13 @@ export default defineConfig({
 
   // Arranca la app para las pruebas E2E
   webServer: {
+    // In CI the project is built in a separate step so the server can
+    // start immediately for the tests. Locally Playwright will only
+    //start the already built server.
     command: "pnpm build && pnpm start",
-    url: "http://127.0.0.1:4321",
+    port: 4321,
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
-    env: { PORT: "4321" },
+    env: { PORT: "4321", HOST: "127.0.0.1" },
   },
 });
