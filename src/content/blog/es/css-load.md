@@ -18,21 +18,30 @@ heroImage: /blog-placeholder-26.png
 A lo mejor podemos pensar que es por el peso (muchos bites a enviar al cliente), pero la respuesta es más
 simple, porque **bloquea el renderizado del navegador**.
 
+<span  class="grid justify-evenly">
+
 ### **Diagrama de carga de los CSS**
+
+</span>
+
+<div class="grid justify-evenly">
 
 ![css-load](/css-load.drawio.png)
 
-- **HTML Parser:**<br>
+</div>
+
+- **HTML Parser:**
   Es el primer paso, donde el navegador analiza el documento HTML para crear el DOM.
-- **CSS Parser:**<br>
-  Cuando el analizador de HTML encuentra hojas de estilo CSS, se las pasa al analizador de CSS.
-- **CSSOM (CSS Object Model):**<br>El analizador de CSS crea el CSSOM, una estructura en forma de árbol que representa los estilos del documento.
-- **DOM:**<br>El analizador de HTML crea esta estructura de árbol del documento HTML.
-- **Render Tree (Árbol de Renderizado):**<br>Es el renderizado a partir de la combinación del DOM y el CSSOM. Este árbol incluye solo los elementos visibles y sus estilos calculados y se aplica a la vez que las reglas de cascada.
-- **Cascade Rules (Reglas de Cascada):**<br> Aquí es donde el navegador aplica las reglas de cascada, especificidad y herencia de CSS para determinar los estilos finales de cada elemento.
-- **Final Computed Style (Estilo Calculado Final):**<br> Es el resultado final para cada elemento, mostrando todos los estilos aplicados, que se utiliza para los pasos posteriores de Layout/reflow (maquetación) y Paint (pintado).
+- **CSS Parser:** Cuando el analizador de HTML encuentra hojas de estilo CSS, se las pasa al analizador de CSS.
+- **CSSOM (CSS Object Model):** El analizador de CSS crea el CSSOM, una estructura en forma de árbol que representa los estilos del documento.
+- **DOM:** El analizador de HTML crea esta estructura de árbol del documento HTML.
+- **Render Tree (Árbol de Renderizado):** Es el renderizado a partir de la combinación del DOM y el CSSOM. Este árbol incluye solo los elementos visibles y sus estilos calculados y se aplica a la vez que las reglas de cascada.
+- **Cascade Rules (Reglas de Cascada):** Aquí es donde el navegador aplica las reglas de cascada, especificidad y herencia de CSS para determinar los estilos finales de cada elemento.
+- **Final Computed Style (Estilo Calculado Final):** Es el resultado final para cada elemento, mostrando todos los estilos aplicados, que se utiliza para los pasos posteriores de Layout/reflow (maquetación) y Paint (pintado).
 
 ### **Maneras de cargar un CSS**
+
+<hr>
 
 #### **Externo** (`<link ...>`)
 
@@ -45,18 +54,22 @@ simple, porque **bloquea el renderizado del navegador**.
 </head>
 ```
 
+<div class="note">
+
 **Notas:**
 
 - **Bloquea el primer render** hasta parsear `styles.css`.
 - Para atenuarlo podríamos limitarlo por media por ejemplo sacando fuera los estilos de print
 
+</div>
+
 ```html
 <link rel="stylesheet" href="/assets/print.css" media="print" />
 ```
 
-#### Interno (`<style>`)
-
 <hr>
+
+#### Interno (`<style>`)
 
 ```html
 <head>
@@ -71,18 +84,24 @@ simple, porque **bloquea el renderizado del navegador**.
 </head>
 ```
 
+<div class="note">
+
 **Notas:**
 
 - Se parsea in situ.
 - Útil para critical CSS pequeño.
 
-#### Inline (en el atributo style)
+</div>
 
 <hr>
+
+#### Inline (en el atributo style)
 
 ```html
 <div style="color: tomato; font-weight: 600">Texto con estilo inline</div>
 ```
+
+<div class="note">
 
 **Notas:**
 
@@ -90,9 +109,11 @@ simple, porque **bloquea el renderizado del navegador**.
 - No cachea
 - No reutilizable (el HTML se puede cachear pero el parseo se tiene que volver a hacer)
 
-#### Importándolo dentro de otro CSS (`@import`)
+</div>
 
 <hr>
+
+#### Importándolo dentro de otro CSS (`@import`)
 
 ```css
 /* main.css */
@@ -115,6 +136,8 @@ O desde `<style>`:
 </style>
 ```
 
+<div class="note">
+
 **Notas:**
 
 - Evalúa en orden de aparición.
@@ -125,9 +148,11 @@ O desde `<style>`:
 - Si después de esto lo quieres seguir usando supongo que será porque te gusta el riesgo. Yo tenía una frase de joven para cuando hacía locuras
   > Commander Salamander: Too fast to live, too young to die"
 
-#### Dinámico por JS (inyectando `<link>` o `<style>`)
+</div>
 
 <hr>
+
+#### Dinámico por JS (inyectando `<link>` o `<style>`)
 
 ```html
 <!-- **Insertar link dinámico (lazy styles)** -->
@@ -153,10 +178,16 @@ O desde `<style>`:
 </script>
 ```
 
+<div class="note">
+
 **Notas:**
 
 - Se aplican al terminar de parsear/adjuntar.
 - Útil para code‑splitting de estilos o tematizado runtime.
+
+</div>
+
+<hr>
 
 ### En resumen
 
@@ -170,7 +201,7 @@ Si atendemos a los bloqueos, diferenciando **bloqueo de red** (latencia/descarga
 | **@import en CSS**          | ✅ Sí (extra)  | ✅ Sí                    | **Peor caso:** descarga en cadena → cada import bloquea el siguiente. |
 | **Dinámico (JS)**           | ✅ Sí          | ❌ No (async)            | Se descarga al insertar el `<link>`/`<style>`. No bloquea el parser.  |
 
-**Conclusión**
+#### Conclusión
 
 - Lo que realmente mata tu render son las **descargas externas síncronas** (link + import).
 - Inline e interno sólo paran el parser localmente (normalmente irrelevante salvo CSS gigante).
@@ -197,10 +228,14 @@ Si atendemos a los bloqueos, diferenciando **bloqueo de red** (latencia/descarga
 <noscript><link rel="stylesheet" href="/assets/late.css" /></noscript>
 ```
 
+<div class="note">
+
 **notas:**
 
 - No aplica estilos hasta el onload (evita bloquear el primer render).
 - Hay que mantener un fallback en `<noscript>` por si las moscas.
+
+</div>
 
 ### Media para cargar sin bloquear y activar luego
 
