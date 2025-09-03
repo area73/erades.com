@@ -1,5 +1,5 @@
 ---
-title: 'CSS: Load Strategies'
+title: "CSS: Load Strategies"
 description: >-
   Practical guide on CSS loading: render blocking, strategies (preload, media,
   inline) and web performance.
@@ -14,13 +14,22 @@ categories:
 draft: false
 heroImage: /blog-placeholder-26.png
 ---
+
 ## Why is it important to know how CSS is loaded?
 
 We might think it is because of the weight (many bytes to send to the client), but the answer is simpler, because it **blocks the browser rendering**.
 
+<span class="grid justify-evenly">
+
 ### **CSS loading diagram**
 
+</span>
+
+<div class="grid justify-evenly">
+
 ![css-load](/css-load.drawio.png)
+
+</div>
 
 - **HTML Parser:**<br>
   This is the first step, where the browser analyzes the HTML document to create the DOM.
@@ -34,6 +43,8 @@ We might think it is because of the weight (many bytes to send to the client), b
 
 ### **Ways to Load CSS**
 
+<hr>
+
 #### **External** (`<link ...>`)
 
 <br>
@@ -45,18 +56,22 @@ We might think it is because of the weight (many bytes to send to the client), b
 </head>
 ```
 
+<div class="note">
+
 **Notes:**
 
 - **Blocks the first render** until `styles.css` is parsed.
 - To mitigate this, we could limit it by media by taking out print styles for example.
 
+</div>
+
 ```html
 <link rel="stylesheet" href="/assets/print.css" media="print" />
 ```
 
-#### Internal (`<style>`)
-
 <hr>
+
+#### Internal (`<style>`)
 
 ```html
 <head>
@@ -71,18 +86,24 @@ We might think it is because of the weight (many bytes to send to the client), b
 </head>
 ```
 
+<div class="note">
+
 **Notes:**
 
 - It is parsed in situ.
 - Useful for small critical CSS.
 
-#### Inline (in the style attribute)
+</div>
 
 <hr>
+
+#### Inline (in the style attribute)
 
 ```html
 <div style="color: tomato; font-weight: 600">Text with inline style</div>
 ```
+
+<div class="note">
 
 **Notes:**
 
@@ -90,9 +111,11 @@ We might think it is because of the weight (many bytes to send to the client), b
 - Not cacheable
 - Not reusable (HTML can be cached but parsing has to be done again)
 
-#### Imported within another CSS (`@import`)
+</div>
 
 <hr>
+
+#### Imported within another CSS (`@import`)
 
 ```css
 /* main.css */
@@ -115,6 +138,8 @@ Or from `<style>`:
 </style>
 ```
 
+<div class="note">
+
 **Notes:**
 
 - Evaluated in order of appearance.
@@ -125,9 +150,11 @@ Or from `<style>`:
 - If after this you want to continue using it I suppose it's because you like risk. I had a phrase when I was young for when I did crazy things
   > Commander Salamander: Too fast to live, too young to die"
 
-#### Dynamically by JS (injecting `<link>` or `<style>`)
+</div>
 
 <hr>
+
+#### Dynamically by JS (injecting `<link>` or `<style>`)
 
 ```html
 <!-- **Insert dynamic link (lazy styles)** -->
@@ -153,28 +180,32 @@ Or from `<style>`:
 </script>
 ```
 
+<div class="note">
+
 **Notes:**
 
 - Applied after parsing/attaching.
 - Useful for style code‑splitting or runtime theming.
 
+</div>
+
 ### In summary
 
 If we look at the blocks, differentiating between **network block** (latency/download) and **parse/render block** (the parser stops while processing rules), we would have something like this:
 
-| Charging Form               | Network Block | Parse/Render Block | Notes                                                                 |
-| --------------------------- | -------------- | ------------------ | --------------------------------------------------------------------- |
-| **External Sheet (link)**   | ✅ Yes         | ✅ Yes (until integrate) | Wait to download → parse → integrate in CSSOM. Blocks FCP/LCP.        |
-| **Internal (style)**       | ❌ No          | ✅ Yes (minimum)    | It is parsed inline in the HTML. No network wait, only local CPU.    |
-| **Inline (style attribute)** | ❌ No          | ✅ Yes (when applied)      | Applied instantly to the element. Minimal cost per specific rule.    |
-| **@import in CSS**          | ✅ Yes (extra) | ✅ Yes              | **Worst case:** chain download → each import blocks the next one.     |
-| **Dynamic (JS)**            | ✅ Yes         | ❌ No (async)          | Downloaded when inserting the `<link>`/`<style>`. Does not block the parser. |
+| Charging Form                | Network Block  | Parse/Render Block       | Notes                                                                        |
+| ---------------------------- | -------------- | ------------------------ | ---------------------------------------------------------------------------- |
+| **External Sheet (link)**    | ✅ Yes         | ✅ Yes (until integrate) | Wait to download → parse → integrate in CSSOM. Blocks FCP/LCP.               |
+| **Internal (style)**         | ❌ No          | ✅ Yes (minimum)         | It is parsed inline in the HTML. No network wait, only local CPU.            |
+| **Inline (style attribute)** | ❌ No          | ✅ Yes (when applied)    | Applied instantly to the element. Minimal cost per specific rule.            |
+| **@import in CSS**           | ✅ Yes (extra) | ✅ Yes                   | **Worst case:** chain download → each import blocks the next one.            |
+| **Dynamic (JS)**             | ✅ Yes         | ❌ No (async)            | Downloaded when inserting the `<link>`/`<style>`. Does not block the parser. |
 
 **Conclusion**
 
 - What really kills your render are the **synchronous external downloads** (link + import).
 - Inline and internal only stop the parser locally (usually irrelevant except for huge CSS).
-- **Dynamic does not block the parser** because it happens later, but**delays the application of styles** until it is downloaded/applied (AKA FOUC → Flash of Unstyled Content).
+- **Dynamic does not block the parser** because it happens later, but **delays the application of styles** until it is downloaded/applied (AKA FOUC → Flash of Unstyled Content).
 
 ---
 
@@ -197,10 +228,14 @@ If we look at the blocks, differentiating between **network block** (latency/dow
 <noscript><link rel="stylesheet" href="/assets/late.css" /></noscript>
 ```
 
-**notes:**
+<div class="note">
+
+**Notes:**
 
 - Doesn't apply styles until onload (avoids blocking the first render).
 - You must maintain a fallback in `<noscript>` just in case.
+
+</div>
 
 ### Media to load without blocking and activate later
 

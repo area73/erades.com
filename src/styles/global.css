@@ -50,18 +50,21 @@
   h1 {
     font-size: var(--text-4xl);
     line-height: var(--line-height-2xl);
+    margin-top: var(--spacing-md);
   }
   h2 {
     color: var(--foreground-dim);
     font-weight: 700;
     font-size: var(--text-xl);
     line-height: var(--line-height-2xl);
+    margin-top: var(--spacing-md);
   }
   h3 {
     color: var(--foreground-dim);
     font-weight: 700;
     font-size: var(--text-lg);
     line-height: var(--line-height-lg);
+    margin-top: var(--spacing-md);
   }
   h4 {
     color: var(--foreground-dim);
@@ -71,23 +74,26 @@
     line-height: var(--line-height-sm);
     font-size: var(--text-md);
     font-weight: var(--font-weight-medium);
+    margin-top: var(--spacing-md);
   }
   h5 {
     font-size: var(--text-sm);
     line-height: var(--line-height-sm);
     color: var(--foreground-dim);
     font-weight: 700;
+    margin-top: var(--spacing-md);
   }
   h6 {
     font-size: var(--text-xs);
     line-height: var(--line-height-xs);
     color: var(--foreground-dim);
     font-weight: 700;
+    margin-top: var(--spacing-md);
   }
   p {
     font-size: var(--text-md);
     line-height: var(--line-height-sm);
-    margin-bottom: var(--spacing-md);
+    margin-top: var(--spacing-md);
   }
 
   ul,
@@ -102,7 +108,7 @@
 
   ul li {
     position: relative;
-    /*margin-bottom: var(--spacing-sm);*/
+    margin-bottom: var(--spacing-sm);
     padding-left: var(--spacing-md);
     line-height: var(--line-height-sm);
   }
@@ -492,6 +498,10 @@ code {
   font-size: 0.875em;
 }
 
+.expressive-code {
+  margin-top: 2rem;
+}
+
 .expressive-code pre {
   margin: 0rem 0 2rem 0 !important;
 }
@@ -527,6 +537,13 @@ code {
 }
 .bibliography a:hover {
   color: var(--color-primary-hover, #1471eb);
+}
+
+/* note */
+.note {
+  background-color: var(--color-muted);
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
 
 /* View Transitions API nativas */
